@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<title>Build Your Own Bouquet | Fleure</title>
+<meta name="description" content="Create a custom handmade bouquet: choose flowers, colours, wrap, ribbon and a gift note, then send your order on WhatsApp.">
+</head>
+<body data-page="custom">
+<main id="main" class="container">
+  <section class="section-tight split" style="align-items:start">
+    <div>
+      <h1>Build Your Own Bouquet</h1>
+      <div class="divider" style="justify-content:flex-start">♥</div>
+      <p class="muted">Create something truly yours. Choose every detail from flowers to finishing touches and we'll handcraft a bouquet made just for you or someone you love.</p>
+
+      <h2 class="script" style="font-size:2rem;margin-top:28px">How it works</h2>
+      <div class="steps panel" style="padding:12px">
+        <div class="step"><span class="step-num">1</span><div><strong>Pick flowers</strong></div></div>
+        <div class="step"><span class="step-num">2</span><div><strong>Pick colours</strong></div></div>
+        <div class="step"><span class="step-num">3</span><div><strong>Pick wrap and ribbon</strong></div></div>
+        <div class="step"><span class="step-num">4</span><div><strong>Add note</strong></div></div>
+      </div>
+
+      <h2 class="script" style="font-size:2rem;margin-top:28px">Occasions</h2>
+      <div class="cat-grid" id="occasions"></div>
+    </div>
+
+    <form class="panel" id="custom" novalidate style="padding:24px">
+      <h2 class="center script" style="font-size:2rem">Your Custom Order</h2>
+      <div class="form-grid">
+        <div class="field"><label for="c-name">Full Name</label><input class="input" id="c-name" name="name" autocomplete="name" required><div class="error" id="e-name"></div></div>
+        <div class="field"><label for="c-wrap">Wrapping Colour</label>
+          <select class="input" id="c-wrap" name="wrap"><option>Kraft</option><option>Pink</option><option>Lavender</option><option>Yellow</option><option>Black & Gold</option><option>Grey & Gold</option></select></div>
+        <div class="field"><label for="c-phone">WhatsApp Number</label><input class="input" id="c-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required><div class="error" id="e-phone"></div></div>
+        <div class="field"><label for="c-ribbon">Ribbon Colour</label>
+          <select class="input" id="c-ribbon" name="ribbon"><option>Pink</option><option>Lavender</option><option>Gold</option><option>Red</option><option>Silver</option><option>Twine</option></select></div>
+        <div class="field"><label for="c-occasion">Occasion</label>
+          <select class="input" id="c-occasion" name="occasion"><option>Birthday</option><option>Anniversary</option><option>Graduation</option><option>Valentine's</option><option>Just because</option><option>Other</option></select></div>
+        <div class="field"><label for="c-qty">Quantity</label><input class="input" id="c-qty" name="qty" type="number" min="1" max="50" value="1" inputmode="numeric"></div>
+        <div class="field"><label for="c-flowers">Flower Selection</label>
+          <select class="input" id="c-flowers" name="flowers"><option>Sunflower</option><option>Rose</option><option>Tulip</option><option>Lily</option><option>Daisy</option><option>Ribbon roses</option><option>Mixed (describe in note)</option></select></div>
+        <div class="field"><label for="c-colours">Flower Colours</label><input class="input" id="c-colours" name="colours" placeholder="e.g. pink and white"></div>
+        <div class="field full"><label for="c-note">Gift Note (optional)</label><textarea class="input" id="c-note" name="note" maxlength="200"></textarea></div>
+        <div class="field full"><label for="c-delivery">Delivery Details</label><textarea class="input" id="c-delivery" name="delivery" placeholder="Address and preferred date" required></textarea><div class="error" id="e-delivery"></div></div>
+      </div>
+      <div class="pdp-actions">
+        <button class="btn btn-primary" type="submit">Send Custom Order</button>
+        <a class="btn btn-secondary" data-wa="Hi! I'd like to place a custom bouquet order." href="#" target="_blank" rel="noopener">Just chat on WhatsApp</a>
+      </div>
+      <p class="muted center" style="font-size:.8rem;margin:0">Sending opens WhatsApp with your order filled in. Nothing is charged until we confirm details with you.</p>
+    </form>
+  </section>
+</main>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  document.querySelectorAll("[data-wa]").forEach((a) => (a.href = waLink(a.dataset.wa)));
+  document.getElementById("occasions").innerHTML = [
+    ["Birthday", "sunflower-rose-tulip"], ["Anniversary", "ribbon-rose-bouquet"], ["Graduation", "lily-tulip"], ["Valentine's", "rose"],
+  ].map(([label, id]) => `<div class="cat-tile"><img src="${byId(id).images[0]}" alt="" loading="lazy"><div class="cat-label"><h3>${label}</h3></div></div>`).join("");
+
+  const form = document.getElementById("custom");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const checks = [["name", "Please enter your name."], ["phone", "Please enter your WhatsApp number."], ["delivery", "Please add delivery details."]];
+    let ok = true;
+    for (const [field, msg] of checks) {
+      const el = form[field], bad = !el.value.trim() || (field === "phone" && el.value.replace(/\D/g, "").length < 10);
+      el.setAttribute("aria-invalid", String(bad));
+      document.getElementById("e-" + field).textContent = bad ? (field === "phone" && el.value.trim() ? "Please enter a valid number." : msg) : "";
+      if (bad && ok) { el.focus(); ok = false; }
+    }
+    if (!ok) return;
+    const f = Object.fromEntries(new FormData(form));
+    const msg = `Hi ${SHOP.name}! I'd like a custom bouquet.\n\nName: ${f.name}\nWhatsApp: ${f.phone}\nOccasion: ${f.occasion}\nFlowers: ${f.flowers}\nFlower colours: ${f.colours || "-"}\nWrapping: ${f.wrap}\nRibbon: ${f.ribbon}\nQuantity: ${f.qty}\nGift note: ${f.note || "-"}\nDelivery: ${f.delivery}`;
+    window.open(waLink(msg), "_blank", "noopener");
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<title>Contact | Fleure</title>
+<meta name="description" content="Have a question, an idea or a custom request? Reach us on WhatsApp.">
+</head>
+<body data-page="contact">
+<main id="main" class="container">
+  <section class="section split" style="align-items:start">
+    <div>
+      <h1>Let’s Make Something Bloom</h1>
+      <p class="muted">Have a question, an idea, or a custom request? We'd love to hear from you. Reach out through your favourite channel and let's create something beautiful together.</p>
+      <a class="btn btn-primary" data-wa="Hi! I have a question about your bouquets." href="#" target="_blank" rel="noopener"><span data-icon="whatsapp" style="display:contents"></span>Order on WhatsApp</a>
+      <img class="rounded" src="assets/products/rose-tulip.jpg" alt="" style="margin-top:28px;max-width:360px;aspect-ratio:4/5" loading="lazy">
+    </div>
+    <div>
+      <div class="channels" id="channels"></div>
+      <form class="panel" id="contact" novalidate style="padding:24px;margin-top:16px">
+        <div class="form-grid">
+          <div class="field full"><label for="m-name">Your Name</label><input class="input" id="m-name" name="name" autocomplete="name" required><div class="error" id="e-name"></div></div>
+          <div class="field full"><label for="m-contact">Email or WhatsApp Number</label><input class="input" id="m-contact" name="contact" required><div class="error" id="e-contact"></div></div>
+          <div class="field full"><label for="m-message">Your Message</label><textarea class="input" id="m-message" name="message" required></textarea><div class="error" id="e-message"></div></div>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit" style="margin-top:8px">Send Message</button>
+        <p class="muted" style="font-size:.8rem;margin:12px 0 0"><span style="color:var(--rose)">♥</span> Sending opens WhatsApp with your message filled in. We usually reply as soon as we can during working hours. Thank you for your patience!</p>
+      </form>
+    </div>
+  </section>
+  <div class="thanks"><span class="script">Thank you</span>for supporting handmade</div>
+</main>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  document.querySelectorAll("[data-wa]").forEach((a) => (a.href = waLink(a.dataset.wa)));
+  document.querySelectorAll("[data-icon]").forEach((el) => (el.innerHTML = ICONS[el.dataset.icon]));
+
+  const channels = [
+    ["whatsapp", "WhatsApp", "Chat with us for quick responses and orders.", waLink("Hi!")],
+    SHOP.instagram && ["instagram", "Instagram", "DM us to share ideas and get inspired.", `https://instagram.com/${SHOP.instagram}`],
+    SHOP.email && ["mail", "Email", "Send us a message and we'll get back to you.", `mailto:${SHOP.email}`],
+  ].filter(Boolean);
+  document.getElementById("channels").innerHTML = channels.map(([icon, title, text, href]) => `
+    <a class="channel panel" href="${href}"${href.startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>
+      <span class="feature-icon">${ICONS[icon]}</span><h3>${title}</h3><p class="muted" style="font-size:.85rem;margin:0">${text}</p></a>`).join("");
+
+  const form = document.getElementById("contact");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let ok = true;
+    for (const field of ["name", "contact", "message"]) {
+      const el = form[field], bad = !el.value.trim();
+      el.setAttribute("aria-invalid", String(bad));
+      document.getElementById("e-" + field).textContent = bad ? "This field is required." : "";
+      if (bad && ok) { el.focus(); ok = false; }
+    }
+    if (!ok) return;
+    window.open(waLink(`Hi ${SHOP.name}! I'm ${form.name.value.trim()} (${form.contact.value.trim()}).\n\n${form.message.value.trim()}`), "_blank", "noopener");
+  });
+</script>
+</body>
+</html>

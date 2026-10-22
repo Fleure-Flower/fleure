@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<title>Bouquet | Fleure</title>
+<meta name="description" content="Handmade bouquet, made to order. Choose colours, wrap and ribbon, and order on WhatsApp.">
+</head>
+<body data-page="shop">
+<main id="main" class="container">
+  <div id="pdp"></div>
+  <section class="section-tight" id="related-wrap">
+    <h2>Related bouquets</h2>
+    <div class="product-grid" id="related"></div>
+  </section>
+</main>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const p = byId(params.get("id"));
+  const root = document.getElementById("pdp");
+
+  if (!p) {
+    root.innerHTML = `<div class="empty"><h1>Bouquet not found</h1><p>This bouquet may have moved.</p><a class="btn btn-primary" href="shop.html">Browse the shop</a></div>`;
+    document.getElementById("related-wrap").hidden = true;
+  } else {
+    document.title = `${p.name} | ${SHOP.name}`;
+    const labels = { flower: "Choose flower colour", wrap: "Wrapping colour", ribbon: "Ribbon colour" };
+    const group = (key, values) => `
+      <fieldset class="option-group">
+        <legend>${labels[key]}</legend>
+        <div class="swatches">${values.map((v, i) => `<label class="swatch"><input type="radio" name="${key}" value="${esc(v)}"${i === 0 ? " checked" : ""}><span>${esc(v)}</span></label>`).join("")}</div>
+      </fieldset>`;
+
+    const sizeBlock = p.sizes ? `
+      <div class="form-grid" style="margin-bottom:18px">
+        <div class="field"><label for="size">Number of roses</label>
+          <select class="input" id="size">${p.sizes.map((s, i) => `<option value="${i}">${s.count} ${s.count === 1 ? "rose" : "roses"}</option>`).join("")}</select></div>
+        <div class="field"><span class="field-label">Finish</span>
+          <div class="swatches">
+            <label class="swatch"><input type="radio" name="finish" value="Without glitter" checked><span>Without glitter</span></label>
+            <label class="swatch"><input type="radio" name="finish" value="With glitter"><span>With glitter</span></label>
+          </div></div>
+      </div>` : "";
+
+    root.innerHTML = `
+      <div class="pdp">
+        <div>
+          <img class="gallery-main" id="main-img" src="${p.images[0]}" alt="${esc(p.name)} bouquet" width="600" height="750">
+          ${p.images.length > 1 ? `<div class="thumbs">${p.images.map((src, i) => `<button type="button" data-src="${src}" aria-label="Show photo ${i + 1}"${i === 0 ? ' aria-current="true"' : ""}><img src="${src}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
+        </div>
+        <div>
+          <h1>${esc(p.name)}</h1>
+          <p><span class="price price-lg" id="price">${priceLabel(p)}</span></p>
+          <p class="muted">${esc(p.description)}</p>
+          <form id="order" novalidate>
+            ${sizeBlock}
+            ${Object.entries(p.options || {}).map(([k, v]) => group(k, v)).join("")}
+            <div class="form-grid">
+              <div class="field"><span class="field-label" id="qty-label">Quantity</span>
+                <div class="qty" role="group" aria-labelledby="qty-label">
+                  <button type="button" data-step="-1" aria-label="Decrease quantity">−</button>
+                  <input id="qty" type="number" min="1" max="20" value="1" inputmode="numeric" aria-label="Quantity">
+                  <button type="button" data-step="1" aria-label="Increase quantity">+</button>
+                </div></div>
+              <div class="field"><label for="note">Gift note (optional)</label>
+                <textarea class="input" id="note" maxlength="200" placeholder="Add your message here..."></textarea>
+                <div class="counter" id="note-count" aria-live="polite">0/200</div></div>
+            </div>
+            <div class="pdp-actions">
+              <button class="btn btn-secondary" type="submit">Add to bag</button>
+              <a class="btn btn-primary" id="wa-now" href="#" target="_blank" rel="noopener">${ICONS.whatsapp}Order on WhatsApp</a>
+            </div>
+          </form>
+          <div class="note-box"><span style="color:var(--rose)">${ICONS.heart.replace("<svg", '<svg width="22" height="22"')}</span>
+            <span>Each bouquet is lovingly handmade to order. Slight variations make your bouquet truly unique.${p.price == null ? " Price depends on size and is confirmed on WhatsApp." : ""}</span></div>
+        </div>
+      </div>`;
+
+    const form = document.getElementById("order");
+    const qty = document.getElementById("qty");
+    const note = document.getElementById("note");
+
+    root.querySelectorAll(".thumbs button").forEach((b) => b.addEventListener("click", () => {
+      document.getElementById("main-img").src = b.dataset.src;
+      root.querySelectorAll(".thumbs button").forEach((x) => x.removeAttribute("aria-current"));
+      b.setAttribute("aria-current", "true");
+    }));
+    form.querySelectorAll("[data-step]").forEach((b) => b.addEventListener("click", () => {
+      qty.value = Math.min(20, Math.max(1, (parseInt(qty.value, 10) || 1) + Number(b.dataset.step)));
+      update();
+    }));
+
+    function current() {
+      const options = {};
+      let price = p.price, name = p.name;
+      if (p.sizes) {
+        const s = p.sizes[Number(document.getElementById("size").value)];
+        const glitter = form.finish.value === "With glitter";
+        price = glitter ? s.glitter : s.price;
+        name = `${p.name}, ${s.count} ${s.count === 1 ? "rose" : "roses"}`;
+        options.Finish = form.finish.value;
+      }
+      for (const k of Object.keys(p.options || {})) options[{ flower: "Flower", wrap: "Wrap", ribbon: "Ribbon" }[k]] = form[k].value;
+      return { id: p.id, name, price, image: p.images[0], qty: Math.min(20, Math.max(1, parseInt(qty.value, 10) || 1)), options, note: note.value.trim() };
+    }
+    function update() {
+      const item = current();
+      if (p.sizes) document.getElementById("price").textContent = rupees(item.price);
+      document.getElementById("note-count").textContent = `${note.value.length}/200`;
+      document.getElementById("wa-now").href = waLink(orderMessage([item]));
+    }
+    form.addEventListener("change", update);
+    form.addEventListener("input", update);
+    form.addEventListener("submit", (e) => { e.preventDefault(); addToCart(current()); });
+    update();
+
+    const related = PRODUCTS.filter((x) => x.category === p.category && x.id !== p.id).slice(0, 5);
+    const fill = related.length ? related : PRODUCTS.filter((x) => x.featured && x.id !== p.id).slice(0, 5);
+    document.getElementById("related").innerHTML = fill.map(productCard).join("");
+  }
+</script>
+</body>
+</html>

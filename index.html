@@ -1,23 +1,100 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Flower Website</title>
-  <style>
-    body { margin: 0; font-family: system-ui, sans-serif; background: #fff7f9; color: #3a2a30; }
-    header { padding: 4rem 1rem; text-align: center; background: linear-gradient(135deg, #ffd6e0, #fff1c1); }
-    h1 { margin: 0 0 .5rem; font-size: 2.5rem; }
-    main { max-width: 800px; margin: 2rem auto; padding: 0 1rem; text-align: center; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<title>Fleure | Handmade Flower Bouquets</title>
+<meta name="description" content="Handmade forever flowers that never wilt: pipe-cleaner and satin ribbon bouquets, made to order. Order on WhatsApp.">
 </head>
-<body>
-  <header>
-    <h1>🌸 Flower Website</h1>
-    <p>Fresh flowers, coming soon.</p>
-  </header>
-  <main>
-    <p>This site is under construction. Check back soon!</p>
-  </main>
+<body data-page="home">
+<main id="main">
+  <section class="hero">
+    <div class="container">
+      <div class="hero-card panel">
+        <div>
+          <h1 class="hero-brand" data-shop-name>Fleure</h1>
+          <p class="hero-sub">Handmade Flowers</p>
+          <p class="hero-tagline">Handmade forever flowers that never wilt</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="shop.html">Shop Now</a>
+            <a class="btn btn-secondary" data-wa="Hi! I'd like to order a bouquet." href="#" target="_blank" rel="noopener">Order on WhatsApp</a>
+          </div>
+        </div>
+        <div class="hero-images">
+          <img src="assets/products/ribbon-pink-glitter.jpg" alt="Pink glitter satin ribbon rose bouquet" width="300" height="400">
+          <img src="assets/products/lily-bouquet-red-white.jpg" alt="Red and white pipe-cleaner lily bouquet" width="300" height="400">
+          <img src="assets/products/ribbon-blue-silver.jpg" alt="Blue and silver satin ribbon rose bouquet" width="300" height="400">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <h2 class="section-title">Bouquets</h2>
+      <div class="divider">♥</div>
+      <div class="product-grid" id="featured"></div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <h2 class="section-title">Shop by type</h2>
+      <div class="divider">♥</div>
+      <div class="cat-grid" id="categories"></div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <h2 class="section-title">Why choose us</h2>
+      <div class="divider">♥</div>
+      <div class="features" id="why"></div>
+    </div>
+  </section>
+
+  <section class="section-tight" id="reviews" hidden>
+    <div class="container">
+      <h2 class="section-title">What our customers say</h2>
+      <div class="divider">♥</div>
+      <div class="features" id="review-list"></div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container">
+      <div class="thanks"><span class="script">Thank you</span>for supporting handmade</div>
+    </div>
+  </section>
+</main>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  document.querySelectorAll("[data-shop-name]").forEach((el) => (el.textContent = SHOP.name));
+  document.querySelectorAll("[data-wa]").forEach((a) => (a.href = waLink(a.dataset.wa)));
+
+  document.getElementById("featured").innerHTML = PRODUCTS.filter((p) => p.featured).map(productCard).join("");
+
+  const catImage = { single: "tulip", double: "rose-tulip", combo: "sunflower-rose-tulip", ribbon: "ribbon-rose-bouquet", grand: "grand-lily-red-white", special: "teddy-bouquet" };
+  document.getElementById("categories").innerHTML = CATEGORIES.map((c) => `
+    <a class="cat-tile" href="shop.html#${c.id}">
+      <img src="${byId(catImage[c.id]).images[0]}" alt="" loading="lazy" width="300" height="375">
+      <div class="cat-label"><h3>${esc(c.short)}</h3><span class="price">${esc(c.priceLabel)}</span></div>
+    </a>`).join("");
+
+  document.getElementById("why").innerHTML = [
+    ["heart", "Handmade with love"], ["ribbon", "Premium materials"], ["sparkle", "Cute & affordable"], ["gift", "Perfect for gifting"],
+  ].map(([icon, text]) => `<div class="feature panel"><span class="feature-icon">${ICONS[icon]}</span><strong>${text}</strong></div>`).join("");
+
+  if (REVIEWS.length) {
+    document.getElementById("reviews").hidden = false;
+    document.getElementById("review-list").innerHTML = REVIEWS.map((r) => `<blockquote class="panel" style="margin:0;padding:18px"><p>“${esc(r.text)}”</p><cite class="muted">— ${esc(r.name)}</cite></blockquote>`).join("");
+  }
+</script>
 </body>
 </html>

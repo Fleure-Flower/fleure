@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<title>Shop Bouquets | Fleure</title>
+<meta name="description" content="Single flower, double flower and combination bouquets from ₹89, satin ribbon roses and special occasion bouquets. Handmade to order.">
+</head>
+<body data-page="shop">
+<main id="main" class="container">
+  <div class="shop-head">
+    <div>
+      <h1>Shop Bouquets</h1>
+      <p class="muted" style="max-width:520px">Thoughtfully handcrafted bouquets made with love. Pick your favourites and make every moment bloom.</p>
+    </div>
+    <div class="filters" role="group" aria-label="Filter by type" id="filters"></div>
+  </div>
+  <div id="rows"></div>
+</main>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+  const rows = document.getElementById("rows");
+  const filters = document.getElementById("filters");
+  rows.innerHTML = CATEGORIES.map((c) => `
+    <section class="shop-row" id="${c.id}" data-cat="${c.id}" aria-labelledby="h-${c.id}">
+      <div class="shop-row-label">
+        <h2 id="h-${c.id}">${esc(c.name)}</h2>
+        <span class="price">${esc(c.priceLabel)}</span>
+      </div>
+      <div class="product-grid">${PRODUCTS.filter((p) => p.category === c.id).map(productCard).join("")}</div>
+    </section>`).join("");
+
+  const options = [["all", "All"], ...CATEGORIES.map((c) => [c.id, c.short])];
+  filters.innerHTML = options.map(([id, label]) => `<button class="chip" type="button" data-filter="${id}" aria-pressed="false">${esc(label)}</button>`).join("");
+
+  function apply(id) {
+    filters.querySelectorAll(".chip").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filter === id)));
+    rows.querySelectorAll(".shop-row").forEach((r) => (r.hidden = id !== "all" && r.dataset.cat !== id));
+  }
+  filters.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-filter]");
+    if (!b) return;
+    apply(b.dataset.filter);
+    history.replaceState(null, "", b.dataset.filter === "all" ? "shop.html" : "#" + b.dataset.filter);
+  });
+  const start = location.hash.slice(1);
+  apply(CATEGORIES.some((c) => c.id === start) ? start : "all");
+</script>
+</body>
+</html>
