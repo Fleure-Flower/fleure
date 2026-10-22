@@ -24,9 +24,10 @@ const pipeOptions = {
   ribbon: ["Pink", "Lavender", "Gold", "Red", "Twine"],
 };
 
-function pipe(id, name, category, price, image, extra) {
+// Pipe-cleaner bouquets are drawn by assets/js/bouquet.js, so the picture follows the chosen wrap and ribbon.
+function pipe(id, name, category, price, flowers, look, extra) {
   return Object.assign({
-    id, name, category, price, images: [image],
+    id, name, category, price, flowers, look, images: [],
     description: `${name} bouquet. ${PIPE} Made to last, with no water or care needed.`,
     material: "Pipe cleaner",
     options: pipeOptions,
@@ -34,29 +35,29 @@ function pipe(id, name, category, price, image, extra) {
 }
 
 window.PRODUCTS = [
-  pipe("sunflower", "Sunflower", "single", 89, "assets/products/sunflower.jpg", { featured: true }),
-  pipe("rose", "Rose", "single", 89, "assets/products/rose.jpg", { featured: true }),
-  pipe("tulip", "Tulip", "single", 89, "assets/products/tulip.jpg", { featured: true }),
-  pipe("lily", "Lily", "single", 89, "assets/products/lily.jpg"),
-  pipe("daisy", "Daisy", "single", 89, "assets/products/daisy.jpg"),
-  pipe("custom-flower", "Custom Flower", "single", 89, "assets/products/custom-flower.jpg", {
+  pipe("sunflower", "Sunflower", "single", 89, ["sunflower"], { wrap: "Kraft", ribbon: "Twine" }, { featured: true }),
+  pipe("rose", "Rose", "single", 89, ["rose"], { wrap: "Pink", ribbon: "Pink" }, { featured: true }),
+  pipe("tulip", "Tulip", "single", 89, ["tulip"], { wrap: "Pink", ribbon: "Pink" }, { featured: true }),
+  pipe("lily", "Lily", "single", 89, ["lily"], { wrap: "Lavender", ribbon: "Lavender" }),
+  pipe("daisy", "Daisy", "single", 89, ["daisy"], { wrap: "Yellow", ribbon: "Gold" }),
+  pipe("custom-flower", "Custom Flower", "single", 89, ["custom"], { wrap: "Lavender", ribbon: "Lavender" }, {
     priceFrom: true,
     description: "Tell us the flower and colours you have in mind and we'll shape it by hand from pipe cleaners. Final price is confirmed on WhatsApp.",
   }),
 
-  pipe("sunflower-rose", "Sunflower + Rose", "double", 189, "assets/products/sunflower-rose.jpg", { featured: true }),
-  pipe("rose-tulip", "Rose + Tulip", "double", 189, "assets/products/rose-tulip.jpg"),
-  pipe("tulip-daisy", "Tulip + Daisy", "double", 189, "assets/products/tulip-daisy.jpg"),
-  pipe("lily-tulip", "Lily + Tulip", "double", 189, "assets/products/lily-tulip.jpg"),
-  pipe("sunflower-tulip", "Sunflower + Tulip", "double", 189, "assets/products/sunflower-tulip.jpg"),
-  pipe("rose-lily", "Rose + Lily", "double", 189, "assets/products/rose-lily.jpg"),
+  pipe("sunflower-rose", "Sunflower + Rose", "double", 189, ["sunflower", "rose"], { wrap: "Kraft", ribbon: "Twine" }, { featured: true }),
+  pipe("rose-tulip", "Rose + Tulip", "double", 189, ["rose", "tulip"], { wrap: "Pink", ribbon: "Pink" }),
+  pipe("tulip-daisy", "Tulip + Daisy", "double", 189, ["tulip", "daisy"], { wrap: "Pink", ribbon: "Pink" }),
+  pipe("lily-tulip", "Lily + Tulip", "double", 189, ["lily", "tulip"], { wrap: "Lavender", ribbon: "Lavender" }),
+  pipe("sunflower-tulip", "Sunflower + Tulip", "double", 189, ["sunflower", "tulip"], { wrap: "Yellow", ribbon: "Gold" }),
+  pipe("rose-lily", "Rose + Lily", "double", 189, ["rose", "lily"], { wrap: "Pink", ribbon: "Red" }),
 
-  pipe("sunflower-rose-tulip", "Sunflower + Rose + Tulip", "combo", 279, "assets/products/sunflower-rose-tulip.jpg", { featured: true }),
-  pipe("rose-tulip-daisy", "Rose + Tulip + Daisy", "combo", 279, "assets/products/rose-tulip-daisy.jpg"),
-  pipe("tulip-lily-rose", "Tulip + Lily + Rose", "combo", 279, "assets/products/tulip-lily-rose.jpg"),
-  pipe("sunflower-lily-tulip", "Sunflower + Lily + Tulip", "combo", 279, "assets/products/sunflower-lily-tulip.jpg"),
-  pipe("rose-daisy-lily", "Rose + Daisy + Lily", "combo", 279, "assets/products/rose-daisy-lily.jpg"),
-  pipe("tulip-daisy-custom", "Tulip + Daisy + Custom Flower", "combo", 279, "assets/products/tulip-daisy-custom.jpg"),
+  pipe("sunflower-rose-tulip", "Sunflower + Rose + Tulip", "combo", 279, ["sunflower", "rose", "tulip"], { wrap: "Kraft", ribbon: "Twine" }, { featured: true }),
+  pipe("rose-tulip-daisy", "Rose + Tulip + Daisy", "combo", 279, ["rose", "tulip", "daisy"], { wrap: "Pink", ribbon: "Pink" }),
+  pipe("tulip-lily-rose", "Tulip + Lily + Rose", "combo", 279, ["tulip", "lily", "rose"], { wrap: "Lavender", ribbon: "Lavender" }),
+  pipe("sunflower-lily-tulip", "Sunflower + Lily + Tulip", "combo", 279, ["sunflower", "lily", "tulip"], { wrap: "Yellow", ribbon: "Gold" }),
+  pipe("rose-daisy-lily", "Rose + Daisy + Lily", "combo", 279, ["rose", "daisy", "lily"], { wrap: "Pink", ribbon: "Red" }),
+  pipe("tulip-daisy-custom", "Tulip + Daisy + Custom Flower", "combo", 279, ["tulip", "daisy", "custom"], { wrap: "Lavender", ribbon: "Lavender" }),
 
   {
     id: "ribbon-rose-bouquet", name: "Ribbon Rose Bouquet", category: "ribbon", price: 90, priceFrom: true, featured: true,

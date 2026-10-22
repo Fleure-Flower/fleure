@@ -58,12 +58,13 @@
   </section>
 </main>
 <script src="assets/js/data.js"></script>
+<script src="assets/js/bouquet.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
   document.querySelectorAll("[data-wa]").forEach((a) => (a.href = waLink(a.dataset.wa)));
   document.getElementById("occasions").innerHTML = [
     ["Birthday", "sunflower-rose-tulip"], ["Anniversary", "ribbon-rose-bouquet"], ["Graduation", "lily-tulip"], ["Valentine's", "rose"],
-  ].map(([label, id]) => `<div class="cat-tile"><img src="${byId(id).images[0]}" alt="" loading="lazy"><div class="cat-label"><h3>${label}</h3></div></div>`).join("");
+  ].map(([label, id]) => `<div class="cat-tile"><img src="${productImage(byId(id))}" alt="" loading="lazy"><div class="cat-label"><h3>${label}</h3></div></div>`).join("");
 
   const form = document.getElementById("custom");
   form.addEventListener("submit", (e) => {

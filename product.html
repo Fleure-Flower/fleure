@@ -20,6 +20,7 @@
   </section>
 </main>
 <script src="assets/js/data.js"></script>
+<script src="assets/js/bouquet.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
   const params = new URLSearchParams(location.search);
@@ -35,7 +36,7 @@
     const group = (key, values) => `
       <fieldset class="option-group">
         <legend>${labels[key]}</legend>
-        <div class="swatches">${values.map((v, i) => `<label class="swatch"><input type="radio" name="${key}" value="${esc(v)}"${i === 0 ? " checked" : ""}><span>${esc(v)}</span></label>`).join("")}</div>
+        <div class="swatches">${values.map((v, i) => `<label class="swatch"><input type="radio" name="${key}" value="${esc(v)}"${(p.look && p.look[key] ? v === p.look[key] : i === 0) ? " checked" : ""}><span>${esc(v)}</span></label>`).join("")}</div>
       </fieldset>`;
 
     const sizeBlock = p.sizes ? `
@@ -52,7 +53,7 @@
     root.innerHTML = `
       <div class="pdp">
         <div>
-          <img class="gallery-main" id="main-img" src="${p.images[0]}" alt="${esc(p.name)} bouquet" width="600" height="750">
+          <img class="gallery-main" id="main-img" src="${productImage(p)}" alt="${esc(p.name)} bouquet" width="600" height="750">
           ${p.images.length > 1 ? `<div class="thumbs">${p.images.map((src, i) => `<button type="button" data-src="${src}" aria-label="Show photo ${i + 1}"${i === 0 ? ' aria-current="true"' : ""}><img src="${src}" alt="" loading="lazy"></button>`).join("")}</div>` : ""}
         </div>
         <div>
@@ -108,10 +109,11 @@
         options.Finish = form.finish.value;
       }
       for (const k of Object.keys(p.options || {})) options[{ flower: "Flower", wrap: "Wrap", ribbon: "Ribbon" }[k]] = form[k].value;
-      return { id: p.id, name, price, image: p.images[0], qty: Math.min(20, Math.max(1, parseInt(qty.value, 10) || 1)), options, note: note.value.trim() };
+      return { id: p.id, name, price, image: p.flowers ? productImage(p, form.wrap.value, form.ribbon.value) : p.images[0], qty: Math.min(20, Math.max(1, parseInt(qty.value, 10) || 1)), options, note: note.value.trim() };
     }
     function update() {
       const item = current();
+      if (p.flowers) document.getElementById("main-img").src = item.image;
       if (p.sizes) document.getElementById("price").textContent = rupees(item.price);
       document.getElementById("note-count").textContent = `${note.value.length}/200`;
       document.getElementById("wa-now").href = waLink(orderMessage([item]));

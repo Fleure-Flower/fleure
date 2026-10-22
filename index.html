@@ -73,6 +73,7 @@
   </section>
 </main>
 <script src="assets/js/data.js"></script>
+<script src="assets/js/bouquet.js"></script>
 <script src="assets/js/app.js"></script>
 <script>
   document.querySelectorAll("[data-shop-name]").forEach((el) => (el.textContent = SHOP.name));
@@ -83,7 +84,7 @@
   const catImage = { single: "tulip", double: "rose-tulip", combo: "sunflower-rose-tulip", ribbon: "ribbon-rose-bouquet", grand: "grand-lily-red-white", special: "teddy-bouquet" };
   document.getElementById("categories").innerHTML = CATEGORIES.map((c) => `
     <a class="cat-tile" href="shop.html#${c.id}">
-      <img src="${byId(catImage[c.id]).images[0]}" alt="" loading="lazy" width="300" height="375">
+      <img src="${productImage(byId(catImage[c.id]))}" alt="" loading="lazy" width="300" height="375">
       <div class="cat-label"><h3>${esc(c.short)}</h3><span class="price">${esc(c.priceLabel)}</span></div>
     </a>`).join("");
 

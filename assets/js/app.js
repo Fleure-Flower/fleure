@@ -188,10 +188,13 @@
 
   /* ---------- Product cards ---------- */
   window.priceLabel = (p) => (p.price == null ? "Ask us" : (p.priceFrom ? (p.sizes ? "from " : "") + rupees(p.price) + (p.sizes ? "" : "+") : rupees(p.price)));
+  // Drawn bouquets use their default wrap and ribbon unless told otherwise.
+  window.productImage = (p, wrap, ribbon) =>
+    p.flowers ? bouquetSrc(p.flowers, wrap || p.look.wrap, ribbon || p.look.ribbon) : p.images[0];
   window.productCard = (p) => `
     <article class="card">
       <a class="card-link" href="product.html?id=${p.id}">
-        <img class="card-img" src="${p.images[0]}" alt="${esc(p.name)} bouquet" loading="lazy" width="300" height="375">
+        <img class="card-img" src="${productImage(p)}" alt="${esc(p.name)} bouquet" loading="lazy" width="300" height="375">
         <h3>${esc(p.name)}</h3>
       </a>
       <span class="price">${priceLabel(p)}</span>
