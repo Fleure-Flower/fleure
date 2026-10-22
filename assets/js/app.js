@@ -189,7 +189,13 @@
   /* ---------- Product cards ---------- */
   window.priceLabel = (p) => (p.price == null ? "Ask us" : (p.priceFrom ? (p.kind === "ribbon" ? "from " : "") + rupees(p.price) + (p.kind === "ribbon" ? "" : "+") : rupees(p.price)));
   // Drawn bouquet for the given choices; cards show a real photo when there is one.
-  window.drawBouquet = (p, choice) => bouquetSrc(Object.assign({ kind: p.kind, flowers: p.flowers }, p.look, choice || {}));
+  // Real photos exist for red ribbon roses with a red bow: every wrap, with and without glitter, 1 to 30 roses.
+  const sizePhoto = (o) => (o.kind === "ribbon" && o.colours === "Red" && o.ribbon === "Red" && o.count >= 1 && o.count <= 30
+    ? `assets/sizes/${o.wrap.toLowerCase()}-${o.glitter ? "glitter" : "plain"}-${o.count}.jpg` : null);
+  window.drawBouquet = (p, choice) => {
+    const o = Object.assign({ kind: p.kind, flowers: p.flowers }, p.look, choice || {});
+    return sizePhoto(o) || bouquetSrc(o);
+  };
   window.productImage = (p) => (p.images.length ? p.images[0] : drawBouquet(p));
   window.productCard = (p) => `
     <article class="card">
