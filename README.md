@@ -11,3 +11,5 @@ Live site: https://sahil-sinha-11.github.io/flower-website/
 - **Product images:** `assets/products/`
 
 No build step: push to `main` and GitHub Pages publishes it.
+
+Before pushing, run `python3 scripts/stamp_version.py` so browsers load the newest CSS and JS.

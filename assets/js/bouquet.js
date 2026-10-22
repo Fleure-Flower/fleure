@@ -7,7 +7,7 @@
   const WRAPS = {
     White: { fill: "#fbfaf6", shade: "#ece8df", edge: "#c9ab6e", line: "#e3ddd1" },
     Black: { fill: "#232022", shade: "#141213", edge: "#c9ab6e", line: "#3a3537" },
-    Newspaper: { fill: "#dcc9a3", shade: "#c9b48b", edge: "#b39b6e", line: "#c4af86", print: true },
+    Newspaper: { fill: "#e6d8bb", shade: "#cdbb97", edge: "#a8916a", line: "#cdbb97", print: true },
   };
   const RIBBONS = {
     Red: "#d1202f", Burgundy: "#8c1626", Pink: "#ee93ab", Lavender: "#a585d6",
@@ -62,21 +62,35 @@
   };
 
   // ---------- Satin ribbon rose, about 110px across ----------
+  // Satin shading: dark at the heart of the rose, bright along the rolled petal edges
+  function roseGradients() {
+    return Object.entries(ROSE).map(([name, [base, hi, lo]]) => `
+      <radialGradient id="rg-${name}" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="58">
+        <stop offset="0" stop-color="${shade(lo, -0.15)}"/><stop offset=".45" stop-color="${base}"/>
+        <stop offset=".82" stop-color="${hi}"/><stop offset="1" stop-color="${base}"/></radialGradient>`).join("");
+  }
+
   function ribbonRose(colour, glitter, rand) {
-    const [base, hi, lo] = ROSE[colour] || ROSE.red;
-    const outer = petals(7, () => `<path d="M0 -6 C 30 -12 46 -34 26 -50 C 12 -58 -12 -58 -26 -50 C -46 -34 -30 -12 0 -6Z" fill="${base}" stroke="${lo}" stroke-width="2.5"/>`);
-    const mid = `<g transform="rotate(25)">${petals(5, () => `<path d="M0 -4 C 22 -8 32 -24 18 -36 C 8 -42 -8 -42 -18 -36 C -32 -24 -22 -8 0 -4Z" fill="${shade(base, 0.08)}" stroke="${lo}" stroke-width="2"/>`)}</g>`;
-    const swirl = `<path d="M0 2 C 0 -6 -10 -6 -10 2 C -10 12 6 14 12 4 C 18 -8 6 -18 -6 -17 C -20 -14 -24 2 -16 12" fill="none" stroke="${lo}" stroke-width="3.5" stroke-linecap="round"/>`;
-    const sheen = `<path d="M-30 -30 C -18 -44 8 -46 22 -36" fill="none" stroke="${hi}" stroke-width="4" stroke-linecap="round" opacity=".7"/>`;
+    const c = ROSE[colour] ? colour : "red";
+    const [base, hi, lo] = ROSE[c];
+    const fill = `url(#rg-${c})`;
+    const petal = (w, h) => `<path d="M0 0 C ${w} -4 ${w * 1.45} ${-h * 0.55} ${w} ${-h * 0.9} C ${w * 0.6} ${-h * 1.12} ${-w * 0.6} ${-h * 1.12} ${-w} ${-h * 0.9} C ${-w * 1.45} ${-h * 0.55} ${-w} -4 0 0Z" fill="${fill}" stroke="${lo}" stroke-width="1.6"/>
+      <path d="M${-w * 0.85} ${-h * 0.92} C ${-w * 0.4} ${-h * 1.08} ${w * 0.4} ${-h * 1.08} ${w * 0.85} ${-h * 0.92}" fill="none" stroke="${hi}" stroke-width="2.6" stroke-linecap="round" opacity=".85"/>`;
+    const outer = petals(5, () => petal(30, 54));
+    const mid = `<g transform="rotate(36)">${petals(5, () => petal(22, 38))}</g>`;
+    const inner = `<g transform="rotate(12)">${petals(3, () => petal(15, 24))}</g>`;
+    const bud = `<ellipse rx="13" ry="11" fill="${lo}"/>
+      <path d="M-11 2 C -10 -10 8 -12 11 -2 C 13 6 2 11 -5 7" fill="none" stroke="${hi}" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M-5 3 C -4 -4 5 -4 5 1" fill="none" stroke="${base}" stroke-width="2.4" stroke-linecap="round"/>`;
     let sparkle = "";
     if (glitter) {
-      for (let i = 0; i < 26; i++) {
-        const a = rand() * Math.PI * 2, r = Math.sqrt(rand()) * 48;
-        sparkle += `<circle cx="${(Math.cos(a) * r).toFixed(1)}" cy="${(Math.sin(a) * r).toFixed(1)}" r="${(0.8 + rand() * 1.4).toFixed(1)}" fill="${colour === "white" ? "#b9c2cf" : "#fff"}" opacity="${(0.55 + rand() * 0.45).toFixed(2)}"/>`;
+      for (let i = 0; i < 30; i++) {
+        const a = rand() * Math.PI * 2, r = Math.sqrt(rand()) * 50;
+        sparkle += `<circle cx="${(Math.cos(a) * r).toFixed(1)}" cy="${(Math.sin(a) * r).toFixed(1)}" r="${(0.7 + rand() * 1.3).toFixed(1)}" fill="${c === "white" ? "#aab4c2" : "#fff"}" opacity="${(0.5 + rand() * 0.5).toFixed(2)}"/>`;
       }
     }
-    const gem = `<circle r="5.5" fill="#f7f8fb" stroke="#9aa3b0" stroke-width="1.5"/><circle cx="-1.5" cy="-1.5" r="1.8" fill="#fff"/>`;
-    return outer + mid + `<circle r="20" fill="${base}"/>` + swirl + sheen + sparkle + gem;
+    const gem = `<circle r="3.6" fill="#f7f8fb" stroke="#9aa3b0" stroke-width="1"/><circle cx="-1" cy="-1" r="1.2" fill="#fff"/>`;
+    return outer + mid + inner + bud + sparkle + gem;
   }
 
   // Flower positions inside the dome, back to front: [x, y, size]
@@ -98,13 +112,17 @@
   }
 
   function printPattern() {
-    // Rows of short dashes that read as newspaper text, plus a headline bar
+    // Columns of fine grey lines that read as newsprint, with an occasional headline
     let lines = "";
-    for (let y = 6; y < 60; y += 6) {
-      lines += `<path d="M2 ${y} h${10 + (y % 7)} M${16 + (y % 5)} ${y} h${14 + (y % 9)}" stroke="#6b5a43" stroke-width="1.6" opacity=".35"/>`;
+    for (let col = 0; col < 2; col++) {
+      for (let y = 10; y < 78; y += 4) {
+        const len = 26 - ((y * 7 + col * 5) % 9);
+        lines += `<path d="M${3 + col * 33} ${y} h${len}" stroke="#5b4b38" stroke-width="1.1" opacity=".38"/>`;
+      }
     }
-    return `<pattern id="print" width="48" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(-8)">
-      <rect width="48" height="60" fill="#dcc9a3"/>${lines}<rect x="2" y="0" width="30" height="3" fill="#6b5a43" opacity=".35"/></pattern>`;
+    return `<pattern id="print" width="68" height="84" patternUnits="userSpaceOnUse" patternTransform="rotate(-6)">
+      <rect width="68" height="84" fill="#e6d8bb"/>${lines}
+      <rect x="3" y="2" width="44" height="4" fill="#4a3d2d" opacity=".45"/></pattern>`;
   }
 
   // Tall pointed sheets behind and around the flowers
@@ -181,6 +199,7 @@
         <filter id="fuzz" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="2.6"/></filter>
         <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#3b2a2f" flood-opacity=".22"/></filter>
         ${w.print ? printPattern() : ""}
+        ${o.kind === "ribbon" ? roseGradients() : ""}
       </defs>
       <rect width="400" height="500" fill="url(#bg)"/>
       <ellipse cx="200" cy="486" rx="86" ry="9" fill="#3b2a2f" opacity=".12"/>
