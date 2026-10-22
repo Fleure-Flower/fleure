@@ -26,9 +26,9 @@
           </div>
         </div>
         <div class="hero-images">
-          <img src="assets/products/ribbon-pink-glitter.jpg" alt="Pink glitter satin ribbon rose bouquet" width="300" height="400">
-          <img src="assets/products/lily-bouquet-red-white.jpg" alt="Red and white pipe-cleaner lily bouquet" width="300" height="400">
-          <img src="assets/products/ribbon-blue-silver.jpg" alt="Blue and silver satin ribbon rose bouquet" width="300" height="400">
+          <img src="assets/photos/rose-blue-white_white-wrap.jpg" alt="Blue and white satin ribbon roses in white wrap" width="300" height="400">
+          <img src="assets/photos/lily-red-white_white-wrap.jpg" alt="Red and white pipe-cleaner lily bouquet" width="300" height="400">
+          <img src="assets/photos/rose-black-white_newspaper-wrap.jpg" alt="Black and white satin ribbon roses in newspaper wrap" width="300" height="400">
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@
 
   document.getElementById("featured").innerHTML = PRODUCTS.filter((p) => p.featured).map(productCard).join("");
 
-  const catImage = { single: "tulip", double: "rose-tulip", combo: "sunflower-rose-tulip", ribbon: "ribbon-rose-bouquet", grand: "grand-lily-red-white", special: "teddy-bouquet" };
+  const catImage = { single: "tulip", double: "rose-tulip", combo: "sunflower-rose-tulip", ribbon: "red-ribbon-roses", grand: "grand-lily-red-white", special: "teddy-bouquet" };
   document.getElementById("categories").innerHTML = CATEGORIES.map((c) => `
     <a class="cat-tile" href="shop.html#${c.id}">
       <img src="${productImage(byId(catImage[c.id]))}" alt="" loading="lazy" width="300" height="375">

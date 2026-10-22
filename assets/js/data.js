@@ -18,85 +18,108 @@ window.CATEGORIES = [
   { id: "special", name: "Special Occasion Bouquets", short: "Special", priceLabel: "Ask us" },
 ];
 
-const PIPE = "Handmade from soft pipe cleaners (chenille stems), wrapped and tied with satin ribbon.";
-const pipeOptions = {
-  wrap: ["Kraft", "Pink", "Lavender", "Yellow"],
-  ribbon: ["Pink", "Lavender", "Gold", "Red", "Twine"],
+const WRAPS = ["White", "Black", "Newspaper"];
+const RIBBONS = ["Red", "Burgundy", "Pink", "Lavender", "Blue", "Gold", "Black", "White"];
+
+// Pipe-cleaner prices by number of flowers. Sizes not listed are priced on WhatsApp.
+const PIPE_PRICES = { 1: 89, 2: 189, 3: 279 };
+
+// Ribbon rose prices by number of roses. Sizes not listed are priced on WhatsApp.
+const ROSE_PRICES = {
+  1: { plain: 90, glitter: 110 },
+  3: { plain: 250, glitter: 270 },
+  6: { plain: 480, glitter: 500 },
+  7: { plain: 550, glitter: 570 },
+  10: { plain: 850, glitter: 870 }, // glitter price assumed (+₹20), not visible in the reference sheet
+  15: { plain: 1300, glitter: 1320 },
+  20: { plain: 1750, glitter: 1770 },
 };
 
-// Pipe-cleaner bouquets are drawn by assets/js/bouquet.js, so the picture follows the chosen wrap and ribbon.
-function pipe(id, name, category, price, flowers, look, extra) {
+const PIPE = "Handmade from soft pipe cleaners (chenille stems), wrapped and tied with a double satin bow.";
+
+// Pipe-cleaner bouquets are drawn by assets/js/bouquet.js, so the picture follows
+// the chosen wrap, ribbon and number of flowers (up to 20).
+function pipe(id, name, category, flowers, look, extra) {
+  const count = Math.max(flowers.length, { single: 1, double: 2, combo: 3 }[category]);
   return Object.assign({
-    id, name, category, price, flowers, look, images: [],
-    description: `${name} bouquet. ${PIPE} Made to last, with no water or care needed.`,
-    material: "Pipe cleaner",
-    options: pipeOptions,
+    id, name, category, kind: "pipe", flowers, images: [],
+    look: Object.assign({ count }, look),
+    minCount: flowers.length, maxCount: 20,
+    price: PIPE_PRICES[count],
+    priceFor: (o) => PIPE_PRICES[o.count] ?? null,
+    description: `${name} bouquet. ${PIPE} Choose how many flowers you'd like, up to 20. Made to last, with no water or care needed.`,
+    options: { wrap: WRAPS, ribbon: RIBBONS },
+  }, extra || {});
+}
+
+// Satin ribbon rose bouquets, up to 30 roses, in any colour mix.
+function roses(id, name, colours, look, photos, extra) {
+  return Object.assign({
+    id, name, category: "ribbon", kind: "ribbon", priceFrom: true, price: 90,
+    images: photos.map((p) => `assets/photos/${p}.jpg`),
+    look: Object.assign({ count: 20, glitter: false, colours }, look),
+    minCount: 1, maxCount: 30,
+    priceFor: (o) => (ROSE_PRICES[o.count] ? ROSE_PRICES[o.count][o.glitter ? "glitter" : "plain"] : null),
+    description: "Roses folded by hand from satin ribbon, each finished with a rhinestone centre and tied with a double satin bow. Choose your colours, how many roses (up to 30), and glitter for extra sparkle.",
+    options: { colours: ["Red", "Burgundy", "Pink", "Blue", "White", "Black", "Red & White", "Black & White", "Blue & White"], wrap: WRAPS, ribbon: RIBBONS },
   }, extra || {});
 }
 
 window.PRODUCTS = [
-  pipe("sunflower", "Sunflower", "single", 89, ["sunflower"], { wrap: "Kraft", ribbon: "Twine" }, { featured: true }),
-  pipe("rose", "Rose", "single", 89, ["rose"], { wrap: "Pink", ribbon: "Pink" }, { featured: true }),
-  pipe("tulip", "Tulip", "single", 89, ["tulip"], { wrap: "Pink", ribbon: "Pink" }, { featured: true }),
-  pipe("lily", "Lily", "single", 89, ["lily"], { wrap: "Lavender", ribbon: "Lavender" }),
-  pipe("daisy", "Daisy", "single", 89, ["daisy"], { wrap: "Yellow", ribbon: "Gold" }),
-  pipe("custom-flower", "Custom Flower", "single", 89, ["custom"], { wrap: "Lavender", ribbon: "Lavender" }, {
+  pipe("sunflower", "Sunflower", "single", ["sunflower"], { wrap: "Newspaper", ribbon: "Black" }, { featured: true }),
+  pipe("rose", "Rose", "single", ["rose"], { wrap: "White", ribbon: "Red" }, { featured: true }),
+  pipe("tulip", "Tulip", "single", ["tulip"], { wrap: "White", ribbon: "Pink" }),
+  pipe("lily", "Lily", "single", ["lily"], { wrap: "White", ribbon: "Pink" }),
+  pipe("daisy", "Daisy", "single", ["daisy"], { wrap: "Black", ribbon: "White" }),
+  pipe("custom-flower", "Custom Flower", "single", ["custom"], { wrap: "White", ribbon: "Lavender" }, {
     priceFrom: true,
     description: "Tell us the flower and colours you have in mind and we'll shape it by hand from pipe cleaners. Final price is confirmed on WhatsApp.",
   }),
 
-  pipe("sunflower-rose", "Sunflower + Rose", "double", 189, ["sunflower", "rose"], { wrap: "Kraft", ribbon: "Twine" }, { featured: true }),
-  pipe("rose-tulip", "Rose + Tulip", "double", 189, ["rose", "tulip"], { wrap: "Pink", ribbon: "Pink" }),
-  pipe("tulip-daisy", "Tulip + Daisy", "double", 189, ["tulip", "daisy"], { wrap: "Pink", ribbon: "Pink" }),
-  pipe("lily-tulip", "Lily + Tulip", "double", 189, ["lily", "tulip"], { wrap: "Lavender", ribbon: "Lavender" }),
-  pipe("sunflower-tulip", "Sunflower + Tulip", "double", 189, ["sunflower", "tulip"], { wrap: "Yellow", ribbon: "Gold" }),
-  pipe("rose-lily", "Rose + Lily", "double", 189, ["rose", "lily"], { wrap: "Pink", ribbon: "Red" }),
+  pipe("sunflower-rose", "Sunflower + Rose", "double", ["sunflower", "rose"], { wrap: "Newspaper", ribbon: "Red" }, { featured: true }),
+  pipe("rose-tulip", "Rose + Tulip", "double", ["rose", "tulip"], { wrap: "White", ribbon: "Pink" }),
+  pipe("tulip-daisy", "Tulip + Daisy", "double", ["tulip", "daisy"], { wrap: "White", ribbon: "Pink" }),
+  pipe("lily-tulip", "Lily + Tulip", "double", ["lily", "tulip"], { wrap: "White", ribbon: "Lavender" }),
+  pipe("sunflower-tulip", "Sunflower + Tulip", "double", ["sunflower", "tulip"], { wrap: "Newspaper", ribbon: "Gold" }),
+  pipe("rose-lily", "Rose + Lily", "double", ["rose", "lily"], { wrap: "Black", ribbon: "Red" }),
 
-  pipe("sunflower-rose-tulip", "Sunflower + Rose + Tulip", "combo", 279, ["sunflower", "rose", "tulip"], { wrap: "Kraft", ribbon: "Twine" }, { featured: true }),
-  pipe("rose-tulip-daisy", "Rose + Tulip + Daisy", "combo", 279, ["rose", "tulip", "daisy"], { wrap: "Pink", ribbon: "Pink" }),
-  pipe("tulip-lily-rose", "Tulip + Lily + Rose", "combo", 279, ["tulip", "lily", "rose"], { wrap: "Lavender", ribbon: "Lavender" }),
-  pipe("sunflower-lily-tulip", "Sunflower + Lily + Tulip", "combo", 279, ["sunflower", "lily", "tulip"], { wrap: "Yellow", ribbon: "Gold" }),
-  pipe("rose-daisy-lily", "Rose + Daisy + Lily", "combo", 279, ["rose", "daisy", "lily"], { wrap: "Pink", ribbon: "Red" }),
-  pipe("tulip-daisy-custom", "Tulip + Daisy + Custom Flower", "combo", 279, ["tulip", "daisy", "custom"], { wrap: "Lavender", ribbon: "Lavender" }),
+  pipe("sunflower-rose-tulip", "Sunflower + Rose + Tulip", "combo", ["sunflower", "rose", "tulip"], { wrap: "Newspaper", ribbon: "Black" }),
+  pipe("rose-tulip-daisy", "Rose + Tulip + Daisy", "combo", ["rose", "tulip", "daisy"], { wrap: "White", ribbon: "Red" }, { featured: true }),
+  pipe("tulip-lily-rose", "Tulip + Lily + Rose", "combo", ["tulip", "lily", "rose"], { wrap: "White", ribbon: "Pink" }),
+  pipe("sunflower-lily-tulip", "Sunflower + Lily + Tulip", "combo", ["sunflower", "lily", "tulip"], { wrap: "Newspaper", ribbon: "Gold" }),
+  pipe("rose-daisy-lily", "Rose + Daisy + Lily", "combo", ["rose", "daisy", "lily"], { wrap: "Black", ribbon: "Red" }),
+  pipe("tulip-daisy-custom", "Tulip + Daisy + Custom Flower", "combo", ["tulip", "daisy", "custom"], { wrap: "White", ribbon: "Lavender" }),
 
-  {
-    id: "ribbon-rose-bouquet", name: "Ribbon Rose Bouquet", category: "ribbon", price: 90, priceFrom: true, featured: true,
-    images: [
-      "assets/products/ribbon-pink-glitter.jpg", "assets/products/ribbon-blue-silver.jpg", "assets/products/ribbon-red-20.jpg",
-      "assets/products/ribbon-red-1.jpg", "assets/products/ribbon-red-6.jpg", "assets/products/ribbon-red-10.jpg",
-    ],
-    description: "Roses folded by hand from satin ribbon, finished with baby's breath and a satin bow. Choose how many roses, and add glitter for extra sparkle.",
-    material: "Satin ribbon",
-    // Price by number of roses. Glitter adds the difference shown.
-    sizes: [
-      { count: 1, price: 90, glitter: 110 },
-      { count: 3, price: 250, glitter: 270 },
-      { count: 6, price: 480, glitter: 500 },
-      { count: 7, price: 550, glitter: 570 },
-      { count: 10, price: 850, glitter: 870 }, // glitter price assumed (+₹20), not visible in the reference sheet
-      { count: 15, price: 1300, glitter: 1320 },
-      { count: 20, price: 1750, glitter: 1770 },
-    ],
-    options: { flower: ["Red", "Pink", "Blue & Silver"], wrap: ["Black & Gold", "Pink", "Grey"], ribbon: ["Red", "Pink", "Silver"] },
-  },
+  roses("red-ribbon-roses", "Red Ribbon Roses", "Red", { wrap: "White", ribbon: "Red" },
+    ["rose-red_white-wrap", "rose-red_black-wrap", "rose-red-glitter_white-wrap", "rose-red-glitter_black-wrap"], { featured: true }),
+  roses("blue-white-ribbon-roses", "Blue & White Ribbon Roses", "Blue & White", { wrap: "White", ribbon: "Blue" },
+    ["rose-blue-white_white-wrap", "rose-blue-white-glitter_white-wrap"], { featured: true }),
+  roses("black-white-ribbon-roses", "Black & White Ribbon Roses", "Black & White", { wrap: "Black", ribbon: "White", glitter: true },
+    ["rose-black-white_black-wrap", "rose-black-white_white-wrap", "rose-black-white_newspaper-wrap"]),
+  roses("red-white-ribbon-roses", "Red & White Ribbon Roses", "Red & White", { wrap: "Newspaper", ribbon: "Red", glitter: true },
+    ["rose-red-white_newspaper-wrap", "rose-red-white_white-wrap"]),
+  roses("white-ribbon-roses", "White Ribbon Roses", "White", { wrap: "Black", ribbon: "White" },
+    ["rose-white_black-wrap", "rose-white-glitter_black-wrap"]),
+  roses("black-ribbon-roses", "Black Ribbon Roses", "Black", { wrap: "White", ribbon: "Black" },
+    ["rose-black_white-wrap", "rose-black-glitter_white-wrap"]),
 
   {
-    id: "grand-lily-red-white", name: "Grand Lily Bouquet, Red & White", category: "grand", price: null,
-    images: ["assets/products/lily-bouquet-red-white.jpg"],
-    description: "A full, generous bouquet of red and white pipe-cleaner lilies in grey and gold wrap. Price depends on size; ask us on WhatsApp.",
-    material: "Pipe cleaner", options: { wrap: ["Grey & Gold", "Kraft", "Pink"] },
+    id: "grand-lily-red-white", name: "Grand Lily Bouquet, Red & White", category: "grand", price: null, featured: true,
+    images: ["assets/photos/lily-red-white_white-wrap.jpg", "assets/products/lily-bouquet-red-white.jpg"],
+    description: "A full, generous bouquet of red and white pipe-cleaner lilies in white and gold wrap, tied with a double satin bow. Price depends on size; ask us on WhatsApp.",
+    options: { wrap: WRAPS, ribbon: RIBBONS },
   },
   {
     id: "grand-lily-blue-white", name: "Grand Lily Bouquet, Blue & White", category: "grand", price: null,
     images: ["assets/products/lily-bouquet-blue-white.jpg"],
     description: "Blue and white pipe-cleaner lilies arranged into a full bouquet. Price depends on size; ask us on WhatsApp.",
-    material: "Pipe cleaner", options: { wrap: ["Grey & Gold", "Kraft", "Pink"] },
+    options: { wrap: WRAPS, ribbon: RIBBONS },
   },
 
-  { id: "chocolate-bouquet", name: "Chocolate Bouquet", category: "special", price: null, images: ["assets/products/chocolate.jpg"], description: "A sweet surprise for your sweet people: chocolates wrapped like a bouquet.", material: "Non-flower", options: { wrap: ["Black", "Pink"], ribbon: ["Pink", "Gold"] } },
-  { id: "teddy-bouquet", name: "Teddy Bouquet", category: "special", price: null, images: ["assets/products/teddy.jpg"], description: "Cute, cuddly and full of love: a soft teddy wrapped with baby's breath.", material: "Non-flower", options: { wrap: ["Pink", "Black"], ribbon: ["Pink", "Gold"] } },
-  { id: "photo-bouquet", name: "Photo Bouquet", category: "special", price: null, images: ["assets/products/photo.jpg"], description: "Memories wrapped with love. Send us your photos on WhatsApp and we'll arrange them into a bouquet.", material: "Non-flower", options: { wrap: ["Black", "Pink"], ribbon: ["Pink", "Gold"] } },
-  { id: "snack-bouquet", name: "Snack Bouquet", category: "special", price: null, images: ["assets/products/snack.jpg"], description: "Tasty, fun and perfect for everyone: favourite snacks wrapped like a bouquet.", material: "Non-flower", options: { wrap: ["Black", "Pink"], ribbon: ["Pink", "Gold"] } },
+  { id: "chocolate-bouquet", name: "Chocolate Bouquet", category: "special", price: null, images: ["assets/products/chocolate.jpg"], description: "A sweet surprise for your sweet people: chocolates wrapped like a bouquet.", options: { wrap: WRAPS, ribbon: RIBBONS } },
+  { id: "teddy-bouquet", name: "Teddy Bouquet", category: "special", price: null, images: ["assets/products/teddy.jpg"], description: "Cute, cuddly and full of love: a soft teddy wrapped with baby's breath.", options: { wrap: WRAPS, ribbon: RIBBONS } },
+  { id: "photo-bouquet", name: "Photo Bouquet", category: "special", price: null, images: ["assets/products/photo.jpg"], description: "Memories wrapped with love. Send us your photos on WhatsApp and we'll arrange them into a bouquet.", options: { wrap: WRAPS, ribbon: RIBBONS } },
+  { id: "snack-bouquet", name: "Snack Bouquet", category: "special", price: null, images: ["assets/products/snack.jpg"], description: "Tasty, fun and perfect for everyone: favourite snacks wrapped like a bouquet.", options: { wrap: WRAPS, ribbon: RIBBONS } },
 ];
 
 // Real customer reviews go here, e.g. { text: "...", name: "First name" }.

@@ -187,10 +187,10 @@
   };
 
   /* ---------- Product cards ---------- */
-  window.priceLabel = (p) => (p.price == null ? "Ask us" : (p.priceFrom ? (p.sizes ? "from " : "") + rupees(p.price) + (p.sizes ? "" : "+") : rupees(p.price)));
-  // Drawn bouquets use their default wrap and ribbon unless told otherwise.
-  window.productImage = (p, wrap, ribbon) =>
-    p.flowers ? bouquetSrc(p.flowers, wrap || p.look.wrap, ribbon || p.look.ribbon) : p.images[0];
+  window.priceLabel = (p) => (p.price == null ? "Ask us" : (p.priceFrom ? (p.kind === "ribbon" ? "from " : "") + rupees(p.price) + (p.kind === "ribbon" ? "" : "+") : rupees(p.price)));
+  // Drawn bouquet for the given choices; cards show a real photo when there is one.
+  window.drawBouquet = (p, choice) => bouquetSrc(Object.assign({ kind: p.kind, flowers: p.flowers }, p.look, choice || {}));
+  window.productImage = (p) => (p.images.length ? p.images[0] : drawBouquet(p));
   window.productCard = (p) => `
     <article class="card">
       <a class="card-link" href="product.html?id=${p.id}">

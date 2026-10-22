@@ -36,13 +36,13 @@
       <div class="form-grid">
         <div class="field"><label for="c-name">Full Name</label><input class="input" id="c-name" name="name" autocomplete="name" required><div class="error" id="e-name"></div></div>
         <div class="field"><label for="c-wrap">Wrapping Colour</label>
-          <select class="input" id="c-wrap" name="wrap"><option>Kraft</option><option>Pink</option><option>Lavender</option><option>Yellow</option><option>Black & Gold</option><option>Grey & Gold</option></select></div>
+          <select class="input" id="c-wrap" name="wrap"><option>White</option><option>Black</option><option>Newspaper</option></select></div>
         <div class="field"><label for="c-phone">WhatsApp Number</label><input class="input" id="c-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required><div class="error" id="e-phone"></div></div>
         <div class="field"><label for="c-ribbon">Ribbon Colour</label>
-          <select class="input" id="c-ribbon" name="ribbon"><option>Pink</option><option>Lavender</option><option>Gold</option><option>Red</option><option>Silver</option><option>Twine</option></select></div>
+          <select class="input" id="c-ribbon" name="ribbon"><option>Red</option><option>Burgundy</option><option>Pink</option><option>Lavender</option><option>Blue</option><option>Gold</option><option>Black</option><option>White</option></select></div>
         <div class="field"><label for="c-occasion">Occasion</label>
           <select class="input" id="c-occasion" name="occasion"><option>Birthday</option><option>Anniversary</option><option>Graduation</option><option>Valentine's</option><option>Just because</option><option>Other</option></select></div>
-        <div class="field"><label for="c-qty">Quantity</label><input class="input" id="c-qty" name="qty" type="number" min="1" max="50" value="1" inputmode="numeric"></div>
+        <div class="field"><label for="c-qty">Number of flowers</label><input class="input" id="c-qty" name="qty" type="number" min="1" max="30" value="1" inputmode="numeric"><div class="counter" style="text-align:left">Up to 20 pipe-cleaner flowers or 30 ribbon roses</div></div>
         <div class="field"><label for="c-flowers">Flower Selection</label>
           <select class="input" id="c-flowers" name="flowers"><option>Sunflower</option><option>Rose</option><option>Tulip</option><option>Lily</option><option>Daisy</option><option>Ribbon roses</option><option>Mixed (describe in note)</option></select></div>
         <div class="field"><label for="c-colours">Flower Colours</label><input class="input" id="c-colours" name="colours" placeholder="e.g. pink and white"></div>
@@ -63,7 +63,7 @@
 <script>
   document.querySelectorAll("[data-wa]").forEach((a) => (a.href = waLink(a.dataset.wa)));
   document.getElementById("occasions").innerHTML = [
-    ["Birthday", "sunflower-rose-tulip"], ["Anniversary", "ribbon-rose-bouquet"], ["Graduation", "lily-tulip"], ["Valentine's", "rose"],
+    ["Birthday", "sunflower-rose-tulip"], ["Anniversary", "red-ribbon-roses"], ["Graduation", "lily-tulip"], ["Valentine's", "rose"],
   ].map(([label, id]) => `<div class="cat-tile"><img src="${productImage(byId(id))}" alt="" loading="lazy"><div class="cat-label"><h3>${label}</h3></div></div>`).join("");
 
   const form = document.getElementById("custom");
@@ -79,7 +79,7 @@
     }
     if (!ok) return;
     const f = Object.fromEntries(new FormData(form));
-    const msg = `Hi ${SHOP.name}! I'd like a custom bouquet.\n\nName: ${f.name}\nWhatsApp: ${f.phone}\nOccasion: ${f.occasion}\nFlowers: ${f.flowers}\nFlower colours: ${f.colours || "-"}\nWrapping: ${f.wrap}\nRibbon: ${f.ribbon}\nQuantity: ${f.qty}\nGift note: ${f.note || "-"}\nDelivery: ${f.delivery}`;
+    const msg = `Hi ${SHOP.name}! I'd like a custom bouquet.\n\nName: ${f.name}\nWhatsApp: ${f.phone}\nOccasion: ${f.occasion}\nFlowers: ${f.flowers}\nFlower colours: ${f.colours || "-"}\nWrapping: ${f.wrap}\nRibbon: ${f.ribbon}\nNumber of flowers: ${f.qty}\nGift note: ${f.note || "-"}\nDelivery: ${f.delivery}`;
     window.open(waLink(msg), "_blank", "noopener");
   });
 </script>
