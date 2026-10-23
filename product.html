@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610231038">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610231042">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order on WhatsApp.">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610231038"></script>
-<script src="assets/js/bouquet.js?v=202610231038"></script>
-<script src="assets/js/app.js?v=202610231038"></script>
+<script src="assets/js/data.js?v=202610231042"></script>
+<script src="assets/js/bouquet.js?v=202610231042"></script>
+<script src="assets/js/app.js?v=202610231042"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const p = byId(params.get("id"));
@@ -51,7 +51,7 @@
     const countBlock = p.sizes ? `
       <fieldset class="option-group"><legend>Number of ${unit}</legend><div class="swatches">
         ${p.sizes.map((n) => `<label class="swatch"><input type="radio" name="count" value="${n}"${n === start.count ? " checked" : ""}><span>${n} ${n === 1 ? unit.slice(0, -1) : unit}</span></label>`).join("")}
-        </div><p class="muted" style="font-size:.8rem;margin:6px 0 0">Want a different number? We can make it for you, just ${contactLinks()}.</p></fieldset>` : drawn ? `
+        </div><p class="muted" id="mix-note" style="font-size:.8rem;margin:6px 0 0" hidden>Mixed colours start from ${p.mixMin} roses.</p><p class="muted" style="font-size:.8rem;margin:6px 0 0">Want a different number? We can make it for you, just ${contactLinks()}.</p></fieldset>` : drawn ? `
       <div class="field" style="margin-bottom:18px"><span class="field-label" id="count-label">Number of ${unit} (${p.minCount}–${p.maxCount})</span>
         <div class="qty" role="group" aria-labelledby="count-label">
           <button type="button" data-step="-1" aria-label="Fewer ${unit}">−</button>
@@ -143,7 +143,18 @@
       };
     }
 
+    // Mixed colours (e.g. Red & White) are not made in the smallest sizes.
+    function syncSizes() {
+      if (!p.sizes || !p.mixMin) return;
+      const mix = form.colours.value.includes(" & ");
+      const boxes = [...form.querySelectorAll('input[name="count"]')];
+      boxes.forEach((b) => { b.disabled = mix && Number(b.value) < p.mixMin; });
+      if (mix && Number(form.count.value) < p.mixMin) boxes.find((b) => Number(b.value) === p.mixMin).checked = true;
+      document.getElementById("mix-note").hidden = !mix;
+    }
+
     function update(e) {
+      syncSizes();
       const item = current();
       if (drawn && !(e && e.target === note)) {
         mainImg.src = item.image;

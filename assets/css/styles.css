@@ -171,6 +171,7 @@ p { margin: 0 0 1em; }
 .swatch input { position: absolute; opacity: 0; pointer-events: none; }
 .swatch span { display: inline-block; padding: 6px 14px; border-radius: var(--pill); border: 1.5px solid var(--line); background: var(--surface); font-size: .85rem; cursor: pointer; }
 .swatch input:checked + span { border-color: var(--rose-strong); background: var(--blush); color: var(--wine); font-weight: 600; }
+.swatch input:disabled + span { opacity: .4; cursor: not-allowed; text-decoration: line-through; }
 .swatch input:focus-visible + span { outline: 2px solid var(--plum); outline-offset: 2px; }
 .qty { display: inline-flex; align-items: center; border: 1.5px solid var(--line); border-radius: var(--pill); background: var(--surface); }
 .qty button { width: 40px; height: 40px; border: 0; background: none; cursor: pointer; font-size: 1.1rem; color: var(--plum); border-radius: 50%; }

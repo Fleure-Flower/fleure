@@ -59,7 +59,7 @@ function roses(id, name, colours, look, photos, extra) {
     id, name, category: "ribbon", kind: "ribbon", priceFrom: true, price: 90,
     images: photos.map((p) => `assets/photos/${p}.jpg`),
     look: Object.assign({ count: 20, glitter: false, colours }, look, { ribbon: colours }),
-    minCount: 1, maxCount: 20, sizes: [1, 3, 7, 10, 13, 17, 20], // the only sizes sold; other counts on request
+    minCount: 1, maxCount: 20, sizes: [1, 3, 7, 10, 13, 17, 20], mixMin: 7, // the only sizes sold (mixed colours from 7); other counts on request
     priceFor: (o) => (ROSE_PRICES[o.count] ? ROSE_PRICES[o.count][o.glitter ? "glitter" : "plain"] : null),
     description: "Roses folded by hand from satin ribbon, tied with a double satin bow in the same colour as the roses. Glitter roses get a rhinestone centre. Choose your colours, how many roses (1, 3, 7, 10, 13, 17 or 20), and glitter for extra sparkle.",
     options: { colours: ["Red", "Pink", "White", "Black", "Red & White", "Black & White"], wrap: WRAPS, ribbon: RIBBONS },
