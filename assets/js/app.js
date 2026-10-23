@@ -192,8 +192,14 @@
   // Real photos exist for red ribbon roses with a red bow: every wrap, with and without glitter, 1 to 30 roses.
   // Photos reuse this script's ?v= stamp so browsers fetch new copies after each update.
   const version = new URL(document.currentScript.src).searchParams.get("v") || "";
-  const sizePhoto = (o) => (o.kind === "ribbon" && o.colours === "Red" && o.ribbon === "Red" && o.count >= 1 && o.count <= 30
-    ? `assets/sizes/${o.wrap.toLowerCase()}-${o.glitter ? "glitter" : "plain"}-${o.count}.jpg?v=${version}` : null);
+  // Real photos by rose colour: folder under assets/sizes and the counts photographed (every wrap, with and without glitter).
+  const SIZE_PHOTOS = { Red: { dir: "", counts: { min: 1, max: 30 } }, Pink: { dir: "pink/", counts: [1, 3] } };
+  const sizePhoto = (o) => {
+    const set = o.kind === "ribbon" && o.ribbon === o.colours && SIZE_PHOTOS[o.colours];
+    if (!set) return null;
+    const c = set.counts, has = Array.isArray(c) ? c.includes(o.count) : o.count >= c.min && o.count <= c.max;
+    return has ? `assets/sizes/${set.dir}${o.wrap.toLowerCase()}-${o.glitter ? "glitter" : "plain"}-${o.count}.jpg?v=${version}` : null;
+  };
   window.drawBouquet = (p, choice) => {
     const o = Object.assign({ kind: p.kind, flowers: p.flowers }, p.look, choice || {});
     return sizePhoto(o) || bouquetSrc(o);
