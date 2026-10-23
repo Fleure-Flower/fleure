@@ -77,9 +77,9 @@
       </div>
       <div><h3>Shop</h3><ul>
         <li><a href="shop.html">All Bouquets</a></li>
-        <li><a href="shop.html#single">Single Flowers</a></li>
         <li><a href="shop.html#ribbon">Ribbon Roses</a></li>
-        <li><a href="shop.html#special">Special Occasion</a></li>
+        <li><a href="shop.html#lily">Pipe Cleaner Lilies</a></li>
+        <li><a href="shop.html#gift">Gift Bouquets</a></li>
       </ul></div>
       <div><h3>Customer Care</h3><ul>
         <li><a href="custom.html">Custom Orders</a></li>
