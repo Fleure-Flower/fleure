@@ -194,8 +194,11 @@
   const version = new URL(document.currentScript.src).searchParams.get("v") || "";
   // Real photos by rose colour: folder under assets/sizes and the counts photographed in every wrap and finish, and single extra photos.
   const SIZE_PHOTOS = { Red: { dir: "", counts: { min: 1, max: 30 } }, Pink: { dir: "pink/", counts: [1, 3], extra: ["black-plain-7", "black-plain-10", "black-plain-20", "white-plain-7", "white-plain-10", "white-plain-13", "white-plain-17", "white-plain-20"] }, White: { dir: "white/", counts: [1, 3] }, Black: { dir: "black/", counts: [1, 3] } };
+  // Real pipe cleaner lily photos by colour, same layout as the roses.
+  const LILY_PHOTOS = { Red: { dir: "lily/red/", counts: [1] } };
   const sizePhoto = (o) => {
-    const set = o.kind === "ribbon" && o.ribbon === o.colours && SIZE_PHOTOS[o.colours];
+    const set = o.kind === "ribbon" ? o.ribbon === o.colours && SIZE_PHOTOS[o.colours]
+      : o.flowers && o.flowers[0] === "lily" && LILY_PHOTOS[o.colours];
     if (!set) return null;
     const c = set.counts, has = Array.isArray(c) ? c.includes(o.count) : o.count >= c.min && o.count <= c.max;
     const name = `${o.wrap.toLowerCase()}-${o.glitter ? "glitter" : "plain"}-${o.count}`;
