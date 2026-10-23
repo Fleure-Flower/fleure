@@ -41,6 +41,14 @@ const LILY_PRICES = {
 };
 const lilyPrice = (o, i) => (LILY_PRICES[o.count] ? LILY_PRICES[o.count][i] : null);
 
+// Lily bouquets: choose how many lilies, colour and wrapping paper.
+const LILY = {
+  unit: ["lily", "lilies"], sizes: [1, 3, 5, 7, 10], maxCount: 10, priceFrom: true, // the only sizes sold; more on request
+  priceFor: (o) => lilyPrice(o, 0), wasFor: (o) => lilyPrice(o, 1), tagFor: (o) => lilyPrice(o, 2),
+  description: "Lilies shaped by hand from soft pipe cleaners, wrapped and tied with a double satin bow. Choose your lily colour, how many lilies (1, 3, 5, 7 or 10) and your wrapping paper. Made to last, with no water or care needed.",
+  options: { colours: ["Pink", "White", "Red", "Red & White"], wrap: WRAPS },
+};
+
 const PIPE = "Handmade from soft pipe cleaners (chenille stems), wrapped and tied with a double satin bow.";
 
 // Pipe-cleaner bouquets are drawn by assets/js/bouquet.js, so the picture follows
@@ -87,12 +95,8 @@ window.PRODUCTS = [
   roses("black-ribbon-roses", "Black Ribbon Roses", "Black", { wrap: "White", count: 3 }, [],
     { images: ["white-plain-3", "black-plain-3", "newspaper-plain-1", "white-glitter-1", "black-glitter-3", "newspaper-glitter-3"].map((n) => `assets/sizes/black/${n}.jpg`) }),
 
-  pipe("lily", "Pipe Cleaner Lily", "lily", ["lily"], { wrap: "White", ribbon: "Pink", colours: "Pink" }, {
-    unit: ["lily", "lilies"], sizes: [1, 3, 5, 7, 10], maxCount: 10, priceFrom: true, // the only sizes sold; more on request
-    priceFor: (o) => lilyPrice(o, 0), wasFor: (o) => lilyPrice(o, 1), tagFor: (o) => lilyPrice(o, 2),
-    description: "Lilies shaped by hand from soft pipe cleaners, wrapped and tied with a double satin bow. Choose your lily colour, how many lilies (1, 3, 5, 7 or 10) and your wrapping paper. Made to last, with no water or care needed.",
-    options: { colours: ["Pink", "White", "Red", "Red & White"], wrap: WRAPS },
-  }),
+  pipe("lily", "Pipe Cleaner Lily", "lily", ["lily"], { wrap: "White", ribbon: "Pink", colours: "Pink" }, LILY),
+
   {
     id: "white-lily-bouquet", name: "White Lily Bouquet", category: "lily", price: null,
     images: ["white", "black", "newspaper"].map((w) => `assets/photos/lily-white_${w}-wrap.jpg`),
@@ -100,12 +104,8 @@ window.PRODUCTS = [
     description: "A full bouquet of pure white pipe-cleaner lilies with a white double satin bow. Pick your wrap: white, black or newspaper. Price on WhatsApp.",
     options: { wrap: WRAPS },
   },
-  {
-    id: "grand-lily-red-white", name: "Grand Lily Bouquet, Red & White", category: "lily", price: null, featured: true,
-    images: ["assets/photos/lily-red-white_white-wrap.jpg", "assets/products/lily-bouquet-red-white.jpg"],
-    description: "A full, generous bouquet of red and white pipe-cleaner lilies in white and gold wrap, tied with a double satin bow. Price depends on size; ask us on WhatsApp.",
-    options: { wrap: WRAPS, ribbon: RIBBONS },
-  },
+  pipe("grand-lily-red-white", "Lily Bouquet, Red & White", "lily", ["lily"], { wrap: "White", ribbon: "Red", colours: "Red & White", count: 10 },
+    Object.assign({}, LILY, { featured: true, images: ["assets/photos/lily-red-white_white-wrap.jpg", "assets/products/lily-bouquet-red-white.jpg"] })),
   {
     id: "grand-lily-blue-white", name: "Grand Lily Bouquet, Blue & White", category: "lily", price: null,
     images: ["assets/products/lily-bouquet-blue-white.jpg"],
