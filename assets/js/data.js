@@ -14,7 +14,7 @@ window.CATEGORIES = [
   { id: "single", name: "Single Flower Bouquets", short: "Single", priceLabel: "₹89" },
   { id: "double", name: "Double Flower Bouquets", short: "Double", priceLabel: "₹189" },
   { id: "combo", name: "Bouquet Combinations", short: "Combos", priceLabel: "₹279" },
-  { id: "ribbon", name: "Ribbon Roses", short: "Ribbon Roses", priceLabel: "from ₹90" },
+  { id: "ribbon", name: "Ribbon Roses", short: "Ribbon Roses", priceLabel: "from ₹59" },
   { id: "grand", name: "Grand Bouquets", short: "Grand", priceLabel: "Ask us" },
   { id: "special", name: "Special Occasion Bouquets", short: "Special", priceLabel: "Ask us" },
 ];
@@ -25,15 +25,16 @@ const RIBBONS = ["Red", "Pink", "Black", "White"];
 // Pipe-cleaner prices by number of flowers. Sizes not listed are priced on WhatsApp.
 const PIPE_PRICES = { 1: 89, 2: 189, 3: 279 };
 
-// Ribbon rose prices by number of roses. Sizes not listed are priced on WhatsApp.
+// Ribbon rose prices by number of roses, without glitter: [price, old price shown crossed out].
+// Glitter adds ₹20. Sizes not listed are priced on WhatsApp.
 const ROSE_PRICES = {
-  1: { plain: 90, glitter: 110 },
-  3: { plain: 250, glitter: 270 },
-  6: { plain: 480, glitter: 500 },
-  7: { plain: 550, glitter: 570 },
-  10: { plain: 850, glitter: 870 }, // glitter price assumed (+₹20), not visible in the reference sheet
-  15: { plain: 1300, glitter: 1320 },
-  20: { plain: 1750, glitter: 1770 },
+  1: [59, null], 3: [169, 179], 7: [399, 419], 10: [549, 599],
+  13: [719, 769], 15: [819, 879], 17: [929, 999], 20: [1099, 1179],
+};
+const GLITTER_EXTRA = 20;
+const rosePrice = (o, i) => {
+  const p = ROSE_PRICES[o.count] && ROSE_PRICES[o.count][i];
+  return p == null ? null : p + (o.glitter ? GLITTER_EXTRA : 0);
 };
 
 const PIPE = "Handmade from soft pipe cleaners (chenille stems), wrapped and tied with a double satin bow.";
@@ -56,12 +57,13 @@ function pipe(id, name, category, flowers, look, extra) {
 // Satin ribbon rose bouquets, up to 20 roses (bigger on request), in any colour mix.
 function roses(id, name, colours, look, photos, extra) {
   return Object.assign({
-    id, name, category: "ribbon", kind: "ribbon", priceFrom: true, price: 90,
+    id, name, category: "ribbon", kind: "ribbon", priceFrom: true, price: 59,
     images: photos.map((p) => `assets/photos/${p}.jpg`),
     look: Object.assign({ count: 20, glitter: false, colours }, look, { ribbon: colours }),
-    minCount: 1, maxCount: 20, sizes: [1, 3, 7, 10, 13, 17, 20], mixMin: 7, // the only sizes sold (mixed colours from 7); other counts on request
-    priceFor: (o) => (ROSE_PRICES[o.count] ? ROSE_PRICES[o.count][o.glitter ? "glitter" : "plain"] : null),
-    description: "Roses folded by hand from satin ribbon, tied with a double satin bow in the same colour as the roses. Glitter roses get a rhinestone centre. Choose your colours, how many roses (1, 3, 7, 10, 13, 17 or 20), and glitter for extra sparkle.",
+    minCount: 1, maxCount: 20, sizes: [1, 3, 7, 10, 13, 15, 17, 20], mixMin: 7, // the only sizes sold (mixed colours from 7); other counts on request
+    priceFor: (o) => rosePrice(o, 0),
+    wasFor: (o) => rosePrice(o, 1),
+    description: "Roses folded by hand from satin ribbon, tied with a double satin bow in the same colour as the roses. Glitter roses get a rhinestone centre. Choose your colours, how many roses (1, 3, 7, 10, 13, 15, 17 or 20), and glitter for extra sparkle.",
     options: { colours: ["Red", "Pink", "White", "Black", "Red & White", "Black & White"], wrap: WRAPS, ribbon: RIBBONS },
   }, extra || {});
 }

@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610231109">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610231126">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order on WhatsApp.">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610231109"></script>
-<script src="assets/js/bouquet.js?v=202610231109"></script>
-<script src="assets/js/app.js?v=202610231109"></script>
+<script src="assets/js/data.js?v=202610231126"></script>
+<script src="assets/js/bouquet.js?v=202610231126"></script>
+<script src="assets/js/app.js?v=202610231126"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const p = byId(params.get("id"));
@@ -162,7 +162,11 @@
         const n = document.getElementById("preview-note");
         if (n) n.textContent = "Preview of your choices. Each bouquet is handmade, so the real one will vary a little.";
       }
-      if (drawn) document.getElementById("price").textContent = item.price == null ? "Price on WhatsApp" : rupees(item.price);
+      if (drawn) {
+        const was = p.wasFor && item.price != null ? p.wasFor(item.choice) : null;
+        document.getElementById("price").innerHTML = item.price == null ? "Price on WhatsApp"
+          : rupees(item.price) + (was ? ` <s class="was">${rupees(was)}</s>` : "");
+      }
       document.getElementById("note-count").textContent = `${note.value.length}/200`;
       document.getElementById("wa-now").href = waLink(orderMessage([item]));
     }
