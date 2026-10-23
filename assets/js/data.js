@@ -90,8 +90,14 @@ window.PRODUCTS = [
   },
   {
     id: "grand-lily-red-white", name: "Grand Lily Bouquet, Red & White", category: "lily", price: null, featured: true,
-    images: ["assets/photos/lily-red-white_white-wrap.jpg"],
+    images: ["assets/photos/lily-red-white_white-wrap.jpg", "assets/products/lily-bouquet-red-white.jpg"],
     description: "A full, generous bouquet of red and white pipe-cleaner lilies in white and gold wrap, tied with a double satin bow. Price depends on size; ask us on WhatsApp.",
+    options: { wrap: WRAPS, ribbon: RIBBONS },
+  },
+  {
+    id: "grand-lily-blue-white", name: "Grand Lily Bouquet, Blue & White", category: "lily", price: null,
+    images: ["assets/products/lily-bouquet-blue-white.jpg"],
+    description: "Blue and white pipe-cleaner lilies arranged into a full bouquet. Price depends on size; ask us on WhatsApp.",
     options: { wrap: WRAPS, ribbon: RIBBONS },
   },
 
