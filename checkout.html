@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610231509">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610231645">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Checkout | Fleure</title>
 <meta name="description" content="Place your order: your details, pickup or delivery, and online payment.">
@@ -27,7 +27,8 @@
       </fieldset>
       <div class="form-grid">
         <div class="field full" id="address-field"><label for="o-address">Delivery Address</label><p class="muted" id="area-note" style="font-size:.8rem;margin:0 0 6px"></p><textarea class="input" id="o-address" name="address" autocomplete="street-address"></textarea><div class="error" id="e-address"></div>
-          <label style="display:flex;gap:8px;align-items:center;font-size:.85rem;margin-top:8px"><input type="checkbox" name="area" id="o-area"> <span id="area-label"></span></label><div class="error" id="e-area"></div></div>
+</div>
+        <div class="field" id="pincode-field"><label for="o-pincode">Pincode</label><input class="input" id="o-pincode" name="pincode" inputmode="numeric" autocomplete="postal-code" maxlength="6"><div class="error" id="e-pincode" role="status"></div></div>
         <div class="field"><label for="o-date">Date needed</label><input class="input" id="o-date" name="date" type="date" required><div class="error" id="e-date"></div></div>
         <div class="field full"><label for="o-notes">Extra requests (optional)</label><textarea class="input" id="o-notes" name="notes" maxlength="500" placeholder="Anything else we should know?"></textarea></div>
       </div>
@@ -41,16 +42,16 @@
     </aside>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610231509"></script>
-<script src="assets/js/bouquet.js?v=202610231509"></script>
-<script src="assets/js/app.js?v=202610231509"></script>
+<script src="assets/js/data.js?v=202610231645"></script>
+<script src="assets/js/bouquet.js?v=202610231645"></script>
+<script src="assets/js/app.js?v=202610231645"></script>
 <script>
   const D = SHOP.delivery;
   const METHODS = [["Pickup", D.pickup, "Pickup (free)"], ["Day delivery", D.day, `Day delivery (₹${D.day})`], ["Night delivery", D.night, `Night delivery (₹${D.night})`]];
   const form = document.getElementById("order");
   const items = getCart();
   document.getElementById("area-note").textContent = `We deliver only in ${D.area}.`;
-  document.getElementById("area-label").textContent = `This address is in ${D.area}`;
+
 
   if (!items.length) {
     document.getElementById("checkout").innerHTML = `<div class="empty panel" style="padding:32px;grid-column:1/-1"><p>Your bag is empty.</p><a class="btn btn-secondary" href="shop.html">Browse bouquets</a></div>`;
@@ -66,6 +67,7 @@
     const summary = () => {
       const isPickup = form.method.value === "Pickup";
       document.getElementById("address-field").hidden = isPickup;
+      document.getElementById("pincode-field").hidden = isPickup;
       document.getElementById("summary").innerHTML = items.map((it) => `
         <div class="cart-item"><img src="${esc(it.image)}" alt="">
           <div><strong>${esc(it.name)}</strong>
@@ -80,6 +82,13 @@
     form.addEventListener("input", (e) => {
       const err = document.getElementById("e-" + e.target.name);
       if (err) { err.textContent = ""; e.target.removeAttribute("aria-invalid"); }
+      // Tell customers straight away when we can't deliver to their pincode.
+      const pin = e.target.value.trim();
+      if (e.target.name === "pincode" && pin.length === 6) {
+        const ok = D.pincodes.includes(pin);
+        err.textContent = ok ? `Great, we deliver to ${pin}.` : `Sorry, delivery isn't available at ${pin}. We deliver only in ${D.area}. Please choose pickup instead.`;
+        err.style.color = ok ? "var(--wine)" : "";
+      }
     });
     summary();
 
@@ -91,7 +100,7 @@
         ["email", "Please enter a valid email.", (v) => /^\S+@\S+\.\S+$/.test(v)],
         ["phone", "Please enter a valid phone number.", (v) => v.replace(/\D/g, "").length >= 10],
         ["address", "Please add your delivery address.", (v) => isPickup || v],
-        ["area", `Sorry, we deliver only in ${D.area}. Please choose pickup instead.`, () => isPickup || form.area.checked],
+        ["pincode", `Sorry, delivery isn't available at this pincode. We deliver only in ${D.area}. Please choose pickup instead.`, (v) => isPickup || D.pincodes.includes(v)],
         ["date", "Please choose a date.", (v) => v],
       ];
       let ok = true;
@@ -107,7 +116,7 @@
       const record = {
         type: "Order", orderId: newOrderId(), name: f.name.trim(), email: f.email.trim(), phone: f.phone.trim(),
         items: itemsText(items), subtotal, method: f.method, deliveryCharge: charge(), total: subtotal + charge(),
-        address: isPickup ? "" : f.address.trim(), date: f.date, notes: f.notes.trim(),
+        address: isPickup ? "" : `${f.address.trim()}, ${D.area} ${f.pincode.trim()}`, date: f.date, notes: f.notes.trim(),
       };
       const btn = document.getElementById("place"), err = document.getElementById("send-error");
       btn.disabled = true; btn.textContent = "Placing order..."; err.textContent = "";

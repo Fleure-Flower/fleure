@@ -7,7 +7,8 @@ window.SHOP = {
   // Web app link from scripts/orders-sheet.gs. Every order, custom request and message is saved to that Google Sheet.
   orderSheetUrl: "",
   // Delivery charges in rupees. Pickup is free. No cash on delivery.
-  delivery: { pickup: 0, day: 30, night: 40, area: "Kharagpur" }, // we only deliver inside this area
+  // We only deliver inside this area, to these pincodes. Add or remove pincodes here.
+  delivery: { pickup: 0, day: 30, night: 40, area: "Kharagpur", pincodes: ["721301", "721302", "721303", "721304", "721305", "721306"] },
 };
 
 window.CATEGORIES = [
