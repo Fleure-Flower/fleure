@@ -108,12 +108,6 @@ window.PRODUCTS = [
   },
   pipe("grand-lily-red-white", "Lily Bouquet", "lily", ["lily"], { wrap: "White", ribbon: "Red", colours: "Red & White", count: 10 },
     Object.assign({}, LILY, { featured: true, images: ["assets/photos/lily-red-white_white-wrap.jpg", "assets/products/lily-bouquet-red-white.jpg"] })),
-  {
-    id: "grand-lily-blue-white", name: "Grand Lily Bouquet, Blue & White", category: "lily", price: null,
-    images: ["assets/products/lily-bouquet-blue-white.jpg"],
-    description: "Blue and white pipe-cleaner lilies arranged into a full bouquet. Price depends on size; email us for the price.",
-    options: { wrap: WRAPS, ribbon: RIBBONS },
-  },
 
   { id: "chocolate-bouquet", name: "Dairy Milk Chocolate Bouquet", category: "gift", price: 399, featured: true,
     images: ["black", "white"].map((w) => `assets/products/dairy-milk_${w}-wrap.jpg`),
