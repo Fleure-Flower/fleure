@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610231444">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610231448">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order on WhatsApp.">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610231444"></script>
-<script src="assets/js/bouquet.js?v=202610231444"></script>
-<script src="assets/js/app.js?v=202610231444"></script>
+<script src="assets/js/data.js?v=202610231448"></script>
+<script src="assets/js/bouquet.js?v=202610231448"></script>
+<script src="assets/js/app.js?v=202610231448"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const p = byId(params.get("id"));
@@ -102,7 +102,7 @@
             ${countBlock}
             ${glitterBlock}
             ${group("wrap", p.options.wrap)}
-            <p class="note-box" style="margin:-4px 0 18px"><span>Want a colour that isn't listed? We can customise your bouquet, just ${contactLinks()}.</span></p>
+            <p class="note-box" style="margin:-4px 0 18px"><span>You can customise your bouquet and its colours if needed. Just ${contactLinks()}.</span></p>
             <div class="field"><label for="note">Gift note (optional)</label>
               <textarea class="input" id="note" maxlength="200" placeholder="Add your message here..."></textarea>
               <div class="counter" id="note-count" aria-live="polite">0/200</div></div>
