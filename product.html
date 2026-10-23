@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610230856">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610230857">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours, wrap and ribbon, and order on WhatsApp.">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610230856"></script>
-<script src="assets/js/bouquet.js?v=202610230856"></script>
-<script src="assets/js/app.js?v=202610230856"></script>
+<script src="assets/js/data.js?v=202610230857"></script>
+<script src="assets/js/bouquet.js?v=202610230857"></script>
+<script src="assets/js/app.js?v=202610230857"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const p = byId(params.get("id"));
@@ -37,24 +37,25 @@
     const labels = { colours: "Flower colours", wrap: "Wrapping paper", ribbon: "Ribbon colour" };
     const start = Object.assign({}, p.look);
 
-    const contactLinks = () => {
-      const call = SHOP.phone ? `<a href="tel:${esc(SHOP.phone.replace(/\s/g, ""))}">call</a>` : "call";
-      const mail = SHOP.email ? `<a href="mailto:${esc(SHOP.email)}">email</a>` : "email";
-      return SHOP.phone || SHOP.email ? `${call} or ${mail} us` : `<a href="contact.html">call or email us</a>`;
-    };
     const group = (key, values) => `
       <fieldset class="option-group">
         <legend>${labels[key]}</legend>
         <div class="swatches">${values.map((v, i) => `<label class="swatch"><input type="radio" name="${key}" value="${esc(v)}"${(start[key] ? v === start[key] : i === 0) ? " checked" : ""}><span>${esc(v)}</span></label>`).join("")}</div>
       </fieldset>`;
 
+    const contactLinks = () => {
+      const call = SHOP.phone ? `<a href="tel:${esc(SHOP.phone.replace(/\s/g, ""))}">call</a>` : "call";
+      const mail = SHOP.email ? `<a href="mailto:${esc(SHOP.email)}">email</a>` : "email";
+      return SHOP.phone || SHOP.email ? `${call} or ${mail} us` : `<a href="contact.html">call or email us</a>`;
+    };
     const countBlock = drawn ? `
       <div class="field" style="margin-bottom:18px"><span class="field-label" id="count-label">Number of ${unit} (${p.minCount}–${p.maxCount})</span>
         <div class="qty" role="group" aria-labelledby="count-label">
           <button type="button" data-step="-1" aria-label="Fewer ${unit}">−</button>
           <input id="count" type="number" min="${p.minCount}" max="${p.maxCount}" value="${start.count}" inputmode="numeric" aria-label="Number of ${unit}">
           <button type="button" data-step="1" aria-label="More ${unit}">+</button>
-        </div></div>` : "";
+        </div>
+        <p class="muted" style="font-size:.8rem;margin:6px 0 0">Want more than ${p.maxCount} ${unit}? We can make it for you, just ${contactLinks()}.</p></div>` : "";
 
     const glitterBlock = p.kind === "ribbon" ? `
       <fieldset class="option-group"><legend>Finish</legend><div class="swatches">

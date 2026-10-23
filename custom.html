@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610230856">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610230857">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Build Your Own Bouquet | Fleure</title>
 <meta name="description" content="Create a custom handmade bouquet: choose flowers, colours, wrap, ribbon and a gift note, then send your order on WhatsApp.">
@@ -42,7 +42,7 @@
           <select class="input" id="c-ribbon" name="ribbon"><option>Red</option><option>Pink</option><option>Black</option><option>White</option></select><div class="counter" style="text-align:left">Want another colour? We can customise it, just call or email us.</div></div>
         <div class="field"><label for="c-occasion">Occasion</label>
           <select class="input" id="c-occasion" name="occasion"><option>Birthday</option><option>Anniversary</option><option>Graduation</option><option>Valentine's</option><option>Just because</option><option>Other</option></select></div>
-        <div class="field"><label for="c-qty">Number of flowers</label><input class="input" id="c-qty" name="qty" type="number" min="1" max="30" value="1" inputmode="numeric"><div class="counter" style="text-align:left">Up to 20 pipe-cleaner flowers or 30 ribbon roses</div></div>
+        <div class="field"><label for="c-qty">Number of flowers</label><input class="input" id="c-qty" name="qty" type="number" min="1" max="20" value="1" inputmode="numeric"><div class="counter" style="text-align:left">Up to 20 flowers. Want more? We can make it, just call or email us.</div></div>
         <div class="field"><label for="c-flowers">Flower Selection</label>
           <select class="input" id="c-flowers" name="flowers"><option>Sunflower</option><option>Rose</option><option>Tulip</option><option>Lily</option><option>Daisy</option><option>Ribbon roses</option><option>Mixed (describe in note)</option></select></div>
         <div class="field"><label for="c-colours">Flower Colours</label><input class="input" id="c-colours" name="colours" placeholder="e.g. pink and white"></div>
@@ -57,9 +57,9 @@
     </form>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610230856"></script>
-<script src="assets/js/bouquet.js?v=202610230856"></script>
-<script src="assets/js/app.js?v=202610230856"></script>
+<script src="assets/js/data.js?v=202610230857"></script>
+<script src="assets/js/bouquet.js?v=202610230857"></script>
+<script src="assets/js/app.js?v=202610230857"></script>
 <script>
   document.querySelectorAll("[data-wa]").forEach((a) => (a.href = waLink(a.dataset.wa)));
   document.getElementById("occasions").innerHTML = [

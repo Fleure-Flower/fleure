@@ -53,15 +53,15 @@ function pipe(id, name, category, flowers, look, extra) {
   }, extra || {});
 }
 
-// Satin ribbon rose bouquets, up to 30 roses, in any colour mix.
+// Satin ribbon rose bouquets, up to 20 roses (bigger on request), in any colour mix.
 function roses(id, name, colours, look, photos, extra) {
   return Object.assign({
     id, name, category: "ribbon", kind: "ribbon", priceFrom: true, price: 90,
     images: photos.map((p) => `assets/photos/${p}.jpg`),
     look: Object.assign({ count: 20, glitter: false, colours }, look),
-    minCount: 1, maxCount: 30,
+    minCount: 1, maxCount: 20,
     priceFor: (o) => (ROSE_PRICES[o.count] ? ROSE_PRICES[o.count][o.glitter ? "glitter" : "plain"] : null),
-    description: "Roses folded by hand from satin ribbon, each finished with a rhinestone centre and tied with a double satin bow. Choose your colours, how many roses (up to 30), and glitter for extra sparkle.",
+    description: "Roses folded by hand from satin ribbon, each finished with a rhinestone centre and tied with a double satin bow. Choose your colours, how many roses (up to 20), and glitter for extra sparkle.",
     options: { colours: ["Red", "Pink", "White", "Black", "Red & White", "Black & White"], wrap: WRAPS, ribbon: RIBBONS },
   }, extra || {});
 }
