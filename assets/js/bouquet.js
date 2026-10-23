@@ -90,7 +90,7 @@
       }
     }
     const gem = `<circle r="3.6" fill="#f7f8fb" stroke="#9aa3b0" stroke-width="1"/><circle cx="-1" cy="-1" r="1.2" fill="#fff"/>`;
-    return outer + mid + inner + bud + sparkle + gem;
+    return outer + mid + inner + bud + sparkle + (glitter ? gem : ""); // rhinestone centre only on glitter roses
   }
 
   // Flower positions inside the dome, back to front: [x, y, size]
@@ -151,22 +151,25 @@
   }
 
   // Double satin bow: two loops each side, a knot and two long tails
+  // A mix such as "Red & White" ties two ribbons together: outer loops in the first colour, inner loops in the second.
   function bow(colour) {
-    const c = RIBBONS[colour] || RIBBONS.Red;
-    const dark = shade(c, -0.25), light = shade(c, colour === "Black" ? 0.35 : 0.35);
-    const tail = (d) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="11" stroke-linecap="butt" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${light}" stroke-width="2.5" opacity=".55"/>`;
+    const names = String(colour || "Red").split(" & ");
+    const pick = (n) => RIBBONS[n] || RIBBONS.Red;
+    const a = pick(names[0]), b = pick(names[1] || names[0]);
+    const dark = (c) => shade(c, c === RIBBONS.White ? -0.18 : -0.25), light = (c) => shade(c, 0.35);
+    const tail = (d, c) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="11" stroke-linecap="butt" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${light(c)}" stroke-width="2.5" opacity=".55"/>`;
     return `<g stroke-linejoin="round">
-      ${tail("M196 352 C 180 392 150 420 120 452")}
-      ${tail("M198 352 C 186 400 176 440 168 478")}
-      ${tail("M204 352 C 216 400 226 440 236 474")}
-      ${tail("M206 352 C 222 392 252 422 280 448")}
-      <path d="M200 346 C 172 312 128 306 122 332 C 118 354 160 360 200 350Z" fill="${c}" stroke="${dark}" stroke-width="2"/>
-      <path d="M200 346 C 228 312 272 306 278 332 C 282 354 240 360 200 350Z" fill="${c}" stroke="${dark}" stroke-width="2"/>
-      <path d="M198 348 C 182 326 156 324 154 338 C 152 350 176 352 198 350Z" fill="${shade(c, -0.08)}" stroke="${dark}" stroke-width="1.5"/>
-      <path d="M202 348 C 218 326 244 324 246 338 C 248 350 224 352 202 350Z" fill="${shade(c, -0.08)}" stroke="${dark}" stroke-width="1.5"/>
-      <path d="M132 328 C 146 316 168 318 184 330" fill="none" stroke="${light}" stroke-width="3" stroke-linecap="round" opacity=".7"/>
-      <path d="M268 328 C 254 316 232 318 216 330" fill="none" stroke="${light}" stroke-width="3" stroke-linecap="round" opacity=".7"/>
-      <rect x="190" y="338" width="20" height="20" rx="6" fill="${c}" stroke="${dark}" stroke-width="2"/></g>`;
+      ${tail("M196 352 C 180 392 150 420 120 452", a)}
+      ${tail("M198 352 C 186 400 176 440 168 478", b)}
+      ${tail("M204 352 C 216 400 226 440 236 474", b)}
+      ${tail("M206 352 C 222 392 252 422 280 448", a)}
+      <path d="M200 346 C 172 312 128 306 122 332 C 118 354 160 360 200 350Z" fill="${a}" stroke="${dark(a)}" stroke-width="2"/>
+      <path d="M200 346 C 228 312 272 306 278 332 C 282 354 240 360 200 350Z" fill="${a}" stroke="${dark(a)}" stroke-width="2"/>
+      <path d="M198 348 C 182 326 156 324 154 338 C 152 350 176 352 198 350Z" fill="${shade(b, -0.08)}" stroke="${dark(b)}" stroke-width="1.5"/>
+      <path d="M202 348 C 218 326 244 324 246 338 C 248 350 224 352 202 350Z" fill="${shade(b, -0.08)}" stroke="${dark(b)}" stroke-width="1.5"/>
+      <path d="M132 328 C 146 316 168 318 184 330" fill="none" stroke="${light(a)}" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+      <path d="M268 328 C 254 316 232 318 216 330" fill="none" stroke="${light(a)}" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+      <rect x="190" y="338" width="20" height="20" rx="6" fill="${a}" stroke="${dark(a)}" stroke-width="2"/></g>`;
   }
 
   function colourAt(mix, i, n, rRel) {
