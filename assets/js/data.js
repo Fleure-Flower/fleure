@@ -99,8 +99,8 @@ window.PRODUCTS = [
     ["rose-black-white_black-wrap", "rose-black-white_white-wrap", "rose-black-white_newspaper-wrap"], { featured: true }),
   roses("red-white-ribbon-roses", "Red & White Ribbon Roses", "Red & White", { wrap: "Newspaper", ribbon: "Red", glitter: true },
     ["rose-red-white_newspaper-wrap", "rose-red-white_white-wrap"]),
-  roses("white-ribbon-roses", "White Ribbon Roses", "White", { wrap: "Black", ribbon: "White" },
-    ["rose-white_black-wrap", "rose-white-glitter_black-wrap"]),
+  roses("white-ribbon-roses", "White Ribbon Roses", "White", { wrap: "Black", count: 3 }, [],
+    { images: ["black-plain-3", "white-plain-3", "newspaper-plain-1", "white-glitter-3", "black-glitter-1", "newspaper-glitter-3"].map((n) => `assets/sizes/white/${n}.jpg`) }),
   roses("black-ribbon-roses", "Black Ribbon Roses", "Black", { wrap: "White", ribbon: "Black" },
     ["rose-black_white-wrap", "rose-black-glitter_white-wrap"]),
 
