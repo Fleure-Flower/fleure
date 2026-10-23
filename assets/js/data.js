@@ -26,14 +26,15 @@ const RIBBONS = ["Red", "Pink", "Black", "White"];
 const PIPE_PRICES = { 1: 89, 2: 189, 3: 279 };
 
 // Ribbon rose prices by number of roses: [price, old price shown crossed out, price with glitter].
-// Sir's glitter table has no old price, so glitter prices show without one. Sizes not listed are priced on WhatsApp.
+// Glitter's old price keeps the same glitter extra on top of the plain old price. Sizes not listed are priced on WhatsApp.
 const ROSE_PRICES = {
   1: [59, null, 69], 3: [169, 179, 179], 7: [399, 419, 409], 10: [549, 599, 569],
   13: [719, 769, 739], 15: [819, 879, 829], 17: [929, 999, 949], 20: [1099, 1179, 1119],
 };
 const rosePrice = (o, i) => {
   const row = ROSE_PRICES[o.count];
-  return row ? row[o.glitter ? (i === 0 ? 2 : 3) : i] ?? null : null;
+  if (!row || row[i] == null) return null;
+  return o.glitter ? row[i] + row[2] - row[0] : row[i];
 };
 
 const PIPE = "Handmade from soft pipe cleaners (chenille stems), wrapped and tied with a double satin bow.";
