@@ -175,7 +175,7 @@
     foot.innerHTML = `
       <div class="cart-total"><span>Total</span><span>${rupees(total)}${cart.some((it) => !it.price) ? " +" : ""}</span></div>
       <a class="btn btn-primary btn-block" href="checkout.html">Checkout</a>
-      <p class="muted" style="font-size:.78rem;margin:0;text-align:center">Pickup is free. Delivery ₹${shop.delivery.day} (day) or ₹${shop.delivery.night} (night). No cash on delivery.</p>`;
+      <p class="muted" style="font-size:.78rem;margin:0;text-align:center">Pickup is free. Delivery only in ${shop.delivery.area}: ₹${shop.delivery.day} (day) or ₹${shop.delivery.night} (night). No cash on delivery.</p>`;
     body.querySelectorAll("[data-remove]").forEach((b) => b.addEventListener("click", () => { cart.splice(Number(b.dataset.remove), 1); save(); }));
   }
 
