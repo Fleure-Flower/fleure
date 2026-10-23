@@ -29,7 +29,7 @@ const PIPE_PRICES = { 1: 89, 2: 189, 3: 279 };
 // Glitter's old price keeps the same glitter extra on top of the plain old price. Sizes not listed are priced on WhatsApp.
 const ROSE_PRICES = {
   1: [59, null, 69], 3: [169, 179, 179], 7: [399, 419, 409], 10: [549, 599, 569],
-  13: [719, 769, 739], 15: [819, 879, 829], 17: [929, 999, 949], 20: [1099, 1179, 1119],
+  13: [719, 769, 739], 17: [929, 999, 949], 20: [1099, 1179, 1119],
 };
 const rosePrice = (o, i) => {
   const row = ROSE_PRICES[o.count];
@@ -60,10 +60,10 @@ function roses(id, name, colours, look, photos, extra) {
     id, name, category: "ribbon", kind: "ribbon", priceFrom: true, price: 59,
     images: photos.map((p) => `assets/photos/${p}.jpg`),
     look: Object.assign({ count: 20, glitter: false, colours }, look, { ribbon: colours }),
-    minCount: 1, maxCount: 20, sizes: [1, 3, 7, 10, 13, 15, 17, 20], mixMin: 7, // the only sizes sold (mixed colours from 7); other counts on request
+    minCount: 1, maxCount: 20, sizes: [1, 3, 7, 10, 13, 17, 20], mixMin: 7, // the only sizes sold (mixed colours from 7); other counts on request
     priceFor: (o) => rosePrice(o, 0),
     wasFor: (o) => rosePrice(o, 1),
-    description: "Roses folded by hand from satin ribbon, tied with a double satin bow in the same colour as the roses. Glitter roses get a rhinestone centre. Choose your colours, how many roses (1, 3, 7, 10, 13, 15, 17 or 20), and glitter for extra sparkle.",
+    description: "Roses folded by hand from satin ribbon, tied with a double satin bow in the same colour as the roses. Glitter roses get a rhinestone centre. Choose your colours, how many roses (1, 3, 7, 10, 13, 17 or 20), and glitter for extra sparkle.",
     options: { colours: ["Red", "Pink", "White", "Black", "Red & White", "Black & White"], wrap: WRAPS, ribbon: RIBBONS },
   }, extra || {});
 }
