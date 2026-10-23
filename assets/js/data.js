@@ -101,8 +101,8 @@ window.PRODUCTS = [
     ["rose-red-white_newspaper-wrap", "rose-red-white_white-wrap"]),
   roses("white-ribbon-roses", "White Ribbon Roses", "White", { wrap: "Black", count: 3 }, [],
     { images: ["black-plain-3", "white-plain-3", "newspaper-plain-1", "white-glitter-3", "black-glitter-1", "newspaper-glitter-3"].map((n) => `assets/sizes/white/${n}.jpg`) }),
-  roses("black-ribbon-roses", "Black Ribbon Roses", "Black", { wrap: "White", ribbon: "Black" },
-    ["rose-black_white-wrap", "rose-black-glitter_white-wrap"]),
+  roses("black-ribbon-roses", "Black Ribbon Roses", "Black", { wrap: "White", count: 3 }, [],
+    { images: ["white-plain-3", "black-plain-3", "newspaper-plain-1", "white-glitter-1", "black-glitter-3", "newspaper-glitter-3"].map((n) => `assets/sizes/black/${n}.jpg`) }),
 
   {
     id: "grand-lily-red-white", name: "Grand Lily Bouquet, Red & White", category: "grand", price: null, featured: true,
