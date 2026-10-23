@@ -193,7 +193,7 @@
   // Photos reuse this script's ?v= stamp so browsers fetch new copies after each update.
   const version = new URL(document.currentScript.src).searchParams.get("v") || "";
   // Real photos by rose colour: folder under assets/sizes and the counts photographed in every wrap and finish, and single extra photos.
-  const SIZE_PHOTOS = { Red: { dir: "", counts: { min: 1, max: 30 } }, Pink: { dir: "pink/", counts: [1, 3], extra: ["black-plain-7", "black-plain-10", "black-plain-20"] }, White: { dir: "white/", counts: [1, 3] }, Black: { dir: "black/", counts: [1, 3] } };
+  const SIZE_PHOTOS = { Red: { dir: "", counts: { min: 1, max: 30 } }, Pink: { dir: "pink/", counts: [1, 3], extra: ["black-plain-7", "black-plain-10", "black-plain-20", "white-plain-13", "white-plain-17", "white-plain-20"] }, White: { dir: "white/", counts: [1, 3] }, Black: { dir: "black/", counts: [1, 3] } };
   const sizePhoto = (o) => {
     const set = o.kind === "ribbon" && o.ribbon === o.colours && SIZE_PHOTOS[o.colours];
     if (!set) return null;
