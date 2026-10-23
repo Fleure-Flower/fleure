@@ -72,7 +72,7 @@ window.PRODUCTS = [
   roses("pink-ribbon-roses", "Pink Ribbon Roses", "Pink", { wrap: "White", count: 3 }, [],
     { images: ["white-plain-3", "black-plain-3", "newspaper-plain-1", "white-glitter-1", "black-glitter-3"].map((n) => `assets/sizes/pink/${n}.jpg`) }),
   roses("black-white-ribbon-roses", "Black & White Ribbon Roses", "Black & White", { wrap: "Black", ribbon: "White", glitter: true, count: 10 },
-    ["rose-black-white_black-wrap", "rose-black-white_white-wrap", "rose-black-white_newspaper-wrap"], { featured: true }),
+    ["rose-black-white_black-wrap", "rose-black-white_white-wrap", "rose-black-white_newspaper-wrap"]),
   roses("red-white-ribbon-roses", "Red & White Ribbon Roses", "Red & White", { wrap: "Newspaper", ribbon: "Red", glitter: true, count: 10 },
     ["rose-red-white_newspaper-wrap", "rose-red-white_white-wrap"]),
   roses("white-ribbon-roses", "White Ribbon Roses", "White", { wrap: "Black", count: 3 }, [],
@@ -80,7 +80,7 @@ window.PRODUCTS = [
   roses("black-ribbon-roses", "Black Ribbon Roses", "Black", { wrap: "White", count: 3 }, [],
     { images: ["white-plain-3", "black-plain-3", "newspaper-plain-1", "white-glitter-1", "black-glitter-3", "newspaper-glitter-3"].map((n) => `assets/sizes/black/${n}.jpg`) }),
 
-  pipe("lily", "Pipe Cleaner Lily", "lily", ["lily"], { wrap: "White", ribbon: "Pink" }, { featured: true }),
+  pipe("lily", "Pipe Cleaner Lily", "lily", ["lily"], { wrap: "White", ribbon: "Pink" }),
   {
     id: "grand-lily-red-white", name: "Grand Lily Bouquet, Red & White", category: "lily", price: null, featured: true,
     images: ["assets/photos/lily-red-white_white-wrap.jpg", "assets/products/lily-bouquet-red-white.jpg"],
@@ -94,9 +94,9 @@ window.PRODUCTS = [
     options: { wrap: WRAPS, ribbon: RIBBONS },
   },
 
-  { id: "chocolate-bouquet", name: "Chocolate Bouquet", category: "gift", price: null, images: ["assets/products/chocolate.jpg"], description: "A sweet surprise for your sweet people: chocolates wrapped like a bouquet.", options: { wrap: WRAPS, ribbon: RIBBONS } },
+  { id: "chocolate-bouquet", name: "Chocolate Bouquet", category: "gift", price: null, featured: true, images: ["assets/products/chocolate.jpg"], description: "A sweet surprise for your sweet people: chocolates wrapped like a bouquet.", options: { wrap: WRAPS, ribbon: RIBBONS } },
   { id: "teddy-bouquet", name: "Teddy Bouquet", category: "gift", price: null, images: ["assets/products/teddy.jpg"], description: "Cute, cuddly and full of love: a soft teddy wrapped with baby's breath.", options: { wrap: WRAPS, ribbon: RIBBONS } },
-  { id: "photo-bouquet", name: "Photo Bouquet", category: "gift", price: null, images: ["assets/products/photo.jpg"], description: "Memories wrapped with love. Send us your photos on WhatsApp and we'll arrange them into a bouquet.", options: { wrap: WRAPS, ribbon: RIBBONS } },
+  { id: "photo-bouquet", name: "Photo Bouquet", category: "gift", price: null, featured: true, images: ["assets/products/photo.jpg"], description: "Memories wrapped with love. Send us your photos on WhatsApp and we'll arrange them into a bouquet.", options: { wrap: WRAPS, ribbon: RIBBONS } },
   { id: "snack-bouquet", name: "Snack Bouquet", category: "gift", price: null, images: ["assets/products/snack.jpg"], description: "Tasty, fun and perfect for everyone: favourite snacks wrapped like a bouquet.", options: { wrap: WRAPS, ribbon: RIBBONS } },
 ];
 
