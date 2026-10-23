@@ -94,12 +94,6 @@ window.PRODUCTS = [
     description: "A full, generous bouquet of red and white pipe-cleaner lilies in white and gold wrap, tied with a double satin bow. Price depends on size; ask us on WhatsApp.",
     options: { wrap: WRAPS, ribbon: RIBBONS },
   },
-  {
-    id: "grand-lily-blue-white", name: "Grand Lily Bouquet, Blue & White", category: "lily", price: null,
-    images: ["assets/products/lily-bouquet-blue-white.jpg"],
-    description: "Blue and white pipe-cleaner lilies arranged into a full bouquet. Price depends on size; ask us on WhatsApp.",
-    options: { wrap: WRAPS, ribbon: RIBBONS },
-  },
 
   { id: "chocolate-bouquet", name: "Dairy Milk Chocolate Bouquet", category: "gift", price: null, featured: true,
     images: ["black", "white"].map((w) => `assets/products/dairy-milk_${w}-wrap.jpg`),
@@ -109,7 +103,6 @@ window.PRODUCTS = [
     images: ["black", "white"].map((w) => `assets/products/kitkat_${w}-wrap.jpg`),
     wrapPhotos: { Black: "assets/products/kitkat_black-wrap.jpg", White: "assets/products/kitkat_white-wrap.jpg" },
     description: "KitKat bars wrapped like a bouquet and tied with a red satin bow. Pick a black or white wrap. Price on WhatsApp.", options: { wrap: ["Black", "White"] } },
-  { id: "teddy-bouquet", name: "Teddy Bouquet", category: "gift", price: null, images: ["assets/products/teddy.jpg"], description: "Cute, cuddly and full of love: a soft teddy wrapped with baby's breath.", options: { wrap: WRAPS, ribbon: RIBBONS } },
   { id: "photo-bouquet", name: "Photo Bouquet", category: "gift", price: null, featured: true,
     images: ["black", "white"].map((w) => `assets/products/photo_${w}-wrap.jpg`),
     wrapPhotos: { Black: "assets/products/photo_black-wrap.jpg", White: "assets/products/photo_white-wrap.jpg" },
@@ -118,7 +111,6 @@ window.PRODUCTS = [
     images: ["black", "white"].map((w) => `assets/products/photo-teddy_${w}-wrap.jpg`),
     wrapPhotos: { Black: "assets/products/photo-teddy_black-wrap.jpg", White: "assets/products/photo-teddy_white-wrap.jpg" },
     description: "Your photos with a soft teddy, chocolates and baby's breath, wrapped with a satin bow. Send us your photos on WhatsApp. Pick a black or white wrap.", options: { wrap: ["Black", "White"] } },
-  { id: "snack-bouquet", name: "Snack Bouquet", category: "gift", price: null, images: ["assets/products/snack.jpg"], description: "Tasty, fun and perfect for everyone: favourite snacks wrapped like a bouquet.", options: { wrap: WRAPS, ribbon: RIBBONS } },
 ];
 
 // Real customer reviews go here, e.g. { text: "...", name: "First name" }.
