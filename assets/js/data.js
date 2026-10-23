@@ -7,6 +7,7 @@ window.SHOP = {
   whatsapp: "",
   instagram: "", // handle without @, e.g. "fleure.flowers"
   email: "",
+  phone: "", // number for calls, e.g. "+91 98765 43210"
 };
 
 window.CATEGORIES = [
@@ -19,7 +20,7 @@ window.CATEGORIES = [
 ];
 
 const WRAPS = ["White", "Black", "Newspaper"];
-const RIBBONS = ["Red", "Burgundy", "Pink", "Lavender", "Blue", "Gold", "Black", "White"];
+const RIBBONS = ["Red", "Pink", "Black", "White"];
 
 // Pipe-cleaner prices by number of flowers. Sizes not listed are priced on WhatsApp.
 const PIPE_PRICES = { 1: 89, 2: 189, 3: 279 };
@@ -61,7 +62,7 @@ function roses(id, name, colours, look, photos, extra) {
     minCount: 1, maxCount: 30,
     priceFor: (o) => (ROSE_PRICES[o.count] ? ROSE_PRICES[o.count][o.glitter ? "glitter" : "plain"] : null),
     description: "Roses folded by hand from satin ribbon, each finished with a rhinestone centre and tied with a double satin bow. Choose your colours, how many roses (up to 30), and glitter for extra sparkle.",
-    options: { colours: ["Red", "Burgundy", "Pink", "Blue", "White", "Black", "Red & White", "Black & White", "Blue & White"], wrap: WRAPS, ribbon: RIBBONS },
+    options: { colours: ["Red", "Pink", "White", "Black", "Red & White", "Black & White"], wrap: WRAPS, ribbon: RIBBONS },
   }, extra || {});
 }
 
@@ -71,7 +72,7 @@ window.PRODUCTS = [
   pipe("tulip", "Tulip", "single", ["tulip"], { wrap: "White", ribbon: "Pink" }),
   pipe("lily", "Lily", "single", ["lily"], { wrap: "White", ribbon: "Pink" }),
   pipe("daisy", "Daisy", "single", ["daisy"], { wrap: "Black", ribbon: "White" }),
-  pipe("custom-flower", "Custom Flower", "single", ["custom"], { wrap: "White", ribbon: "Lavender" }, {
+  pipe("custom-flower", "Custom Flower", "single", ["custom"], { wrap: "White", ribbon: "Pink" }, {
     priceFrom: true,
     description: "Tell us the flower and colours you have in mind and we'll shape it by hand from pipe cleaners. Final price is confirmed on WhatsApp.",
   }),
@@ -79,7 +80,7 @@ window.PRODUCTS = [
   pipe("sunflower-rose", "Sunflower + Rose", "double", ["sunflower", "rose"], { wrap: "Newspaper", ribbon: "Red" }, { featured: true }),
   pipe("rose-tulip", "Rose + Tulip", "double", ["rose", "tulip"], { wrap: "White", ribbon: "Pink" }),
   pipe("tulip-daisy", "Tulip + Daisy", "double", ["tulip", "daisy"], { wrap: "White", ribbon: "Pink" }),
-  pipe("lily-tulip", "Lily + Tulip", "double", ["lily", "tulip"], { wrap: "White", ribbon: "Lavender" }),
+  pipe("lily-tulip", "Lily + Tulip", "double", ["lily", "tulip"], { wrap: "White", ribbon: "Pink" }),
   pipe("sunflower-tulip", "Sunflower + Tulip", "double", ["sunflower", "tulip"], { wrap: "Newspaper", ribbon: "Gold" }),
   pipe("rose-lily", "Rose + Lily", "double", ["rose", "lily"], { wrap: "Black", ribbon: "Red" }),
 
@@ -88,14 +89,12 @@ window.PRODUCTS = [
   pipe("tulip-lily-rose", "Tulip + Lily + Rose", "combo", ["tulip", "lily", "rose"], { wrap: "White", ribbon: "Pink" }),
   pipe("sunflower-lily-tulip", "Sunflower + Lily + Tulip", "combo", ["sunflower", "lily", "tulip"], { wrap: "Newspaper", ribbon: "Gold" }),
   pipe("rose-daisy-lily", "Rose + Daisy + Lily", "combo", ["rose", "daisy", "lily"], { wrap: "Black", ribbon: "Red" }),
-  pipe("tulip-daisy-custom", "Tulip + Daisy + Custom Flower", "combo", ["tulip", "daisy", "custom"], { wrap: "White", ribbon: "Lavender" }),
+  pipe("tulip-daisy-custom", "Tulip + Daisy + Custom Flower", "combo", ["tulip", "daisy", "custom"], { wrap: "White", ribbon: "Pink" }),
 
   roses("red-ribbon-roses", "Red Ribbon Roses", "Red", { wrap: "White", ribbon: "Red" },
     ["rose-red_white-wrap", "rose-red_black-wrap", "rose-red-glitter_white-wrap", "rose-red-glitter_black-wrap"], { featured: true }),
-  roses("blue-white-ribbon-roses", "Blue & White Ribbon Roses", "Blue & White", { wrap: "White", ribbon: "Blue" },
-    ["rose-blue-white_white-wrap", "rose-blue-white-glitter_white-wrap"], { featured: true }),
   roses("black-white-ribbon-roses", "Black & White Ribbon Roses", "Black & White", { wrap: "Black", ribbon: "White", glitter: true },
-    ["rose-black-white_black-wrap", "rose-black-white_white-wrap", "rose-black-white_newspaper-wrap"]),
+    ["rose-black-white_black-wrap", "rose-black-white_white-wrap", "rose-black-white_newspaper-wrap"], { featured: true }),
   roses("red-white-ribbon-roses", "Red & White Ribbon Roses", "Red & White", { wrap: "Newspaper", ribbon: "Red", glitter: true },
     ["rose-red-white_newspaper-wrap", "rose-red-white_white-wrap"]),
   roses("white-ribbon-roses", "White Ribbon Roses", "White", { wrap: "Black", ribbon: "White" },
