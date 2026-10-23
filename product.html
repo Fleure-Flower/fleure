@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610231130">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610231131">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order on WhatsApp.">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610231130"></script>
-<script src="assets/js/bouquet.js?v=202610231130"></script>
-<script src="assets/js/app.js?v=202610231130"></script>
+<script src="assets/js/data.js?v=202610231131"></script>
+<script src="assets/js/bouquet.js?v=202610231131"></script>
+<script src="assets/js/app.js?v=202610231131"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const p = byId(params.get("id"));
@@ -66,6 +66,18 @@
         <label class="swatch"><input type="radio" name="finish" value="With glitter"${start.glitter ? " checked" : ""}><span>With glitter</span></label>
       </div></fieldset>` : "";
 
+    // Price list for every size, plain and glitter, with the old price crossed out.
+    const cell = (o) => {
+      const now = p.priceFor(o), was = p.wasFor(o);
+      return now == null ? "On WhatsApp" : rupees(now) + (was ? ` <s class="was">${rupees(was)}</s>` : "");
+    };
+    const priceTable = p.sizes && p.wasFor ? `
+      <div class="price-table-wrap"><h2 class="field-label">Price list</h2>
+        <table class="price-table">
+          <thead><tr><th scope="col">Bouquet size</th><th scope="col">Without glitter</th><th scope="col">With glitter</th></tr></thead>
+          <tbody>${p.sizes.map((n) => `<tr data-count="${n}"><th scope="row">${n} ${n === 1 ? "Rose" : "Roses"}</th><td>${cell({ count: n, glitter: false })}</td><td>${cell({ count: n, glitter: true })}</td></tr>`).join("")}</tbody>
+        </table></div>` : "";
+
     const photos = p.images;
     const thumbs = drawn && photos.length
       ? `<p class="field-label" style="margin:14px 0 6px">Real bouquets we've made</p><div class="thumbs">${photos.map((src, i) => `<button type="button" data-src="${src}" aria-label="Show photo ${i + 1}"><img src="${src}" alt="" loading="lazy"></button>`).join("")}</div>`
@@ -77,6 +89,7 @@
           <img class="gallery-main" id="main-img" src="${drawn ? drawBouquet(p) : photos[0]}" alt="${esc(p.name)} bouquet" width="600" height="750">
           ${drawn ? `<p class="muted center" id="preview-note" style="font-size:.8rem;margin:8px 0 0">Preview of your choices. Each bouquet is handmade, so the real one will vary a little.</p>` : ""}
           ${thumbs}
+          ${priceTable}
         </div>
         <div>
           <h1>${esc(p.name)}</h1>
@@ -167,6 +180,7 @@
         document.getElementById("price").innerHTML = item.price == null ? "Price on WhatsApp"
           : rupees(item.price) + (was ? ` <s class="was">${rupees(was)}</s>` : "");
       }
+      root.querySelectorAll(".price-table tbody tr").forEach((r) => r.classList.toggle("is-current", Number(r.dataset.count) === item.choice.count));
       document.getElementById("note-count").textContent = `${note.value.length}/200`;
       document.getElementById("wa-now").href = waLink(orderMessage([item]));
     }

@@ -266,3 +266,11 @@ textarea.input { min-height: 96px; resize: vertical; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
+
+.price-table-wrap { margin-top: 24px; }
+.price-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.price-table th, .price-table td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); }
+.price-table thead th { font-weight: 500; color: var(--muted); font-size: .85rem; }
+.price-table tbody th { font-weight: 600; }
+.price-table .was { opacity: .55; margin-left: 4px; }
+.price-table tr.is-current { background: var(--blush); }
