@@ -13,7 +13,7 @@ window.SHOP = {
 window.CATEGORIES = [
   { id: "ribbon", name: "Ribbon Roses", short: "Ribbon Roses", priceLabel: "from ₹59" },
   { id: "lily", name: "Pipe Cleaner Lilies", short: "Pipe Cleaner Lily", priceLabel: "from ₹89" },
-  { id: "gift", name: "Gift Bouquets", short: "Gift Bouquets", priceLabel: "Ask us" },
+  { id: "gift", name: "Gift Bouquets", short: "Gift Bouquets", priceLabel: "from ₹299" },
 ];
 
 const WRAPS = ["White", "Black", "Newspaper"];
@@ -113,22 +113,22 @@ window.PRODUCTS = [
     options: { wrap: WRAPS, ribbon: RIBBONS },
   },
 
-  { id: "chocolate-bouquet", name: "Dairy Milk Chocolate Bouquet", category: "gift", price: null, featured: true,
+  { id: "chocolate-bouquet", name: "Dairy Milk Chocolate Bouquet", category: "gift", price: 399, featured: true,
     images: ["black", "white"].map((w) => `assets/products/dairy-milk_${w}-wrap.jpg`),
     wrapPhotos: { Black: "assets/products/dairy-milk_black-wrap.jpg", White: "assets/products/dairy-milk_white-wrap.jpg" },
-    description: "Cadbury Dairy Milk bars wrapped like a bouquet and tied with a satin bow. Pick a black or white wrap. Price on WhatsApp.", options: { wrap: ["Black", "White"] } },
-  { id: "kitkat-bouquet", name: "KitKat Chocolate Bouquet", category: "gift", price: null,
+    description: "Cadbury Dairy Milk bars wrapped like a bouquet and tied with a satin bow. Pick a black or white wrap.", options: { wrap: ["Black", "White"] } },
+  { id: "kitkat-bouquet", name: "KitKat Chocolate Bouquet", category: "gift", price: 399,
     images: ["black", "white"].map((w) => `assets/products/kitkat_${w}-wrap.jpg`),
     wrapPhotos: { Black: "assets/products/kitkat_black-wrap.jpg", White: "assets/products/kitkat_white-wrap.jpg" },
-    description: "KitKat bars wrapped like a bouquet and tied with a red satin bow. Pick a black or white wrap. Price on WhatsApp.", options: { wrap: ["Black", "White"] } },
-  { id: "photo-bouquet", name: "Photo Bouquet", category: "gift", price: null, featured: true,
+    description: "KitKat bars wrapped like a bouquet and tied with a red satin bow. Pick a black or white wrap.", options: { wrap: ["Black", "White"] } },
+  { id: "photo-bouquet", name: "Photo Bouquet", category: "gift", price: 299, featured: true,
     images: ["black", "white"].map((w) => `assets/products/photo_${w}-wrap.jpg`),
     wrapPhotos: { Black: "assets/products/photo_black-wrap.jpg", White: "assets/products/photo_white-wrap.jpg" },
     description: "Your favourite photos printed and arranged into a bouquet with a satin bow. Send us your photos on WhatsApp. Pick a black or white wrap.", options: { wrap: ["Black", "White"] } },
-  { id: "photo-teddy-bouquet", name: "Photo Bouquet with Teddy & Chocolates", category: "gift", price: null,
+  { id: "photo-teddy-bouquet", name: "Photo Bouquet with Teddy & Chocolates", category: "gift", price: 799, priceFrom: true,
     images: ["black", "white"].map((w) => `assets/products/photo-teddy_${w}-wrap.jpg`),
     wrapPhotos: { Black: "assets/products/photo-teddy_black-wrap.jpg", White: "assets/products/photo-teddy_white-wrap.jpg" },
-    description: "Your photos with a soft teddy, chocolates and baby's breath, wrapped with a satin bow. Send us your photos on WhatsApp. Pick a black or white wrap.", options: { wrap: ["Black", "White"] } },
+    description: "Your photos with a soft teddy, chocolates and baby's breath, wrapped with a satin bow. Send us your photos on WhatsApp. Pick a black or white wrap. From ₹799; the final price depends on the teddy you choose, confirmed on WhatsApp.", options: { wrap: ["Black", "White"] } },
 ];
 
 // Real customer reviews go here, e.g. { text: "...", name: "First name" }.
