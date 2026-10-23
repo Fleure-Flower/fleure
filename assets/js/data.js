@@ -82,6 +82,13 @@ window.PRODUCTS = [
 
   pipe("lily", "Pipe Cleaner Lily", "lily", ["lily"], { wrap: "White", ribbon: "Pink" }),
   {
+    id: "white-lily-bouquet", name: "White Lily Bouquet", category: "lily", price: null,
+    images: ["white", "black", "newspaper"].map((w) => `assets/photos/lily-white_${w}-wrap.jpg`),
+    wrapPhotos: { White: "assets/photos/lily-white_white-wrap.jpg", Black: "assets/photos/lily-white_black-wrap.jpg", Newspaper: "assets/photos/lily-white_newspaper-wrap.jpg" },
+    description: "A full bouquet of pure white pipe-cleaner lilies with a white double satin bow. Pick your wrap: white, black or newspaper. Price on WhatsApp.",
+    options: { wrap: WRAPS },
+  },
+  {
     id: "grand-lily-red-white", name: "Grand Lily Bouquet, Red & White", category: "lily", price: null, featured: true,
     images: ["assets/photos/lily-red-white_white-wrap.jpg", "assets/products/lily-bouquet-red-white.jpg"],
     description: "A full, generous bouquet of red and white pipe-cleaner lilies in white and gold wrap, tied with a double satin bow. Price depends on size; ask us on WhatsApp.",

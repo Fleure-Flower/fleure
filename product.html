@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610231359">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610231408">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order on WhatsApp.">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610231359"></script>
-<script src="assets/js/bouquet.js?v=202610231359"></script>
-<script src="assets/js/app.js?v=202610231359"></script>
+<script src="assets/js/data.js?v=202610231408"></script>
+<script src="assets/js/bouquet.js?v=202610231408"></script>
+<script src="assets/js/app.js?v=202610231408"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const p = byId(params.get("id"));
@@ -152,7 +152,7 @@
       }
       return {
         id: p.id, name, price, qty: 1, options, note: note.value.trim(),
-        image: drawn ? drawBouquet(p, choice) : photos[0], choice,
+        image: drawn ? drawBouquet(p, choice) : (p.wrapPhotos && p.wrapPhotos[choice.wrap]) || photos[0], choice,
       };
     }
 
@@ -182,6 +182,11 @@
     function update(e) {
       syncSizes();
       const item = current();
+      // Photo products with one photo per wrap switch to the chosen wrap.
+      if (!drawn && p.wrapPhotos && e && e.target.name === "wrap") {
+        mainImg.src = item.image;
+        root.querySelectorAll(".thumbs button").forEach((x) => x.toggleAttribute("aria-current", x.dataset.src === item.image));
+      }
       if (drawn && !(e && e.target === note)) {
         mainImg.src = item.image;
         root.querySelectorAll(".thumbs button").forEach((x) => x.removeAttribute("aria-current"));
