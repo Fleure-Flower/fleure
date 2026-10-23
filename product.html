@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610231459">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610231502">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order online.">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610231459"></script>
-<script src="assets/js/bouquet.js?v=202610231459"></script>
-<script src="assets/js/app.js?v=202610231459"></script>
+<script src="assets/js/data.js?v=202610231502"></script>
+<script src="assets/js/bouquet.js?v=202610231502"></script>
+<script src="assets/js/app.js?v=202610231502"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const p = byId(params.get("id"));
@@ -44,6 +44,11 @@
       </fieldset>`;
 
     const contactLinks = () => emailUs();
+    const pieces = p.pieces;
+    const piecesBlock = pieces ? `
+      <fieldset class="option-group"><legend>${esc(pieces.label)}</legend><div class="swatches">
+        ${pieces.sizes.map((n, i) => `<label class="swatch"><input type="radio" name="pieces" value="${n}"${i === 0 ? " checked" : ""}><span>${n}</span></label>`).join("")}
+        </div><p class="muted" style="font-size:.8rem;margin:6px 0 0">Need more? Just ${emailUs()}.</p></fieldset>` : "";
     const countBlock = p.sizes ? `
       <fieldset class="option-group"><legend>Number of ${unit}</legend><div class="swatches">
         ${p.sizes.map((n) => `<label class="swatch"><input type="radio" name="count" value="${n}"${n === start.count ? " checked" : ""}><span>${n} ${n === 1 ? unitOne : unit}</span></label>`).join("")}
@@ -96,6 +101,7 @@
           <form id="order" novalidate>
             ${p.options && p.options.colours ? group("colours", p.options.colours) : ""}
             ${countBlock}
+            ${piecesBlock}
             ${glitterBlock}
             ${group("wrap", p.options.wrap)}
             <p class="note-box" style="margin:-4px 0 18px"><span>You can customise your bouquet and its colours if needed. Just ${contactLinks()}.</span></p>
@@ -152,6 +158,12 @@
         name = `${p.name}, ${choice.count} ${choice.count === 1 ? unitOne : unit}`;
         price = p.priceFor(choice);
       }
+      if (pieces) {
+        const n = Number(form.pieces.value), [one, many] = pieces.unit;
+        options[many.replace(/^./, (c) => c.toUpperCase())] = n;
+        name = `${p.name}, ${n} ${n === 1 ? one : many}`;
+        price = pieces.prices ? pieces.prices[n] ?? null : null;
+      }
       return {
         id: p.id, name, price, qty: 1, options, note: note.value.trim(),
         image: drawn ? drawBouquet(p, choice) : (p.wrapPhotos && p.wrapPhotos[choice.wrap]) || photos[0], choice,
@@ -195,6 +207,7 @@
         const n = document.getElementById("preview-note");
         if (n) n.textContent = "Preview of your choices. Each bouquet is handmade, so the real one will vary a little.";
       }
+      if (pieces) document.getElementById("price").innerHTML = item.price == null ? "Price by email" : rupees(item.price);
       if (drawn) {
         const was = p.wasFor && item.price != null ? p.wasFor(item.choice) : null;
         document.getElementById("price").innerHTML = item.price == null ? "Price on request"
