@@ -6,10 +6,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610230907">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610230911">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
-<meta name="description" content="Handmade bouquet, made to order. Choose colours, wrap and ribbon, and order on WhatsApp.">
+<meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order on WhatsApp.">
 </head>
 <body data-page="shop">
 <main id="main" class="container">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610230907"></script>
-<script src="assets/js/bouquet.js?v=202610230907"></script>
-<script src="assets/js/app.js?v=202610230907"></script>
+<script src="assets/js/data.js?v=202610230911"></script>
+<script src="assets/js/bouquet.js?v=202610230911"></script>
+<script src="assets/js/app.js?v=202610230911"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const p = byId(params.get("id"));
@@ -87,7 +87,6 @@
             ${countBlock}
             ${glitterBlock}
             ${group("wrap", p.options.wrap)}
-            ${group("ribbon", p.options.ribbon)}
             <p class="note-box" style="margin:-4px 0 18px"><span>Want a colour that isn't listed? We can customise your bouquet, just ${contactLinks()}.</span></p>
             <div class="field"><label for="note">Gift note (optional)</label>
               <textarea class="input" id="note" maxlength="200" placeholder="Add your message here..."></textarea>
@@ -122,8 +121,8 @@
     function clampCount(n) { return Math.min(p.maxCount, Math.max(p.minCount, n)); }
 
     function current() {
-      const choice = { wrap: form.wrap.value, ribbon: form.ribbon.value };
-      const options = { Wrap: choice.wrap, Ribbon: choice.ribbon };
+      const choice = { wrap: form.wrap.value, ribbon: start.ribbon };
+      const options = { Wrap: choice.wrap };
       let name = p.name, price = p.price;
       if (drawn) {
         choice.count = p.sizes ? Number(form.count.value) : clampCount(parseInt(count.value, 10) || p.minCount);

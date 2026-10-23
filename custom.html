@@ -6,10 +6,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610230907">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610230911">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Build Your Own Bouquet | Fleure</title>
-<meta name="description" content="Create a custom handmade bouquet: choose flowers, colours, wrap, ribbon and a gift note, then send your order on WhatsApp.">
+<meta name="description" content="Create a custom handmade bouquet: choose flowers, colours, wrap and a gift note, then send your order on WhatsApp.">
 </head>
 <body data-page="custom">
 <main id="main" class="container">
@@ -23,7 +23,7 @@
       <div class="steps panel" style="padding:12px">
         <div class="step"><span class="step-num">1</span><div><strong>Pick flowers</strong></div></div>
         <div class="step"><span class="step-num">2</span><div><strong>Pick colours</strong></div></div>
-        <div class="step"><span class="step-num">3</span><div><strong>Pick wrap and ribbon</strong></div></div>
+        <div class="step"><span class="step-num">3</span><div><strong>Pick wrap</strong></div></div>
         <div class="step"><span class="step-num">4</span><div><strong>Add note</strong></div></div>
       </div>
 
@@ -38,8 +38,6 @@
         <div class="field"><label for="c-wrap">Wrapping Colour</label>
           <select class="input" id="c-wrap" name="wrap"><option>White</option><option>Black</option><option>Newspaper</option></select></div>
         <div class="field"><label for="c-phone">WhatsApp Number</label><input class="input" id="c-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required><div class="error" id="e-phone"></div></div>
-        <div class="field"><label for="c-ribbon">Ribbon Colour</label>
-          <select class="input" id="c-ribbon" name="ribbon"><option>Red</option><option>Pink</option><option>Black</option><option>White</option></select><div class="counter" style="text-align:left">Want another colour? We can customise it, just call or email us.</div></div>
         <div class="field"><label for="c-occasion">Occasion</label>
           <select class="input" id="c-occasion" name="occasion"><option>Birthday</option><option>Anniversary</option><option>Graduation</option><option>Valentine's</option><option>Just because</option><option>Other</option></select></div>
         <div class="field"><label for="c-qty">Number of flowers</label><input class="input" id="c-qty" name="qty" type="number" min="1" max="20" value="1" inputmode="numeric"><div class="counter" style="text-align:left">Up to 20 flowers. Want more? We can make it, just call or email us.</div></div>
@@ -57,9 +55,9 @@
     </form>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610230907"></script>
-<script src="assets/js/bouquet.js?v=202610230907"></script>
-<script src="assets/js/app.js?v=202610230907"></script>
+<script src="assets/js/data.js?v=202610230911"></script>
+<script src="assets/js/bouquet.js?v=202610230911"></script>
+<script src="assets/js/app.js?v=202610230911"></script>
 <script>
   document.querySelectorAll("[data-wa]").forEach((a) => (a.href = waLink(a.dataset.wa)));
   document.getElementById("occasions").innerHTML = [
@@ -79,7 +77,7 @@
     }
     if (!ok) return;
     const f = Object.fromEntries(new FormData(form));
-    const msg = `Hi ${SHOP.name}! I'd like a custom bouquet.\n\nName: ${f.name}\nWhatsApp: ${f.phone}\nOccasion: ${f.occasion}\nFlowers: ${f.flowers}\nFlower colours: ${f.colours || "-"}\nWrapping: ${f.wrap}\nRibbon: ${f.ribbon}\nNumber of flowers: ${f.qty}\nGift note: ${f.note || "-"}\nDelivery: ${f.delivery}`;
+    const msg = `Hi ${SHOP.name}! I'd like a custom bouquet.\n\nName: ${f.name}\nWhatsApp: ${f.phone}\nOccasion: ${f.occasion}\nFlowers: ${f.flowers}\nFlower colours: ${f.colours || "-"}\nWrapping: ${f.wrap}\nNumber of flowers: ${f.qty}\nGift note: ${f.note || "-"}\nDelivery: ${f.delivery}`;
     window.open(waLink(msg), "_blank", "noopener");
   });
 </script>
