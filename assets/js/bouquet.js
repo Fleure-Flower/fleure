@@ -44,6 +44,12 @@
   }
 
   // ---------- Pipe-cleaner flowers, drawn about 110px across around 0,0 ----------
+  // Lily colours: [petal, alternate petal, edge, centre vein]
+  const LILY = {
+    Pink: ["#f7bfd1", "#f9cfdc", "#e48aa9", "#e57aa0"],
+    White: ["#f4f1f2", "#ffffff", "#d6ced2", "#e2d9dd"],
+    Red: ["#9b1b30", "#ad2238", "#ffffff", "#ffd9df"],
+  };
   const PIPE = {
     sunflower: () => `${petals(16, () => `<path d="M0 -20 C 13 -32 11 -52 0 -60 C -11 -52 -13 -32 0 -20Z" fill="url(#sunPetal)" stroke="#d9a20f" stroke-width="2"/>`)}
       <circle r="26" fill="#4a2a17"/>${[22, 16, 10, 4].map((r, i) => `<circle r="${r}" fill="none" stroke="${i % 2 ? "#6b3f22" : "#3a2010"}" stroke-width="4"/>`).join("")}`,
@@ -53,8 +59,11 @@
       <path d="M-34 -6 C -40 -40 -30 -60 -18 -66 C -10 -44 -8 -24 -6 18 C -24 18 -32 10 -34 -6Z" fill="#ee8fb3" stroke="#d26c95" stroke-width="2"/>
       <path d="M34 -6 C 40 -40 30 -60 18 -66 C 10 -44 8 -24 6 18 C 24 18 32 10 34 -6Z" fill="#ee8fb3" stroke="#d26c95" stroke-width="2"/>
       <path d="M0 -70 C 22 -54 26 -20 18 10 C 12 22 -12 22 -18 10 C -26 -20 -22 -54 0 -70Z" fill="url(#tulipPetal)" stroke="#d26c95" stroke-width="2"/></g>`,
-    lily: () => `${petals(6, (i) => `<path d="M0 -4 C 20 -20 18 -46 0 -64 C -18 -46 -20 -20 0 -4Z" fill="${i % 2 ? "#f7bfd1" : "#f9cfdc"}" stroke="#e48aa9" stroke-width="2"/><path d="M0 -10 L0 -48" stroke="#e57aa0" stroke-width="2" stroke-linecap="round"/>`)}
-      ${petals(6, () => `<path d="M0 0 L4 -26" stroke="#c9a23a" stroke-width="2"/><ellipse cx="4" cy="-28" rx="3" ry="5" fill="#b7562e"/>`)}`,
+    lily: (c) => {
+      const [a, b, edge, vein] = LILY[c] || LILY.Pink;
+      return `${petals(6, (i) => `<path d="M0 -4 C 20 -20 18 -46 0 -64 C -18 -46 -20 -20 0 -4Z" fill="${i % 2 ? a : b}" stroke="${edge}" stroke-width="2"/><path d="M0 -10 L0 -48" stroke="${vein}" stroke-width="2" stroke-linecap="round"/>`)}
+      ${petals(6, () => `<path d="M0 0 L4 -26" stroke="#c9a23a" stroke-width="2"/><ellipse cx="4" cy="-28" rx="3" ry="5" fill="#b7562e"/>`)}`;
+    },
     daisy: () => `${petals(18, () => `<path d="M0 -14 C 7 -24 7 -46 0 -54 C -7 -46 -7 -24 0 -14Z" fill="#ffffff" stroke="#e3dfe2" stroke-width="2"/>`)}
       <circle r="17" fill="#f2c230" stroke="#dca614" stroke-width="3"/>`,
     custom: () => `${petals(5, () => `<path d="M0 -10 C 22 -18 26 -46 0 -54 C -26 -46 -22 -18 0 -10Z" fill="#7e62d4" stroke="#5f45b4" stroke-width="2"/><path d="M0 -16 C 10 -22 12 -40 0 -46 C -12 -40 -10 -22 0 -16Z" fill="#9a83e2"/>`)}
@@ -189,7 +198,7 @@
       const tilt = n > 3 ? Math.round((rand() - 0.5) * 30) : 0;
       const body = o.kind === "ribbon"
         ? ribbonRose(colourAt(o.colours, i, n, rRel === undefined ? (i === 0 && n === 3 ? 0 : 1) : rRel), o.glitter, rand)
-        : `<g filter="url(#fuzz)">${(PIPE[o.flowers[i % o.flowers.length]] || PIPE.rose)()}</g>`;
+        : `<g filter="url(#fuzz)">${(PIPE[o.flowers[i % o.flowers.length]] || PIPE.rose)(o.colours ? o.colours.split(" & ")[i % o.colours.split(" & ").length] : undefined)}</g>`;
       return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${tilt}) scale(${s})">${body}</g>`;
     }).join("");
     // a soft inner lining so gaps between flowers read as wrap, not background

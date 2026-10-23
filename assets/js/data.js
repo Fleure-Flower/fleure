@@ -87,11 +87,11 @@ window.PRODUCTS = [
   roses("black-ribbon-roses", "Black Ribbon Roses", "Black", { wrap: "White", count: 3 }, [],
     { images: ["white-plain-3", "black-plain-3", "newspaper-plain-1", "white-glitter-1", "black-glitter-3", "newspaper-glitter-3"].map((n) => `assets/sizes/black/${n}.jpg`) }),
 
-  pipe("lily", "Pipe Cleaner Lily", "lily", ["lily"], { wrap: "White", ribbon: "Pink" }, {
+  pipe("lily", "Pipe Cleaner Lily", "lily", ["lily"], { wrap: "White", ribbon: "Pink", colours: "Pink" }, {
     unit: ["lily", "lilies"], sizes: [1, 3, 5, 7, 10], maxCount: 10, priceFrom: true, // the only sizes sold; more on request
     priceFor: (o) => lilyPrice(o, 0), wasFor: (o) => lilyPrice(o, 1), tagFor: (o) => lilyPrice(o, 2),
-    description: "Lilies shaped by hand from soft pipe cleaners, wrapped and tied with a double satin bow. Choose how many lilies (1, 3, 5, 7 or 10) and your wrapping paper. Made to last, with no water or care needed.",
-    options: { wrap: WRAPS },
+    description: "Lilies shaped by hand from soft pipe cleaners, wrapped and tied with a double satin bow. Choose your lily colour, how many lilies (1, 3, 5, 7 or 10) and your wrapping paper. Made to last, with no water or care needed.",
+    options: { colours: ["Pink", "White", "Red", "Red & White"], wrap: WRAPS },
   }),
   {
     id: "white-lily-bouquet", name: "White Lily Bouquet", category: "lily", price: null,
