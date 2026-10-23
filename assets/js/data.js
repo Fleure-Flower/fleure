@@ -34,6 +34,13 @@ const rosePrice = (o, i) => {
   return o.glitter ? row[i] + row[2] - row[0] : row[i];
 };
 
+// Pipe cleaner lily prices by number of lilies: [price, old price shown crossed out, offer label].
+const LILY_PRICES = {
+  1: [89, null, ""], 3: [259, 267, "Offer price"], 5: [419, 445, "Offer price"],
+  7: [569, 623, "Offer price"], 10: [799, 890, "Bulk Special"],
+};
+const lilyPrice = (o, i) => (LILY_PRICES[o.count] ? LILY_PRICES[o.count][i] : null);
+
 const PIPE = "Handmade from soft pipe cleaners (chenille stems), wrapped and tied with a double satin bow.";
 
 // Pipe-cleaner bouquets are drawn by assets/js/bouquet.js, so the picture follows
@@ -80,7 +87,12 @@ window.PRODUCTS = [
   roses("black-ribbon-roses", "Black Ribbon Roses", "Black", { wrap: "White", count: 3 }, [],
     { images: ["white-plain-3", "black-plain-3", "newspaper-plain-1", "white-glitter-1", "black-glitter-3", "newspaper-glitter-3"].map((n) => `assets/sizes/black/${n}.jpg`) }),
 
-  pipe("lily", "Pipe Cleaner Lily", "lily", ["lily"], { wrap: "White", ribbon: "Pink" }),
+  pipe("lily", "Pipe Cleaner Lily", "lily", ["lily"], { wrap: "White", ribbon: "Pink" }, {
+    unit: ["lily", "lilies"], sizes: [1, 3, 5, 7, 10], maxCount: 10, priceFrom: true, // the only sizes sold; more on request
+    priceFor: (o) => lilyPrice(o, 0), wasFor: (o) => lilyPrice(o, 1), tagFor: (o) => lilyPrice(o, 2),
+    description: "Lilies shaped by hand from soft pipe cleaners, wrapped and tied with a double satin bow. Choose how many lilies (1, 3, 5, 7 or 10) and your wrapping paper. Made to last, with no water or care needed.",
+    options: { wrap: WRAPS },
+  }),
   {
     id: "white-lily-bouquet", name: "White Lily Bouquet", category: "lily", price: null,
     images: ["white", "black", "newspaper"].map((w) => `assets/photos/lily-white_${w}-wrap.jpg`),

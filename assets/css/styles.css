@@ -272,5 +272,6 @@ textarea.input { min-height: 96px; resize: vertical; }
 .price-table th, .price-table td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); }
 .price-table thead th { font-weight: 500; color: var(--muted); font-size: .85rem; }
 .price-table tbody th { font-weight: 600; }
+.price-table .offer { display: inline-block; margin-left: 6px; padding: 0 8px; border-radius: var(--pill); background: var(--blush); color: var(--wine); font-size: .75rem; font-weight: 600; }
 .price-table .was { opacity: .55; margin-left: 4px; }
 .price-table tr.is-current { background: var(--blush); }

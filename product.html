@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610231431">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610231437">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order on WhatsApp.">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610231431"></script>
-<script src="assets/js/bouquet.js?v=202610231431"></script>
-<script src="assets/js/app.js?v=202610231431"></script>
+<script src="assets/js/data.js?v=202610231437"></script>
+<script src="assets/js/bouquet.js?v=202610231437"></script>
+<script src="assets/js/app.js?v=202610231437"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const p = byId(params.get("id"));
@@ -33,7 +33,7 @@
   } else {
     document.title = `${p.name} | ${SHOP.name}`;
     const drawn = Boolean(p.kind);
-    const unit = p.kind === "ribbon" ? "roses" : "flowers";
+    const [unitOne, unit] = p.unit || (p.kind === "ribbon" ? ["rose", "roses"] : ["flower", "flowers"]);
     const labels = { colours: "Flower colours", wrap: "Wrapping paper", ribbon: "Ribbon colour" };
     const start = Object.assign({}, p.look);
 
@@ -50,7 +50,7 @@
     };
     const countBlock = p.sizes ? `
       <fieldset class="option-group"><legend>Number of ${unit}</legend><div class="swatches">
-        ${p.sizes.map((n) => `<label class="swatch"><input type="radio" name="count" value="${n}"${n === start.count ? " checked" : ""}><span>${n} ${n === 1 ? unit.slice(0, -1) : unit}</span></label>`).join("")}
+        ${p.sizes.map((n) => `<label class="swatch"><input type="radio" name="count" value="${n}"${n === start.count ? " checked" : ""}><span>${n} ${n === 1 ? unitOne : unit}</span></label>`).join("")}
         </div><p class="muted" id="mix-note" style="font-size:.8rem;margin:6px 0 0" hidden>Mixed colours start from ${p.mixMin} roses.</p><p class="muted" style="font-size:.8rem;margin:6px 0 0">Want a different number? We can make it for you, just ${contactLinks()}.</p></fieldset>` : drawn ? `
       <div class="field" style="margin-bottom:18px"><span class="field-label" id="count-label">Number of ${unit} (${p.minCount}–${p.maxCount})</span>
         <div class="qty" role="group" aria-labelledby="count-label">
@@ -66,16 +66,18 @@
         <label class="swatch"><input type="radio" name="finish" value="With glitter"${start.glitter ? " checked" : ""}><span>With glitter</span></label>
       </div></fieldset>` : "";
 
-    // Price list for every size, plain and glitter, with the old price crossed out.
+    // Price list for every size (plain and glitter for roses), with the old price crossed out.
     const cell = (o) => {
-      const now = p.priceFor(o), was = p.wasFor(o);
-      return now == null ? "On WhatsApp" : rupees(now) + (was ? ` <s class="was">${rupees(was)}</s>` : "");
+      const now = p.priceFor(o), was = p.wasFor(o), tag = p.tagFor && p.tagFor(o);
+      return now == null ? "On WhatsApp" : rupees(now) + (was ? ` <s class="was">${rupees(was)}</s>` : "") + (tag ? ` <span class="offer">${esc(tag)}</span>` : "");
     };
+    const glitterCols = p.kind === "ribbon";
+    const unitTitle = (n) => { const u = n === 1 ? unitOne : unit; return u[0].toUpperCase() + u.slice(1); };
     const priceTable = p.sizes && p.wasFor ? `
       <div class="price-table-wrap"><h2 class="field-label">Price list</h2>
         <table class="price-table">
-          <thead><tr><th scope="col">Bouquet size</th><th scope="col">Without glitter</th><th scope="col">With glitter</th></tr></thead>
-          <tbody>${p.sizes.map((n) => `<tr data-count="${n}"><th scope="row">${n} ${n === 1 ? "Rose" : "Roses"}</th><td>${cell({ count: n, glitter: false })}</td><td>${cell({ count: n, glitter: true })}</td></tr>`).join("")}</tbody>
+          <thead><tr><th scope="col">Bouquet size</th>${glitterCols ? `<th scope="col">Without glitter</th><th scope="col">With glitter</th>` : `<th scope="col">Price</th>`}</tr></thead>
+          <tbody>${p.sizes.map((n) => `<tr data-count="${n}"><th scope="row">${n} ${unitTitle(n)}</th>${glitterCols ? `<td>${cell({ count: n, glitter: false })}</td><td>${cell({ count: n, glitter: true })}</td>` : `<td>${cell({ count: n })}</td>`}</tr>`).join("")}</tbody>
         </table></div>` : "";
 
     const photos = p.images;
@@ -147,7 +149,7 @@
           options.Colours = choice.colours;
           options.Finish = form.finish.value;
         }
-        name = `${p.name}, ${choice.count} ${choice.count === 1 ? unit.slice(0, -1) : unit}`;
+        name = `${p.name}, ${choice.count} ${choice.count === 1 ? unitOne : unit}`;
         price = p.priceFor(choice);
       }
       return {
@@ -158,7 +160,7 @@
 
     // Mixed colours (e.g. Red & White) are not made in the smallest sizes, and sizes over 10 come only in some colours.
     function syncSizes() {
-      if (!p.sizes) return;
+      if (!p.sizes || !form.colours) return;
       const colour = form.colours.value, mix = colour.includes(" & ");
       const min = mix && p.mixMin ? p.mixMin : 1;
       const ok = (n) => n >= min && (n <= 10 || !p.bigSizes || (p.bigSizes[colour] || []).includes(n));
