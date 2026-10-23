@@ -6,10 +6,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610231453">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610231459">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
-<meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order on WhatsApp.">
+<meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order online.">
 </head>
 <body data-page="shop">
 <main id="main" class="container">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610231453"></script>
-<script src="assets/js/bouquet.js?v=202610231453"></script>
-<script src="assets/js/app.js?v=202610231453"></script>
+<script src="assets/js/data.js?v=202610231459"></script>
+<script src="assets/js/bouquet.js?v=202610231459"></script>
+<script src="assets/js/app.js?v=202610231459"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const p = byId(params.get("id"));
@@ -43,11 +43,7 @@
         <div class="swatches">${values.map((v, i) => `<label class="swatch"><input type="radio" name="${key}" value="${esc(v)}"${(start[key] ? v === start[key] : i === 0) ? " checked" : ""}><span>${esc(v)}</span></label>`).join("")}</div>
       </fieldset>`;
 
-    const contactLinks = () => {
-      const call = SHOP.phone ? `<a href="tel:${esc(SHOP.phone.replace(/\s/g, ""))}">call</a>` : "call";
-      const mail = SHOP.email ? `<a href="mailto:${esc(SHOP.email)}">email</a>` : "email";
-      return SHOP.phone || SHOP.email ? `${call} or ${mail} us` : `<a href="contact.html">call or email us</a>`;
-    };
+    const contactLinks = () => emailUs();
     const countBlock = p.sizes ? `
       <fieldset class="option-group"><legend>Number of ${unit}</legend><div class="swatches">
         ${p.sizes.map((n) => `<label class="swatch"><input type="radio" name="count" value="${n}"${n === start.count ? " checked" : ""}><span>${n} ${n === 1 ? unitOne : unit}</span></label>`).join("")}
@@ -69,7 +65,7 @@
     // Price list for every size (plain and glitter for roses), with the old price crossed out.
     const cell = (o) => {
       const now = p.priceFor(o), was = p.wasFor(o), tag = p.tagFor && p.tagFor(o);
-      return now == null ? "On WhatsApp" : rupees(now) + (was ? ` <s class="was">${rupees(was)}</s>` : "") + (tag ? ` <span class="offer">${esc(tag)}</span>` : "");
+      return now == null ? "On request" : rupees(now) + (was ? ` <s class="was">${rupees(was)}</s>` : "") + (tag ? ` <span class="offer">${esc(tag)}</span>` : "");
     };
     const glitterCols = p.kind === "ribbon";
     const unitTitle = (n) => { const u = n === 1 ? unitOne : unit; return u[0].toUpperCase() + u.slice(1); };
@@ -108,7 +104,7 @@
               <div class="counter" id="note-count" aria-live="polite">0/200</div></div>
             <div class="pdp-actions">
               <button class="btn btn-secondary" type="submit">Add to bag</button>
-              <a class="btn btn-primary" id="wa-now" href="#" target="_blank" rel="noopener">${ICONS.whatsapp}Order on WhatsApp</a>
+              <button class="btn btn-primary" type="button" id="buy-now">Order Now</button>
             </div>
           </form>
           <div class="note-box"><span style="color:var(--rose)">${ICONS.heart.replace("<svg", '<svg width="22" height="22"')}</span>
@@ -201,17 +197,17 @@
       }
       if (drawn) {
         const was = p.wasFor && item.price != null ? p.wasFor(item.choice) : null;
-        document.getElementById("price").innerHTML = item.price == null ? "Price on WhatsApp"
+        document.getElementById("price").innerHTML = item.price == null ? "Price on request"
           : rupees(item.price) + (was ? ` <s class="was">${rupees(was)}</s>` : "");
       }
       root.querySelectorAll(".price-table tbody tr").forEach((r) => r.classList.toggle("is-current", Number(r.dataset.count) === item.choice.count));
       document.getElementById("note-count").textContent = `${note.value.length}/200`;
-      document.getElementById("wa-now").href = waLink(orderMessage([item]));
     }
     form.addEventListener("change", update);
     form.addEventListener("input", update);
     if (count) count.addEventListener("blur", () => { count.value = clampCount(parseInt(count.value, 10) || p.minCount); update(); });
     form.addEventListener("submit", (e) => { e.preventDefault(); addToCart(current()); });
+    document.getElementById("buy-now").addEventListener("click", () => { addToCart(current(), true); location.href = "checkout.html"; });
     update();
 
     const related = PRODUCTS.filter((x) => x.category === p.category && x.id !== p.id).slice(0, 5);

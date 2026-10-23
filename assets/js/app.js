@@ -1,4 +1,4 @@
-// Shared site behaviour: header, footer, cart and WhatsApp ordering.
+// Shared site behaviour: header, footer, cart, email contact and saving orders.
 (function () {
   const shop = window.SHOP;
   const products = window.PRODUCTS;
@@ -8,7 +8,6 @@
   const rupees = (n) => "₹" + Number(n).toLocaleString("en-IN");
 
   const icons = {
-    whatsapp: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2s.2-1.1.1-1.2-.2-.2-.5-.3z"/></svg>',
     instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>',
     mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
     bag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>',
@@ -21,12 +20,23 @@
   };
   window.ICONS = icons;
 
-  // WhatsApp link. With no number set, WhatsApp asks which chat to open.
-  function waLink(text) {
-    const base = shop.whatsapp ? `https://wa.me/${shop.whatsapp}` : "https://wa.me/";
-    return `${base}?text=${encodeURIComponent(text)}`;
-  }
-  window.waLink = waLink;
+  // Email is the only contact. Until the shop email is set, links go to the contact form.
+  const mailLink = (subject, body = "") => shop.email
+    ? `mailto:${shop.email}?subject=${encodeURIComponent(subject)}${body ? `&body=${encodeURIComponent(body)}` : ""}` : "contact.html";
+  window.mailLink = mailLink;
+  window.emailUs = (text = "email us") => `<a href="${esc(mailLink("Custom bouquet request"))}">${text}</a>`;
+
+  // Saves an order, custom request or message to the shop's Google Sheet (see scripts/orders-sheet.gs).
+  window.sendToShop = async (record) => {
+    if (!shop.orderSheetUrl) throw new Error("not-set-up");
+    const res = await fetch(shop.orderSheetUrl, { method: "POST", body: new URLSearchParams({ data: JSON.stringify(record) }) });
+    const out = await res.json();
+    if (!out.ok) throw new Error(out.error || "not saved");
+  };
+  window.newOrderId = (prefix = "FL") => {
+    const d = new Date(), pad = (n) => String(n).padStart(2, "0");
+    return `${prefix}-${String(d.getFullYear()).slice(2)}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+  };
 
   /* ---------- Header and footer ---------- */
   const page = document.body.dataset.page;
@@ -47,7 +57,7 @@
         ${navItems.map(([id, href, label]) => `<a href="${href}"${id === page ? ' aria-current="page"' : ""}>${label}</a>`).join("")}
       </nav>
       <div class="header-actions">
-        <a class="btn btn-primary header-wa" href="${waLink("Hi! I'd like to order a bouquet.")}" target="_blank" rel="noopener">${icons.whatsapp}Order on WhatsApp</a>
+        <a class="btn btn-primary header-wa" href="shop.html">Order Now</a>
         <button class="icon-btn" type="button" data-open-cart aria-label="Open cart">${icons.bag}<span class="badge" data-cart-count hidden>0</span></button>
         <button class="icon-btn menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">${icons.menu}</button>
       </div>
@@ -61,7 +71,6 @@
   });
 
   const socials = [
-    shop.whatsapp ? `<a href="${waLink("Hi!")}" target="_blank" rel="noopener" aria-label="WhatsApp">${icons.whatsapp}</a>` : "",
     shop.instagram ? `<a href="https://instagram.com/${esc(shop.instagram)}" target="_blank" rel="noopener" aria-label="Instagram">${icons.instagram}</a>` : "",
     shop.email ? `<a href="mailto:${esc(shop.email)}" aria-label="Email">${icons.mail}</a>` : "",
   ].join("");
@@ -78,7 +87,7 @@
       <div><h3>Shop</h3><ul>
         <li><a href="shop.html">All Bouquets</a></li>
         <li><a href="shop.html#ribbon">Ribbon Roses</a></li>
-        <li><a href="shop.html#lily">Pipe Cleaner Lilies</a></li>
+        <li><a href="shop.html#lily">Lily Bouquets</a></li>
         <li><a href="shop.html#gift">Gift Bouquets</a></li>
       </ul></div>
       <div><h3>Customer Care</h3><ul>
@@ -134,17 +143,15 @@
 
   const lineTotal = (item) => (item.price ? item.price * item.qty : 0);
 
-  function orderMessage(items) {
-    const lines = items.map((it, i) => {
-      const opts = Object.entries(it.options || {}).filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`).join(", ");
-      const price = it.price ? `${rupees(it.price)} x ${it.qty} = ${rupees(lineTotal(it))}` : `x ${it.qty} (price to confirm)`;
-      return `${i + 1}. ${it.name}${opts ? ` (${opts})` : ""}\n   ${price}${it.note ? `\n   Gift note: ${it.note}` : ""}`;
-    });
-    const total = items.reduce((s, it) => s + lineTotal(it), 0);
-    const unpriced = items.some((it) => !it.price);
-    return `Hi ${shop.name}! I'd like to order:\n\n${lines.join("\n")}\n\nTotal: ${rupees(total)}${unpriced ? " + items priced on request" : ""}\n\nMy name:\nDelivery address:\nDelivery date:`;
-  }
-  window.orderMessage = orderMessage;
+  // The bag as plain text, one bouquet per line, for the order sheet.
+  window.itemsText = (items) => items.map((it, i) => {
+    const opts = Object.entries(it.options || {}).filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`).join(", ");
+    const price = it.price ? `${rupees(it.price)} x ${it.qty} = ${rupees(lineTotal(it))}` : `x ${it.qty} (price to confirm)`;
+    return `${i + 1}. ${it.name}${opts ? ` (${opts})` : ""}, ${price}${it.note ? `, gift note: ${it.note}` : ""}`;
+  }).join("\n");
+  window.lineTotal = lineTotal;
+  window.getCart = () => cart.slice();
+  window.clearCart = () => { cart = []; save(); };
 
   function render() {
     const count = cart.reduce((s, it) => s + it.qty, 0);
@@ -167,8 +174,8 @@
     const total = cart.reduce((s, it) => s + lineTotal(it), 0);
     foot.innerHTML = `
       <div class="cart-total"><span>Total</span><span>${rupees(total)}${cart.some((it) => !it.price) ? " +" : ""}</span></div>
-      <a class="btn btn-primary btn-block" href="${waLink(orderMessage(cart))}" target="_blank" rel="noopener">${icons.whatsapp}Order on WhatsApp</a>
-      <p class="muted" style="font-size:.78rem;margin:0;text-align:center">Customisation and delivery details are confirmed over WhatsApp.</p>`;
+      <a class="btn btn-primary btn-block" href="checkout.html">Checkout</a>
+      <p class="muted" style="font-size:.78rem;margin:0;text-align:center">Pickup is free. Delivery ₹${shop.delivery.day} (day) or ₹${shop.delivery.night} (night). No cash on delivery.</p>`;
     body.querySelectorAll("[data-remove]").forEach((b) => b.addEventListener("click", () => { cart.splice(Number(b.dataset.remove), 1); save(); }));
   }
 
@@ -178,16 +185,16 @@
   let toastTimer;
   function notify(msg) { toast.textContent = msg; toast.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => (toast.hidden = true), 2400); }
 
-  window.addToCart = function (item) {
+  window.addToCart = function (item, quiet) {
     const key = JSON.stringify([item.id, item.options, item.note, item.price]);
     const existing = cart.find((it) => JSON.stringify([it.id, it.options, it.note, it.price]) === key);
     if (existing) existing.qty += item.qty; else cart.push(item);
     save();
-    notify(`${item.name} added to your bag`);
+    if (!quiet) notify(`${item.name} added to your bag`);
   };
 
   /* ---------- Product cards ---------- */
-  window.priceLabel = (p) => (p.price == null ? "Ask us" : (p.priceFrom ? (p.kind === "ribbon" ? "from " : "") + rupees(p.price) + (p.kind === "ribbon" ? "" : "+") : rupees(p.price)));
+  window.priceLabel = (p) => (p.price == null ? "Ask us" : (p.priceFrom ? "from " : "") + rupees(p.price));
   // Drawn bouquet for the given choices; cards show a real photo when there is one.
   // Real photos exist for red ribbon roses with a red bow: every wrap, with and without glitter, 1 to 30 roses.
   // Photos reuse this script's ?v= stamp so browsers fetch new copies after each update.

@@ -6,10 +6,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610231453">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610231459">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>How to Order + FAQ | Fleure</title>
-<meta name="description" content="How to order a handmade bouquet on WhatsApp, plus answers about flower care, delivery and payment.">
+<meta name="description" content="How to order a handmade bouquet online, plus answers about flower care, delivery and payment.">
 </head>
 <body data-page="order">
 <main id="main" class="container">
@@ -18,15 +18,15 @@
       <h1 class="center">How to Order</h1>
       <div class="divider">♥</div>
       <ol class="step-list">
-        <li><span class="step-num">1</span>DM / WhatsApp us</li>
-        <li><span class="step-num">2</span>Flower(s) you want</li>
-        <li><span class="step-num">3</span>Quantity</li>
-        <li><span class="step-num">4</span>Colour customisation</li>
-        <li><span class="step-num">5</span>Delivery details</li>
+        <li><span class="step-num">1</span>Pick your bouquet</li>
+        <li><span class="step-num">2</span>Choose quantity, colour and wrap</li>
+        <li><span class="step-num">3</span>Add to bag and checkout</li>
+        <li><span class="step-num">4</span>Pickup (free) or delivery</li>
+        <li><span class="step-num">5</span>Pay online when we email you</li>
       </ol>
       <div class="center">
-        <a class="btn btn-primary" data-wa="Hi! I'd like to order a bouquet." href="#" target="_blank" rel="noopener"><span data-icon="whatsapp" style="display:contents"></span>Order on WhatsApp</a>
-        <p class="muted" style="font-size:.85rem;margin-top:10px"><span style="color:var(--rose)">♥</span> Customisation and delivery details are confirmed over WhatsApp.</p>
+        <a class="btn btn-primary" href="shop.html">Order Now</a>
+        <p class="muted" style="font-size:.85rem;margin-top:10px"><span style="color:var(--rose)">♥</span> For customisation or extra requests, <span id="email-us"></span>.</p>
       </div>
     </div>
     <div class="faq" id="faq">
@@ -36,16 +36,18 @@
         <p>Keep your flowers in a cool, dry place away from direct sunlight and moisture. Avoid water or mist, as our flowers are handmade and not real. Gently dust with a soft brush, or a blow dryer on a cool setting, if needed.</p></details>
       <details><summary>How long does delivery take?</summary>
         <p>Delivery time varies based on your location and the complexity of your order. Once details are confirmed, we'll share the estimated delivery time with you.</p></details>
+      <details><summary>How much is delivery?</summary>
+        <p>Pickup is free. Day delivery is ₹30 and night delivery is ₹40.</p></details>
       <details><summary>What payment options are available?</summary>
-        <p>Available payment options will be shared with you during order confirmation on WhatsApp.</p></details>
+        <p>Online payment only. We don't take cash on delivery. After you place your order, we'll email you to confirm it and share how to pay.</p></details>
     </div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610231453"></script>
-<script src="assets/js/bouquet.js?v=202610231453"></script>
-<script src="assets/js/app.js?v=202610231453"></script>
+<script src="assets/js/data.js?v=202610231459"></script>
+<script src="assets/js/bouquet.js?v=202610231459"></script>
+<script src="assets/js/app.js?v=202610231459"></script>
 <script>
-  document.querySelectorAll("[data-wa]").forEach((a) => (a.href = waLink(a.dataset.wa)));
+  document.getElementById("email-us").innerHTML = emailUs();
   document.querySelectorAll("[data-icon]").forEach((el) => (el.innerHTML = ICONS[el.dataset.icon]));
 </script>
 </body>

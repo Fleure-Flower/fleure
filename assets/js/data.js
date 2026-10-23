@@ -2,28 +2,28 @@
 window.SHOP = {
   name: "Fleure", // Taken from the Canva home page. Change here if your brand name is different.
   tagline: "Handmade forever flowers that never wilt",
-  // WhatsApp number with country code, digits only, e.g. "919876543210".
-  // Left empty until confirmed: WhatsApp then asks the customer which chat to send to.
-  whatsapp: "",
   instagram: "", // handle without @, e.g. "fleure.flowers"
-  email: "",
-  phone: "", // number for calls, e.g. "+91 98765 43210"
+  email: "", // the only contact for custom orders and extra requests
+  // Web app link from scripts/orders-sheet.gs. Every order, custom request and message is saved to that Google Sheet.
+  orderSheetUrl: "",
+  // Delivery charges in rupees. Pickup is free. No cash on delivery.
+  delivery: { pickup: 0, day: 30, night: 40 },
 };
 
 window.CATEGORIES = [
   { id: "ribbon", name: "Ribbon Roses", short: "Ribbon Roses", priceLabel: "from ₹59" },
-  { id: "lily", name: "Pipe Cleaner Lilies", short: "Pipe Cleaner Lily", priceLabel: "from ₹89" },
+  { id: "lily", name: "Lily Bouquets", short: "Lily Bouquet", priceLabel: "from ₹89" },
   { id: "gift", name: "Gift Bouquets", short: "Gift Bouquets", priceLabel: "from ₹299" },
 ];
 
 const WRAPS = ["White", "Black", "Newspaper"];
 const RIBBONS = ["Red", "Pink", "Black", "White"];
 
-// Pipe-cleaner prices by number of flowers. Sizes not listed are priced on WhatsApp.
+// Pipe-cleaner prices by number of flowers. Sizes not listed are priced on request.
 const PIPE_PRICES = { 1: 89, 2: 189, 3: 279 };
 
 // Ribbon rose prices by number of roses: [price, old price shown crossed out, price with glitter].
-// Glitter's old price keeps the same glitter extra on top of the plain old price. Sizes not listed are priced on WhatsApp.
+// Glitter's old price keeps the same glitter extra on top of the plain old price. Sizes not listed are priced on request.
 const ROSE_PRICES = {
   1: [59, null, 69], 3: [169, 179, 179], 7: [399, 419, 409], 10: [549, 599, 569],
   13: [719, 769, 739], 17: [929, 999, 949], 20: [1099, 1179, 1119],
@@ -101,15 +101,15 @@ window.PRODUCTS = [
     id: "white-lily-bouquet", name: "White Lily Bouquet", category: "lily", price: null,
     images: ["white", "black", "newspaper"].map((w) => `assets/photos/lily-white_${w}-wrap.jpg`),
     wrapPhotos: { White: "assets/photos/lily-white_white-wrap.jpg", Black: "assets/photos/lily-white_black-wrap.jpg", Newspaper: "assets/photos/lily-white_newspaper-wrap.jpg" },
-    description: "A full bouquet of pure white pipe-cleaner lilies with a white double satin bow. Pick your wrap: white, black or newspaper. Price on WhatsApp.",
+    description: "A full bouquet of pure white pipe-cleaner lilies with a white double satin bow. Pick your wrap: white, black or newspaper. Price on request; email us.",
     options: { wrap: WRAPS },
   },
-  pipe("grand-lily-red-white", "Lily Bouquet, Red & White", "lily", ["lily"], { wrap: "White", ribbon: "Red", colours: "Red & White", count: 10 },
+  pipe("grand-lily-red-white", "Lily Bouquet", "lily", ["lily"], { wrap: "White", ribbon: "Red", colours: "Red & White", count: 10 },
     Object.assign({}, LILY, { featured: true, images: ["assets/photos/lily-red-white_white-wrap.jpg", "assets/products/lily-bouquet-red-white.jpg"] })),
   {
     id: "grand-lily-blue-white", name: "Grand Lily Bouquet, Blue & White", category: "lily", price: null,
     images: ["assets/products/lily-bouquet-blue-white.jpg"],
-    description: "Blue and white pipe-cleaner lilies arranged into a full bouquet. Price depends on size; ask us on WhatsApp.",
+    description: "Blue and white pipe-cleaner lilies arranged into a full bouquet. Price depends on size; email us for the price.",
     options: { wrap: WRAPS, ribbon: RIBBONS },
   },
 
@@ -124,11 +124,11 @@ window.PRODUCTS = [
   { id: "photo-bouquet", name: "Photo Bouquet", category: "gift", price: 299, featured: true,
     images: ["black", "white"].map((w) => `assets/products/photo_${w}-wrap.jpg`),
     wrapPhotos: { Black: "assets/products/photo_black-wrap.jpg", White: "assets/products/photo_white-wrap.jpg" },
-    description: "Your favourite photos printed and arranged into a bouquet with a satin bow. Send us your photos on WhatsApp. Pick a black or white wrap.", options: { wrap: ["Black", "White"] } },
-  { id: "photo-teddy-bouquet", name: "Photo Bouquet with Teddy & Chocolates", category: "gift", price: 799, priceFrom: true,
+    description: "Your favourite photos printed and arranged into a bouquet with a satin bow. Email us your photos after you order. Pick a black or white wrap.", options: { wrap: ["Black", "White"] } },
+  { id: "photo-teddy-bouquet", name: "Photo Bouquet with Teddy & Chocolates", category: "gift", price: 799, priceFrom: true, featured: true,
     images: ["black", "white"].map((w) => `assets/products/photo-teddy_${w}-wrap.jpg`),
     wrapPhotos: { Black: "assets/products/photo-teddy_black-wrap.jpg", White: "assets/products/photo-teddy_white-wrap.jpg" },
-    description: "Your photos with a soft teddy, chocolates and baby's breath, wrapped with a satin bow. Send us your photos on WhatsApp. Pick a black or white wrap. From ₹799; the final price depends on the teddy you choose, confirmed on WhatsApp.", options: { wrap: ["Black", "White"] } },
+    description: "Your photos with a soft teddy, chocolates and baby's breath, wrapped with a satin bow. Email us your photos after you order. Pick a black or white wrap. From ₹799; the final price depends on the teddy you choose, confirmed by email.", options: { wrap: ["Black", "White"] } },
 ];
 
 // Real customer reviews go here, e.g. { text: "...", name: "First name" }.

@@ -6,10 +6,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610231453">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610231459">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Fleure | Handmade Flower Bouquets</title>
-<meta name="description" content="Handmade forever flowers that never wilt: pipe-cleaner and satin ribbon bouquets, made to order. Order on WhatsApp.">
+<meta name="description" content="Handmade forever flowers that never wilt: pipe-cleaner and satin ribbon bouquets, made to order. Order online.">
 </head>
 <body data-page="home">
 <main id="main">
@@ -22,7 +22,7 @@
           <p class="hero-tagline">Handmade forever flowers that never wilt</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="shop.html">Shop Now</a>
-            <a class="btn btn-secondary" data-wa="Hi! I'd like to order a bouquet." href="#" target="_blank" rel="noopener">Order on WhatsApp</a>
+            <a class="btn btn-secondary" href="custom.html">Custom Order</a>
           </div>
         </div>
         <div class="hero-images">
@@ -31,14 +31,6 @@
           <img src="assets/photos/rose-black-white_newspaper-wrap.jpg" alt="Black and white satin ribbon roses in newspaper wrap" width="300" height="400">
         </div>
       </div>
-    </div>
-  </section>
-
-  <section class="section-tight">
-    <div class="container">
-      <h2 class="section-title">Bouquets</h2>
-      <div class="divider">♥</div>
-      <div class="product-grid" id="featured"></div>
     </div>
   </section>
 
@@ -72,14 +64,12 @@
     </div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610231453"></script>
-<script src="assets/js/bouquet.js?v=202610231453"></script>
-<script src="assets/js/app.js?v=202610231453"></script>
+<script src="assets/js/data.js?v=202610231459"></script>
+<script src="assets/js/bouquet.js?v=202610231459"></script>
+<script src="assets/js/app.js?v=202610231459"></script>
 <script>
   document.querySelectorAll("[data-shop-name]").forEach((el) => (el.textContent = SHOP.name));
-  document.querySelectorAll("[data-wa]").forEach((a) => (a.href = waLink(a.dataset.wa)));
 
-  document.getElementById("featured").innerHTML = PRODUCTS.filter((p) => p.featured).map(productCard).join("");
 
   const catImage = { ribbon: "red-ribbon-roses", lily: "grand-lily-red-white", gift: "photo-teddy-bouquet" };
   document.getElementById("categories").innerHTML = CATEGORIES.map((c) => `

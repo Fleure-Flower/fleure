@@ -6,10 +6,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610231453">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610231459">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Build Your Own Bouquet | Fleure</title>
-<meta name="description" content="Create a custom handmade bouquet: choose flowers, colours, wrap and a gift note, then send your order on WhatsApp.">
+<meta name="description" content="Create a custom handmade bouquet: choose flowers, colours, wrap and a gift note, then send us your request.">
 </head>
 <body data-page="custom">
 <main id="main" class="container">
@@ -37,48 +37,61 @@
         <div class="field"><label for="c-name">Full Name</label><input class="input" id="c-name" name="name" autocomplete="name" required><div class="error" id="e-name"></div></div>
         <div class="field"><label for="c-wrap">Wrapping Colour</label>
           <select class="input" id="c-wrap" name="wrap"><option>White</option><option>Black</option><option>Newspaper</option></select></div>
-        <div class="field"><label for="c-phone">WhatsApp Number</label><input class="input" id="c-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required><div class="error" id="e-phone"></div></div>
+        <div class="field"><label for="c-email">Email</label><input class="input" id="c-email" name="email" type="email" autocomplete="email" required><div class="error" id="e-email"></div></div>
         <div class="field"><label for="c-occasion">Occasion</label>
           <select class="input" id="c-occasion" name="occasion"><option>Birthday</option><option>Anniversary</option><option>Graduation</option><option>Valentine's</option><option>Just because</option><option>Other</option></select></div>
-        <div class="field"><label for="c-qty">Number of flowers</label><input class="input" id="c-qty" name="qty" type="number" min="1" max="20" value="1" inputmode="numeric"><div class="counter" style="text-align:left">Up to 20 flowers. Want more? We can make it, just call or email us.</div></div>
+        <div class="field"><label for="c-qty">Number of flowers</label><input class="input" id="c-qty" name="qty" type="number" min="1" max="20" value="1" inputmode="numeric"><div class="counter" style="text-align:left">Up to 20 flowers. Want more? We can make it, just tell us in the note.</div></div>
         <div class="field"><label for="c-flowers">Flower Selection</label>
-          <select class="input" id="c-flowers" name="flowers"><option>Ribbon roses</option><option>Pipe cleaner lilies</option><option>Gift bouquet</option><option>Mixed (describe in note)</option></select></div>
+          <select class="input" id="c-flowers" name="flowers"><option>Ribbon roses</option><option>Lily bouquet</option><option>Gift bouquet</option><option>Mixed (describe in note)</option></select></div>
         <div class="field"><label for="c-colours">Flower Colours</label><input class="input" id="c-colours" name="colours" placeholder="e.g. pink and white"></div>
-        <div class="field full"><label for="c-note">Gift Note (optional)</label><textarea class="input" id="c-note" name="note" maxlength="200"></textarea></div>
-        <div class="field full"><label for="c-delivery">Delivery Details</label><textarea class="input" id="c-delivery" name="delivery" placeholder="Address and preferred date" required></textarea><div class="error" id="e-delivery"></div></div>
+        <div class="field full"><label for="c-note">Gift note and extra requests (optional)</label><textarea class="input" id="c-note" name="note" maxlength="500"></textarea></div>
+        <div class="field full"><label for="c-delivery">Pickup or Delivery</label><textarea class="input" id="c-delivery" name="delivery" placeholder="Pickup (free), or your address for delivery (₹30 day / ₹40 night), and the date you need it" required></textarea><div class="error" id="e-delivery"></div></div>
       </div>
       <div class="pdp-actions">
-        <button class="btn btn-primary" type="submit">Send Custom Order</button>
-        <a class="btn btn-secondary" data-wa="Hi! I'd like to place a custom bouquet order." href="#" target="_blank" rel="noopener">Just chat on WhatsApp</a>
+        <button class="btn btn-primary" type="submit" id="send">Send Custom Request</button>
       </div>
-      <p class="muted center" style="font-size:.8rem;margin:0">Sending opens WhatsApp with your order filled in. Nothing is charged until we confirm details with you.</p>
+      <p class="error center" id="send-error" role="alert"></p>
+      <p class="muted center" style="font-size:.8rem;margin:0">We'll email you the price and details. Nothing is charged until you confirm. Online payment only, no cash on delivery.</p>
     </form>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610231453"></script>
-<script src="assets/js/bouquet.js?v=202610231453"></script>
-<script src="assets/js/app.js?v=202610231453"></script>
+<script src="assets/js/data.js?v=202610231459"></script>
+<script src="assets/js/bouquet.js?v=202610231459"></script>
+<script src="assets/js/app.js?v=202610231459"></script>
 <script>
-  document.querySelectorAll("[data-wa]").forEach((a) => (a.href = waLink(a.dataset.wa)));
   document.getElementById("occasions").innerHTML = [
     ["Birthday", "photo-teddy-bouquet"], ["Anniversary", "red-ribbon-roses"], ["Graduation", "grand-lily-blue-white"], ["Valentine's", "pink-ribbon-roses"],
   ].map(([label, id]) => `<div class="cat-tile"><img src="${productImage(byId(id))}" alt="" loading="lazy"><div class="cat-label"><h3>${label}</h3></div></div>`).join("");
 
   const form = document.getElementById("custom");
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const checks = [["name", "Please enter your name."], ["phone", "Please enter your WhatsApp number."], ["delivery", "Please add delivery details."]];
+    const checks = [["name", "Please enter your name."], ["email", "Please enter your email."], ["delivery", "Please add delivery details."]];
     let ok = true;
     for (const [field, msg] of checks) {
-      const el = form[field], bad = !el.value.trim() || (field === "phone" && el.value.replace(/\D/g, "").length < 10);
+      const el = form[field], bad = !el.value.trim() || (field === "email" && !/^\S+@\S+\.\S+$/.test(el.value.trim()));
       el.setAttribute("aria-invalid", String(bad));
-      document.getElementById("e-" + field).textContent = bad ? (field === "phone" && el.value.trim() ? "Please enter a valid number." : msg) : "";
+      document.getElementById("e-" + field).textContent = bad ? (field === "email" && el.value.trim() ? "Please enter a valid email." : msg) : "";
       if (bad && ok) { el.focus(); ok = false; }
     }
     if (!ok) return;
     const f = Object.fromEntries(new FormData(form));
-    const msg = `Hi ${SHOP.name}! I'd like a custom bouquet.\n\nName: ${f.name}\nWhatsApp: ${f.phone}\nOccasion: ${f.occasion}\nFlowers: ${f.flowers}\nFlower colours: ${f.colours || "-"}\nWrapping: ${f.wrap}\nNumber of flowers: ${f.qty}\nGift note: ${f.note || "-"}\nDelivery: ${f.delivery}`;
-    window.open(waLink(msg), "_blank", "noopener");
+    const record = {
+      type: "Custom request", orderId: newOrderId("CU"), name: f.name.trim(), email: f.email.trim(),
+      items: `Custom bouquet: ${f.flowers}, colours: ${f.colours || "-"}, wrap: ${f.wrap}, ${f.qty} flowers, occasion: ${f.occasion}`,
+      address: f.delivery.trim(), notes: f.note.trim(),
+    };
+    const btn = document.getElementById("send"), err = document.getElementById("send-error");
+    btn.disabled = true; err.textContent = "";
+    try {
+      await sendToShop(record);
+    } catch (x) {
+      btn.disabled = false;
+      err.innerHTML = `Sorry, we couldn't send your request here. Please ${emailUs("email us")} instead.`;
+      return;
+    }
+    form.innerHTML = `<h2 class="center script" style="font-size:2rem">Thank you, ${esc(record.name)}!</h2>
+      <p class="center">Your request number is <strong>${esc(record.orderId)}</strong>. We'll email you at ${esc(record.email)} with the price and details.</p>`;
   });
 </script>
 </body>
