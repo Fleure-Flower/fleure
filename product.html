@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610231321">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610231324">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order on WhatsApp.">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610231321"></script>
-<script src="assets/js/bouquet.js?v=202610231321"></script>
-<script src="assets/js/app.js?v=202610231321"></script>
+<script src="assets/js/data.js?v=202610231324"></script>
+<script src="assets/js/bouquet.js?v=202610231324"></script>
+<script src="assets/js/app.js?v=202610231324"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const p = byId(params.get("id"));
@@ -156,18 +156,24 @@
       };
     }
 
-    // Mixed colours (e.g. Red & White) are not made in the smallest sizes, and only red comes in the biggest.
+    // Mixed colours (e.g. Red & White) are not made in the smallest sizes, and sizes over 10 come only in some colours.
     function syncSizes() {
       if (!p.sizes) return;
       const colour = form.colours.value, mix = colour.includes(" & ");
-      const min = mix && p.mixMin ? p.mixMin : 1, max = p.maxFor ? p.maxFor(colour) : Infinity;
+      const min = mix && p.mixMin ? p.mixMin : 1;
+      const ok = (n) => n >= min && (n <= 10 || !p.bigSizes || (p.bigSizes[colour] || []).includes(n));
       const boxes = [...form.querySelectorAll('input[name="count"]')];
-      boxes.forEach((b) => { const n = Number(b.value); b.disabled = n < min || n > max; });
+      boxes.forEach((b) => { b.disabled = !ok(Number(b.value)); });
       const n = Number(form.count.value);
-      if (n < min || n > max) boxes.find((b) => Number(b.value) === Math.min(max, Math.max(min, n))).checked = true;
+      if (!ok(n)) {
+        const allowed = boxes.map((b) => Number(b.value)).filter(ok);
+        const pick = allowed.reduce((best, x) => (Math.abs(x - n) < Math.abs(best - n) ? x : best));
+        boxes.find((b) => Number(b.value) === pick).checked = true;
+      }
+      const missing = p.sizes.filter((x) => x > 10 && x >= min && !ok(x));
       const notes = [];
       if (mix && p.mixMin) notes.push(`Mixed colours start from ${p.mixMin} roses.`);
-      if (max < p.maxCount) notes.push(`${p.sizes.filter((x) => x > max).join(", ").replace(/, (\d+)$/, " and $1")} roses are only available in red for now.`);
+      if (missing.length) notes.push(`${missing.join(", ").replace(/, (\d+)$/, " and $1")} roses aren't available in ${colour.toLowerCase()} for now.`);
       const note = document.getElementById("mix-note");
       note.textContent = notes.join(" ");
       note.hidden = !notes.length;

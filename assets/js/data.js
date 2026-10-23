@@ -61,10 +61,10 @@ function roses(id, name, colours, look, photos, extra) {
     images: photos.map((p) => `assets/photos/${p}.jpg`),
     look: Object.assign({ count: 20, glitter: false, colours }, look, { ribbon: colours }),
     minCount: 1, maxCount: 20, sizes: [1, 3, 7, 10, 13, 17, 20], mixMin: 7, // the only sizes sold (mixed colours from 7); other counts on request
-    maxFor: (c) => (c === "Red" ? 20 : 10), // 13, 17 and 20 roses are red only for now
+    bigSizes: { Red: [13, 17, 20], Pink: [20] }, // sizes over 10 sold for now, by colour
     priceFor: (o) => rosePrice(o, 0),
     wasFor: (o) => rosePrice(o, 1),
-    description: "Roses folded by hand from satin ribbon, tied with a double satin bow in the same colour as the roses. Glitter roses get a rhinestone centre. Choose your colours, how many roses (1, 3, 7, 10, 13, 17 or 20; 13 and up in red only for now), and glitter for extra sparkle.",
+    description: "Roses folded by hand from satin ribbon, tied with a double satin bow in the same colour as the roses. Glitter roses get a rhinestone centre. Choose your colours, how many roses (1, 3, 7, 10, 13, 17 or 20; some sizes over 10 only in certain colours for now), and glitter for extra sparkle.",
     options: { colours: ["Red", "Pink", "White", "Black", "Red & White", "Black & White"], wrap: WRAPS, ribbon: RIBBONS },
   }, extra || {});
 }
