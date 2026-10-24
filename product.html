@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610241039">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610241053">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order online.">
@@ -24,9 +24,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610241039"></script>
-<script src="assets/js/bouquet.js?v=202610241039"></script>
-<script src="assets/js/app.js?v=202610241039"></script>
+<script src="assets/js/data.js?v=202610241053"></script>
+<script src="assets/js/bouquet.js?v=202610241053"></script>
+<script src="assets/js/app.js?v=202610241053"></script>
 <script>
   const params = new URLSearchParams(location.search);
   // Old links to lily products that were merged into the White Lily Bouquet.
@@ -180,12 +180,13 @@
       };
     }
 
-    // Mixed colours (e.g. Red & White) are not made in the smallest sizes, and sizes over 10 come only in some colours.
+    // Mixed colours (e.g. Red & White) are not made in the smallest sizes, and some colours stop at a smaller size.
     function syncSizes() {
       if (!p.sizes || !form.colours) return;
       const colour = form.colours.value, mix = colour.includes(" & ");
       const min = mix && p.mixMin ? p.mixMin : 1;
-      const ok = (n) => n >= min && (n <= 10 || !p.bigSizes || (p.bigSizes[colour] || []).includes(n));
+      const max = (p.maxByColour || {})[colour] || p.maxCount;
+      const ok = (n) => n >= min && n <= max;
       const boxes = [...form.querySelectorAll('input[name="count"]')];
       boxes.forEach((b) => { b.disabled = !ok(Number(b.value)); });
       const n = Number(form.count.value);
@@ -194,7 +195,7 @@
         const pick = allowed.reduce((best, x) => (Math.abs(x - n) < Math.abs(best - n) ? x : best));
         boxes.find((b) => Number(b.value) === pick).checked = true;
       }
-      const missing = p.sizes.filter((x) => x > 10 && x >= min && !ok(x));
+      const missing = p.sizes.filter((x) => x >= min && !ok(x));
       const notes = [];
       if (mix && p.mixMin) notes.push(`Mixed colours start from ${p.mixMin} roses.`);
       if (missing.length) notes.push(`${missing.join(", ").replace(/, (\d+)$/, " and $1")} roses aren't available in ${colour.toLowerCase()} for now.`);
@@ -239,12 +240,13 @@
 
     // Reference pictures of other designs; customers email us the picture to order one like it.
     if (p.ideas) {
-      const pic = (n) => `assets/photos/ideas/idea-${String(n).padStart(2, "0")}.jpg`;
+      const idea = p.ideasName || "Idea";
+      const pic = (n) => `${p.ideasFolder || "assets/photos/ideas/"}idea-${String(n).padStart(2, "0")}.jpg`;
       document.getElementById("ideas-note").innerHTML = `Like one of these? We can make a bouquet like it for you. ${emailUs("Email us")} the picture (or its number) and tell us the colours and size you'd like. These are reference pictures to show the kind of designs we can customise.`;
       document.getElementById("ideas").innerHTML = p.ideas.map((n) => {
-        const href = mailLink(`Custom bouquet like idea #${n}`, `Hi! I'd like a bouquet like this reference picture (idea #${n}): ${new URL(pic(n), location.href).href}\n\nColours:\nSize:\nDate needed:`);
-        return `<article class="card"><img class="card-img" src="${pic(n)}" alt="Customisation idea ${n}" loading="lazy" width="300" height="375">
-          <h3>Idea #${n}</h3><a class="btn btn-outline" href="${esc(href)}">Email us</a></article>`;
+        const href = mailLink(`Custom bouquet like ${idea.toLowerCase()} #${n}`, `Hi! I'd like a bouquet like this reference picture (${idea.toLowerCase()} #${n}): ${new URL(pic(n), location.href).href}\n\nColours:\nSize:\nDate needed:`);
+        return `<article class="card"><img class="card-img" src="${pic(n)}" alt="Customisation ${idea.toLowerCase()} ${n}" loading="lazy" width="300" height="375">
+          <h3>${idea} #${n}</h3><a class="btn btn-outline" href="${esc(href)}">Email us</a></article>`;
       }).join("");
       document.getElementById("ideas-wrap").hidden = false;
     }
