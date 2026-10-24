@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610241053">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610241151">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Checkout | Fleure</title>
 <meta name="description" content="Place your order: your details, pickup or delivery, and online payment.">
@@ -16,6 +16,8 @@
   <section class="section-tight split" style="align-items:start" id="checkout">
     <form class="panel" id="order" novalidate style="padding:24px">
       <h1 class="script" style="font-size:2.4rem;margin:0 0 12px">Checkout</h1>
+      <p class="muted" id="step-label" style="margin:0 0 14px">Step 1 of 2: Your details</p>
+      <div id="step1">
       <div class="form-grid">
         <div class="field full"><label for="o-name">Full Name</label><input class="input" id="o-name" name="name" autocomplete="name" required><div class="error" id="e-name"></div></div>
         <div class="field"><label for="o-email">Email</label><input class="input" id="o-email" name="email" type="email" autocomplete="email" required><div class="error" id="e-email"></div></div>
@@ -30,10 +32,20 @@
 </div>
         <div class="field" id="pincode-field"><label for="o-pincode">Pincode</label><input class="input" id="o-pincode" name="pincode" inputmode="numeric" autocomplete="postal-code" maxlength="6"><div class="error" id="e-pincode" role="status"></div></div>
         <div class="field"><label for="o-date">Date needed</label><input class="input" id="o-date" name="date" type="date" required><div class="error" id="e-date"></div></div>
-        <div class="field full"><label for="o-notes">Extra requests (optional)</label><textarea class="input" id="o-notes" name="notes" maxlength="500" placeholder="Anything else we should know?"></textarea></div>
+        <div class="field full"><label for="o-notes">Customisation ideas and extra requests (optional)</label><textarea class="input" id="o-notes" name="notes" maxlength="500" placeholder="Colours, design, a message for the card, or anything else you'd like."></textarea></div>
       </div>
-      <p class="note-box" style="margin:4px 0 18px"><span><strong>Online payment only. No cash on delivery.</strong> After you place your order we'll email you to confirm it and share how to pay.</span></p>
-      <button class="btn btn-primary btn-block" type="submit" id="place">Place Order</button>
+      <p class="note-box" style="margin:4px 0 18px"><span><strong>Online payment only. No cash on delivery.</strong> On the next step you'll pay by scanning our QR code and upload a screenshot of your payment.</span></p>
+      <button class="btn btn-primary btn-block" type="button" id="next">Continue to Payment</button>
+      </div>
+      <div id="step2" hidden>
+        <p style="margin:0 0 6px">Amount to pay: <strong id="pay-amount"></strong></p>
+        <p class="muted" id="pay-unpriced" style="font-size:.85rem;margin:0 0 10px" hidden></p>
+        <div id="qr" class="center" style="margin:0 0 16px"></div>
+        <div class="field"><label for="o-shot">Screenshot of your payment</label><input class="input" id="o-shot" name="shot" type="file" accept="image/*"><div class="error" id="e-shot"></div>
+          <img id="shot-preview" alt="Your payment screenshot" hidden style="max-width:180px;margin-top:10px;border-radius:8px"></div>
+        <button class="btn btn-primary btn-block" type="submit" id="place">Place Order</button>
+        <button class="btn btn-secondary btn-block" type="button" id="back" style="margin-top:10px">Back to details</button>
+      </div>
       <p class="error" id="send-error" role="alert" style="margin-top:10px"></p>
     </form>
     <aside class="panel" style="padding:24px">
@@ -42,9 +54,9 @@
     </aside>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610241053"></script>
-<script src="assets/js/bouquet.js?v=202610241053"></script>
-<script src="assets/js/app.js?v=202610241053"></script>
+<script src="assets/js/data.js?v=202610241151"></script>
+<script src="assets/js/bouquet.js?v=202610241151"></script>
+<script src="assets/js/app.js?v=202610241151"></script>
 <script>
   const D = SHOP.delivery;
   const METHODS = [["Pickup", D.pickup, "Pickup (free)"], ["Day delivery", D.day, `Day delivery (₹${D.day})`], ["Night delivery", D.night, `Night delivery (₹${D.night})`]];
@@ -92,8 +104,14 @@
     });
     summary();
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    const step1 = document.getElementById("step1"), step2 = document.getElementById("step2");
+    const showStep = (two) => {
+      step1.hidden = two; step2.hidden = !two;
+      document.getElementById("step-label").textContent = two ? "Step 2 of 2: Payment" : "Step 1 of 2: Your details";
+      document.getElementById("send-error").textContent = "";
+      scrollTo(0, 0);
+    };
+    const checkDetails = () => {
       const isPickup = form.method.value === "Pickup";
       const checks = [
         ["name", "Please enter your name.", (v) => v],
@@ -110,13 +128,61 @@
         document.getElementById("e-" + field).textContent = bad ? msg : "";
         if (bad && ok) { el.focus(); ok = false; }
       }
-      if (!ok) return;
+      return ok;
+    };
+    const goToPayment = () => {
+      if (!checkDetails()) return;
+      document.getElementById("pay-amount").textContent = rupees(subtotal + charge()) + (unpriced ? " + bouquets priced on request" : "");
+      const up = document.getElementById("pay-unpriced");
+      up.hidden = !unpriced;
+      up.textContent = "Some bouquets are priced on request, so we'll email you the final amount. If you haven't paid yet, you can still place the order and email us the screenshot later.";
+      document.getElementById("qr").innerHTML = SHOP.paymentQr
+        ? `<img src="${esc(SHOP.paymentQr)}" alt="Payment QR code" style="max-width:240px;width:100%;border-radius:12px;margin:0 auto"><p class="muted" style="font-size:.85rem">Scan with any UPI app, pay the amount above, then upload a screenshot below.</p>`
+        : `<p class="note-box"><span>Our payment QR code is coming soon. For now, place your order and we'll email you how to pay. You can send us the payment screenshot by email.</span></p>`;
+      showStep(true);
+    };
+    document.getElementById("next").addEventListener("click", goToPayment);
+    document.getElementById("back").addEventListener("click", () => showStep(false));
 
-      const f = Object.fromEntries(new FormData(form));
+    // Shrinks the payment screenshot so it uploads quickly.
+    let shot = "";
+    form.shot.addEventListener("change", () => {
+      const file = form.shot.files[0], prev = document.getElementById("shot-preview");
+      shot = ""; prev.hidden = true;
+      if (!file) return;
+      const img = new Image();
+      img.onload = () => {
+        const k = Math.min(1, 1280 / Math.max(img.width, img.height));
+        const c = document.createElement("canvas");
+        c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        shot = c.toDataURL("image/jpeg", 0.8);
+        prev.src = shot; prev.hidden = false;
+        URL.revokeObjectURL(img.src);
+      };
+      img.onerror = () => { document.getElementById("e-shot").textContent = "Please choose a picture (a screenshot of your payment)."; };
+      img.src = URL.createObjectURL(file);
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (step2.hidden) return goToPayment();
+      if (!checkDetails()) return showStep(false);
+      const isPickup = form.method.value === "Pickup";
+      const shotErr = document.getElementById("e-shot");
+      if (!shot && SHOP.paymentQr && !unpriced) {
+        shotErr.textContent = "Please upload a screenshot of your payment.";
+        form.shot.focus();
+        return;
+      }
+      shotErr.textContent = "";
+
+      const f = Object.fromEntries([...new FormData(form)].filter(([k]) => k !== "shot"));
       const record = {
         type: "Order", orderId: newOrderId(), name: f.name.trim(), email: f.email.trim(), phone: f.phone.trim(),
         items: itemsText(items), subtotal, method: f.method, deliveryCharge: charge(), total: subtotal + charge(),
         address: isPickup ? "" : `${f.address.trim()}, ${D.area} ${f.pincode.trim()}`, date: f.date, notes: f.notes.trim(),
+        screenshot: shot,
       };
       const btn = document.getElementById("place"), err = document.getElementById("send-error");
       btn.disabled = true; btn.textContent = "Placing order..."; err.textContent = "";
@@ -134,7 +200,7 @@
         <div class="panel center" style="padding:32px;grid-column:1/-1">
           <h1 class="script" style="font-size:2.6rem;margin:0">Thank you, ${esc(record.name)}!</h1>
           <p>Your order number is <strong>${esc(record.orderId)}</strong>.</p>
-          <p class="muted">We'll email you at ${esc(record.email)} to confirm your order and share how to pay. Online payment only, no cash on delivery.</p>
+          <p class="muted">We'll email you at ${esc(record.email)} to confirm your order.${shot ? "" : ` If you haven't sent your payment screenshot yet, please email it to ${esc(SHOP.email)} with your order number.`}</p>
           <a class="btn btn-secondary" href="shop.html">Keep browsing</a>
         </div>`;
       scrollTo(0, 0);

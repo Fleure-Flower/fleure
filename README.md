@@ -1,6 +1,6 @@
 # Fleure – Handmade Flowers
 
-Static website for a handmade pipe-cleaner and satin ribbon flower bouquet shop, built from the Canva design "Handmade flower shop website". Orders are saved to a Google Sheet (see `scripts/orders-sheet.gs`). Contact is by email only.
+Static website for a handmade pipe-cleaner and satin ribbon flower bouquet shop, built from the Canva design "Handmade flower shop website". Orders (with payment screenshots, kept in a Drive folder) are saved to a Google Sheet (see `scripts/orders-sheet.gs`). Put the payment QR picture in `assets/` and set `paymentQr` in `assets/js/data.js`. Contact is by email only.
 
 Live site: https://sahil-sinha-11.github.io/flower-website/
 

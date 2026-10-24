@@ -3,9 +3,10 @@ window.SHOP = {
   name: "Fleure", // Taken from the Canva home page. Change here if your brand name is different.
   tagline: "Handmade forever flowers that never wilt",
   instagram: "", // handle without @, e.g. "fleure.flowers"
-  email: "", // the only contact for custom orders and extra requests
+  email: "fleurehandmadeflower@gmail.com", // the only contact for custom orders and extra requests
   // Web app link from scripts/orders-sheet.gs. Every order, custom request and message is saved to that Google Sheet.
   orderSheetUrl: "",
+  paymentQr: "", // payment QR picture, e.g. "assets/payment-qr.jpg"; until set, checkout says the QR is coming soon
   // Delivery charges in rupees. Pickup is free. No cash on delivery.
   // We only deliver inside this area, to these pincodes. Add or remove pincodes here.
   delivery: { pickup: 0, day: 30, night: 40, area: "Kharagpur", pincodes: ["721301", "721302", "721303", "721304", "721305", "721306"] },
