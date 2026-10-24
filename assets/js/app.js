@@ -204,8 +204,8 @@
   // Real pipe cleaner lily photos by colour, same layout as the roses.
   const LILY_PHOTOS = {
     Red: { dir: "lily/red/", counts: [1] },
-    White: { dir: "lily/white/", counts: [], extra: ["black-plain-1", "black-plain-3", "black-plain-10", "newspaper-plain-3"] },
-    Pink: { dir: "lily/pink/", counts: [], extra: ["black-plain-1", "black-plain-3", "newspaper-plain-3"] },
+    White: { dir: "lily/white/", counts: [], extra: ["black-plain-1", "black-plain-3", "black-plain-10", "newspaper-plain-1", "newspaper-plain-3"] },
+    Pink: { dir: "lily/pink/", counts: [], extra: ["black-plain-1", "black-plain-3", "newspaper-plain-1", "newspaper-plain-3"] },
   };
   const sizePhoto = (o) => {
     const set = o.kind === "ribbon" ? o.ribbon === o.colours && SIZE_PHOTOS[o.colours]
