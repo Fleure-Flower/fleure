@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /checkout.html
 
-Sitemap: https://sahil-sinha-11.github.io/flower-website/sitemap.xml
+Sitemap: https://fleure-flower.github.io/fleure/sitemap.xml
