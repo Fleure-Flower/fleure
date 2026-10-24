@@ -100,7 +100,7 @@ window.PRODUCTS = [
 
   // The one lily product: customers choose the number of lilies, colour and wrap.
   pipe("white-lily-bouquet", "White Lily Bouquet", "lily", ["lily"], { wrap: "White", ribbon: "White", colours: "White" },
-    Object.assign({}, LILY, { featured: true, images: ["assets/photos/lily-white_white-wrap.jpg"] })),
+    Object.assign({}, LILY, { featured: true, fixedPhoto: true, images: ["assets/photos/lily-white_white-wrap.jpg"] })),
 
   { id: "chocolate-bouquet", name: "Dairy Milk Chocolate Bouquet", category: "gift", price: 399, featured: true,
     images: ["black", "white"].map((w) => `assets/products/dairy-milk_${w}-wrap.jpg`),
