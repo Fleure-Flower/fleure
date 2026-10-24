@@ -1,0 +1,13 @@
+name: check-order-sheet
+on:
+  push:
+    paths: [".github/workflows/check-orders.yml"]
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: GET (no side effects)
+        run: curl -sS -L -o get.txt -w "status=%{http_code} final=%{url_effective}\n" "https://script.google.com/macros/s/AKfycbyukKPyLDqN6plru2nz2XdAdyTbbHypm8E_EMIYvnrnYaL3MJhi4P6IkuzM9LPC4-2s5Q/exec"; head -c 600 get.txt | sed 's/<[^>]*>/ /g'; echo
+      - name: POST without order data (saves nothing)
+        run: curl -sS -L -X POST -d "nothing=1" -w "\nstatus=%{http_code} final=%{url_effective}\n" "https://script.google.com/macros/s/AKfycbyukKPyLDqN6plru2nz2XdAdyTbbHypm8E_EMIYvnrnYaL3MJhi4P6IkuzM9LPC4-2s5Q/exec" -D headers.txt | head -c 800; echo; grep -i "access-control\|content-type\|location" headers.txt
