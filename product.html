@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610240928">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610240934">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order online.">
@@ -19,12 +19,14 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610240928"></script>
-<script src="assets/js/bouquet.js?v=202610240928"></script>
-<script src="assets/js/app.js?v=202610240928"></script>
+<script src="assets/js/data.js?v=202610240934"></script>
+<script src="assets/js/bouquet.js?v=202610240934"></script>
+<script src="assets/js/app.js?v=202610240934"></script>
 <script>
   const params = new URLSearchParams(location.search);
-  const p = byId(params.get("id"));
+  // Old links to lily products that were merged into the White Lily Bouquet.
+  const moved = { lily: "white-lily-bouquet", "grand-lily-red-white": "white-lily-bouquet", "grand-lily-blue-white": "white-lily-bouquet" };
+  const p = byId(moved[params.get("id")] || params.get("id"));
   const root = document.getElementById("pdp");
 
   if (!p) {
@@ -106,6 +108,8 @@
             <div class="field"><label for="note">Gift note (optional)</label>
               <textarea class="input" id="note" maxlength="200" placeholder="Add your message here..."></textarea>
               <div class="counter" id="note-count" aria-live="polite">0/200</div></div>
+            <div class="field"><label for="request">Any extra request (optional)</label>
+              <textarea class="input" id="request" maxlength="300" placeholder="e.g. a colour mix, a different size, a delivery time..."></textarea></div>
             <div class="pdp-actions">
               <button class="btn btn-secondary" type="submit">Add to bag</button>
               <button class="btn btn-primary" type="button" id="buy-now">Order Now</button>
@@ -163,7 +167,7 @@
         price = pieces.prices ? pieces.prices[n] ?? null : null;
       }
       return {
-        id: p.id, name, price, qty: 1, options, note: note.value.trim(),
+        id: p.id, name, price, qty: 1, options, note: note.value.trim(), request: document.getElementById("request").value.trim(),
         image: drawn ? drawBouquet(p, choice) : (p.wrapPhotos && p.wrapPhotos[choice.wrap]) || photos[0], choice,
       };
     }
@@ -199,7 +203,7 @@
         mainImg.src = item.image;
         root.querySelectorAll(".thumbs button").forEach((x) => x.toggleAttribute("aria-current", x.dataset.src === item.image));
       }
-      if (drawn && !(e && e.target === note)) {
+      if (drawn && !(e && (e.target === note || e.target.id === "request"))) {
         mainImg.src = item.image;
         root.querySelectorAll(".thumbs button").forEach((x) => x.removeAttribute("aria-current"));
         const n = document.getElementById("preview-note");

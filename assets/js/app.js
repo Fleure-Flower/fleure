@@ -147,7 +147,7 @@
   window.itemsText = (items) => items.map((it, i) => {
     const opts = Object.entries(it.options || {}).filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`).join(", ");
     const price = it.price ? `${rupees(it.price)} x ${it.qty} = ${rupees(lineTotal(it))}` : `x ${it.qty} (price to confirm)`;
-    return `${i + 1}. ${it.name}${opts ? ` (${opts})` : ""}, ${price}${it.note ? `, gift note: ${it.note}` : ""}`;
+    return `${i + 1}. ${it.name}${opts ? ` (${opts})` : ""}, ${price}${it.note ? `, gift note: ${it.note}` : ""}${it.request ? `, extra request: ${it.request}` : ""}`;
   }).join("\n");
   window.lineTotal = lineTotal;
   window.getCart = () => cart.slice();
@@ -167,6 +167,7 @@
         <img src="${esc(it.image)}" alt="">
         <div><strong>${esc(it.name)}</strong>
           <div class="meta">${Object.entries(it.options || {}).filter(([, v]) => v).map(([k, v]) => `${esc(k)}: ${esc(v)}`).join(" · ")}</div>
+          ${it.request ? `<div class="meta">Request: ${esc(it.request)}</div>` : ""}
           <div class="meta">Qty ${it.qty} · ${it.price ? rupees(lineTotal(it)) : "Price on request"}</div>
         </div>
         <button class="remove" type="button" data-remove="${i}">Remove</button>
@@ -186,8 +187,8 @@
   function notify(msg) { toast.textContent = msg; toast.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => (toast.hidden = true), 2400); }
 
   window.addToCart = function (item, quiet) {
-    const key = JSON.stringify([item.id, item.options, item.note, item.price]);
-    const existing = cart.find((it) => JSON.stringify([it.id, it.options, it.note, it.price]) === key);
+    const key = JSON.stringify([item.id, item.options, item.note, item.request, item.price]);
+    const existing = cart.find((it) => JSON.stringify([it.id, it.options, it.note, it.request, it.price]) === key);
     if (existing) existing.qty += item.qty; else cart.push(item);
     save();
     if (!quiet) notify(`${item.name} added to your bag`);

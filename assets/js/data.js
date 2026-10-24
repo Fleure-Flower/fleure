@@ -98,17 +98,9 @@ window.PRODUCTS = [
   roses("black-ribbon-roses", "Black Ribbon Roses", "Black", { wrap: "White", count: 3 }, [],
     { images: ["white-plain-3", "black-plain-3", "newspaper-plain-1", "white-glitter-1", "black-glitter-3", "newspaper-glitter-3"].map((n) => `assets/sizes/black/${n}.jpg`) }),
 
-  pipe("lily", "Pipe Cleaner Lily", "lily", ["lily"], { wrap: "White", ribbon: "Pink", colours: "Pink" }, LILY),
-
-  {
-    id: "white-lily-bouquet", name: "White Lily Bouquet", category: "lily", price: null,
-    images: ["white", "black", "newspaper"].map((w) => `assets/photos/lily-white_${w}-wrap.jpg`),
-    wrapPhotos: { White: "assets/photos/lily-white_white-wrap.jpg", Black: "assets/photos/lily-white_black-wrap.jpg", Newspaper: "assets/photos/lily-white_newspaper-wrap.jpg" },
-    description: "A full bouquet of pure white pipe-cleaner lilies with a white double satin bow. Pick your wrap: white, black or newspaper. Price on request; email us.",
-    options: { wrap: WRAPS },
-  },
-  pipe("grand-lily-red-white", "Lily Bouquet", "lily", ["lily"], { wrap: "White", ribbon: "Red", colours: "Red & White", count: 10 },
-    Object.assign({}, LILY, { featured: true, images: ["assets/photos/lily-red-white_white-wrap.jpg", "assets/products/lily-bouquet-red-white.jpg"] })),
+  // The one lily product: customers choose the number of lilies, colour and wrap.
+  pipe("white-lily-bouquet", "White Lily Bouquet", "lily", ["lily"], { wrap: "White", ribbon: "White", colours: "White" },
+    Object.assign({}, LILY, { featured: true, images: ["assets/photos/lily-white_white-wrap.jpg"] })),
 
   { id: "chocolate-bouquet", name: "Dairy Milk Chocolate Bouquet", category: "gift", price: 399, featured: true,
     images: ["black", "white"].map((w) => `assets/products/dairy-milk_${w}-wrap.jpg`),
