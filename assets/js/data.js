@@ -6,6 +6,7 @@ window.SHOP = {
   email: "fleurehandmadeflower@gmail.com", // the only contact for custom orders and extra requests
   // Web app link from scripts/orders-sheet.gs. Every order, custom request and message is saved to that Google Sheet.
   orderSheetUrl: "https://script.google.com/macros/s/AKfycbyukKPyLDqN6plru2nz2XdAdyTbbHypm8E_EMIYvnrnYaL3MJhi4P6IkuzM9LPC4-2s5Q/exec",
+  gaId: "", // Google Analytics measurement ID, e.g. "G-ABC123XYZ"; analytics stays off until set
   paymentQr: "", // payment QR picture, e.g. "assets/payment-qr.jpg"; until set, checkout says the QR is coming soon
   // Delivery charges in rupees. Pickup is free. No cash on delivery.
   // We only deliver inside this area, to these pincodes. Add or remove pincodes here.

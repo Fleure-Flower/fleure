@@ -23,7 +23,17 @@
   // Email is the only contact. Until the shop email is set, links go to the contact form.
   const mailLink = (subject, body = "") => shop.email
     ? `mailto:${shop.email}?subject=${encodeURIComponent(subject)}${body ? `&body=${encodeURIComponent(body)}` : ""}` : "contact.html";
+  // Google Analytics, only once a measurement ID is set in data.js.
+  if (shop.gaId) {
+    const ga = document.createElement("script");
+    ga.async = true; ga.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(shop.gaId)}`;
+    document.head.appendChild(ga);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    gtag("js", new Date()); gtag("config", shop.gaId);
+  }
   window.mailLink = mailLink;
+  window.altName = (p) => /bouquet/i.test(p.name) ? p.name : `${p.name} bouquet`;
   window.emailUs = (text = "email us") => `<a href="${esc(mailLink("Custom bouquet request"))}">${text}</a>`;
 
   // Saves an order, custom request or message to the shop's Google Sheet (see scripts/orders-sheet.gs).
@@ -243,7 +253,7 @@
   window.productCard = (p) => `
     <article class="card">
       <a class="card-link" href="product.html?id=${p.id}">
-        <img class="card-img" src="${productImage(p)}" alt="${esc(p.name)} bouquet" loading="lazy" width="300" height="375">
+        <img class="card-img" src="${productImage(p)}" alt="${esc(altName(p))}" loading="lazy" width="300" height="375">
         <h3>${esc(p.name)}</h3>
       </a>
       <span class="price">${priceLabel(p)}</span>

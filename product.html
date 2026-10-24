@@ -6,10 +6,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610241159">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610241646">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order online.">
+<meta name="theme-color" content="#FBF4F1">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fleure">
+<meta property="og:title" content="Bouquet | Fleure">
+<meta property="og:description" content="Handmade bouquet, made to order. Choose colours and wrap, and order online.">
+<meta property="og:url" content="https://sahil-sinha-11.github.io/flower-website/product.html">
+<meta property="og:image" content="https://sahil-sinha-11.github.io/flower-website/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body data-page="shop">
 <main id="main" class="container">
@@ -24,9 +34,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610241159"></script>
-<script src="assets/js/bouquet.js?v=202610241159"></script>
-<script src="assets/js/app.js?v=202610241159"></script>
+<script src="assets/js/data.js?v=202610241646"></script>
+<script src="assets/js/bouquet.js?v=202610241646"></script>
+<script src="assets/js/app.js?v=202610241646"></script>
 <script>
   const params = new URLSearchParams(location.search);
   // Old links to lily products that were merged into the White Lily Bouquet.
@@ -97,7 +107,7 @@
     root.innerHTML = `
       <div class="pdp">
         <div>
-          <img class="gallery-main" id="main-img" src="${drawn && !fixed ? drawBouquet(p) : fixed ? lookPhoto(p.look) : photos[0]}" alt="${esc(p.name)} bouquet" width="600" height="750">
+          <img class="gallery-main" id="main-img" src="${drawn && !fixed ? drawBouquet(p) : fixed ? lookPhoto(p.look) : photos[0]}" alt="${esc(altName(p))}" width="600" height="750">
           ${drawn && !fixed ? `<p class="muted center" id="preview-note" style="font-size:.8rem;margin:8px 0 0">Preview of your choices. Each bouquet is handmade, so the real one will vary a little.</p>` : ""}
           ${thumbs}
           ${priceTable}
@@ -112,7 +122,7 @@
             ${piecesBlock}
             ${glitterBlock}
             ${group("wrap", p.options.wrap)}
-            <p class="note-box" style="margin:-4px 0 18px"><span>The design and colour of the flowers can be customised to your wish. Just ${contactLinks()}, or write it in the extra request box.</span></p>
+            <p class="note-box" style="margin:-4px 0 18px"><span>${p.category === "gift" ? "The design and colours of your bouquet" : "The design and colour of the flowers"} can be customised to your wish. Just ${contactLinks()}, or write it in the extra request box.</span></p>
             <div class="field"><label for="note">Gift note (optional)</label>
               <textarea class="input" id="note" maxlength="200" placeholder="Add your message here..."></textarea>
               <div class="counter" id="note-count" aria-live="polite">0/200</div></div>
