@@ -281,3 +281,22 @@ textarea.input { min-height: 96px; resize: vertical; }
 dialog.confirm { width: min(440px, calc(100% - 32px)); border: none; border-radius: var(--radius); padding: 24px; background: var(--surface); color: var(--text); box-shadow: 0 20px 60px rgba(60, 20, 35, .25); }
 dialog.confirm::backdrop { background: rgba(40, 20, 28, .45); }
 .confirm-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 16px; }
+
+/* My Orders */
+.order-card { padding: 20px; margin-bottom: 16px; }
+.order-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.order-top .meta { color: var(--muted); font-size: .85rem; margin-top: 2px; }
+.status { padding: 4px 12px; border-radius: var(--pill); background: var(--blush); color: var(--wine); font-size: .8rem; font-weight: 600; white-space: nowrap; }
+.status-delivered { background: #e3f2e6; color: #23633a; }
+.status-cancelled { background: #eee; color: #555; }
+.steps { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 0; margin: 16px 0 4px; font-size: .75rem; color: var(--muted); text-align: center; }
+.steps li { border-top: 4px solid var(--line); padding-top: 6px; }
+.steps li.done { border-color: var(--rose-strong); color: var(--text); }
+.order-items { font-size: .9rem; margin: 14px 0 6px; }
+.review { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); display: grid; gap: 10px; }
+.review .btn { justify-self: start; }
+.stars { display: inline-flex; flex-direction: row-reverse; justify-content: flex-end; gap: 2px; }
+.stars input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.stars label { font-size: 1.9rem; line-height: 1; color: #dcbfba; cursor: pointer; padding: 0 2px; }
+.stars input:checked ~ label, .stars label:hover, .stars label:hover ~ label { color: #e0a526; }
+.stars input:focus-visible + label { outline: 2px solid var(--rose-strong); border-radius: 4px; }

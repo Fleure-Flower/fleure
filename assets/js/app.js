@@ -43,6 +43,17 @@
     const out = await res.json();
     if (!out.ok) throw new Error(out.error || "not saved");
   };
+  // My Orders page: orders matching this email and phone, with their status from the sheet.
+  window.getOrders = async (email, phone) => {
+    if (!shop.orderSheetUrl) throw new Error("not-set-up");
+    const res = await fetch(`${shop.orderSheetUrl}?${new URLSearchParams({ action: "orders", email, phone })}`);
+    const out = await res.json();
+    if (!out.ok) throw new Error(out.error || "not loaded");
+    return out.orders;
+  };
+  // Remembers the customer's email and phone on this device so My Orders opens straight away.
+  window.getCustomer = () => { try { return JSON.parse(localStorage.getItem("fleure-customer")); } catch (e) { return null; } };
+  window.saveCustomer = (c) => { try { localStorage.setItem("fleure-customer", JSON.stringify(c)); } catch (e) {} };
   window.newOrderId = (prefix = "FL") => {
     const d = new Date(), pad = (n) => String(n).padStart(2, "0");
     return `${prefix}-${String(d.getFullYear()).slice(2)}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
@@ -53,6 +64,7 @@
   const navItems = [
     ["home", "index.html", "Home"], ["shop", "shop.html", "Shop"], ["custom", "custom.html", "Custom Orders"],
     ["about", "about.html", "About"], ["order", "how-to-order.html", "How to Order"], ["contact", "contact.html", "Contact"],
+    ["orders", "orders.html", "My Orders"],
   ];
 
   const header = document.createElement("header");
@@ -102,6 +114,7 @@
       </ul></div>
       <div><h3>Customer Care</h3><ul>
         <li><a href="custom.html">Custom Orders</a></li>
+        <li><a href="orders.html">My Orders</a></li>
         <li><a href="how-to-order.html">How to Order</a></li>
         <li><a href="how-to-order.html#faq">FAQ</a></li>
         <li><a href="contact.html">Contact Us</a></li>

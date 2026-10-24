@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610242001">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<title>My Orders | Fleure</title>
+<meta name="description" content="See your Fleure orders, their delivery status, and leave a review.">
+<meta name="theme-color" content="#FBF4F1">
+<link rel="canonical" href="https://fleure-flower.github.io/fleure/orders.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Fleure">
+<meta property="og:title" content="My Orders | Fleure">
+<meta property="og:description" content="See your Fleure orders, their delivery status, and leave a review.">
+<meta property="og:url" content="https://fleure-flower.github.io/fleure/orders.html">
+<meta property="og:image" content="https://fleure-flower.github.io/fleure/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="robots" content="noindex">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body data-page="orders">
+<main id="main" class="container">
+  <section class="section-tight" style="max-width:760px;margin:0 auto">
+    <h1>My Orders</h1>
+    <p class="muted">Enter the email and phone number you ordered with to see your orders and their status.</p>
+    <form class="panel" id="lookup" novalidate style="padding:20px">
+      <div class="form-grid">
+        <div class="field"><label for="o-email">Email</label><input class="input" id="o-email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="o-phone">Phone number</label><input class="input" id="o-phone" name="phone" type="tel" autocomplete="tel" required></div>
+      </div>
+      <button class="btn btn-primary" type="submit" id="find" style="margin-top:8px">Show my orders</button>
+      <p class="error" id="lookup-error" role="alert"></p>
+    </form>
+    <div id="orders" aria-live="polite" style="margin-top:20px"></div>
+  </section>
+</main>
+<script src="assets/js/data.js?v=202610242001"></script>
+<script src="assets/js/bouquet.js?v=202610242001"></script>
+<script src="assets/js/app.js?v=202610242001"></script>
+<script>
+  const form = document.getElementById("lookup"), list = document.getElementById("orders"), err = document.getElementById("lookup-error");
+  const STEPS = ["Order placed", "Confirmed", "Out for delivery", "Delivered"];
+  const nice = (d) => /^\d{4}-\d{2}-\d{2}$/.test(d) ? new Date(d + "T00:00").toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : esc(d || "");
+  let who = getCustomer();
+  if (who) { form.email.value = who.email; form.phone.value = who.phone; }
+
+  const reviewForm = (o) => `
+    <form class="review" data-order="${esc(o.orderId)}">
+      <p style="margin:0 0 6px"><strong>How did you like it?</strong> We'd love your review.</p>
+      <div class="stars" role="radiogroup" aria-label="Rating">
+        ${[5, 4, 3, 2, 1].map((n) => `<input type="radio" name="rating" id="r-${esc(o.orderId)}-${n}" value="${n}"><label for="r-${esc(o.orderId)}-${n}" title="${n} star${n > 1 ? "s" : ""}">★</label>`).join("")}
+      </div>
+      <textarea class="input" name="text" maxlength="2000" placeholder="Tell us about your bouquet (optional)"></textarea>
+      <button class="btn btn-primary" type="submit">Send review</button>
+      <p class="error" role="alert"></p>
+    </form>`;
+
+  const card = (o) => {
+    const pickup = /pickup/i.test(o.method);
+    const status = pickup && o.status === "Out for delivery" ? "Ready for pickup" : o.status;
+    const step = STEPS.indexOf(o.status === "Ready for pickup" ? "Out for delivery" : o.status);
+    return `
+    <article class="panel order-card">
+      <div class="order-top">
+        <div><strong>${esc(o.orderId)}</strong><div class="meta">Placed ${nice(o.placed)} · ${esc(o.method)}${o.date ? ` · for ${nice(o.date)}` : ""}</div></div>
+        <span class="status status-${esc(String(status).toLowerCase().replace(/\s+/g, "-"))}">${esc(status)}</span>
+      </div>
+      ${step >= 0 ? `<ol class="steps">${STEPS.map((s, i) => `<li class="${i <= step ? "done" : ""}">${s === "Out for delivery" && pickup ? "Ready for pickup" : s}</li>`).join("")}</ol>` : ""}
+      <p class="order-items">${esc(o.items).replace(/ (?=\d+\. )/g, "<br>")}</p>
+      <div class="cart-total"><strong>Total</strong><strong>${rupees(o.total || 0)}</strong></div>
+      ${o.status === "Delivered" ? (o.reviewed ? `<p class="muted">♥ Thank you for your review!</p>` : reviewForm(o)) : ""}
+    </article>`;
+  };
+
+  async function load() {
+    err.textContent = "";
+    const btn = document.getElementById("find");
+    btn.disabled = true; btn.textContent = "Loading...";
+    try {
+      const orders = await getOrders(who.email, who.phone);
+      list.innerHTML = orders.length ? orders.map(card).join("")
+        : `<div class="panel empty" style="padding:24px"><p>We couldn't find any orders for this email and phone number.</p><a class="btn btn-secondary" href="shop.html">Browse bouquets</a></div>`;
+    } catch (x) {
+      list.innerHTML = "";
+      err.innerHTML = `Sorry, we couldn't load your orders right now. Please try again, or ${emailUs("email us")}.`;
+    }
+    btn.disabled = false; btn.textContent = "Show my orders";
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = form.email.value.trim(), phone = form.phone.value.trim();
+    if (!/^\S+@\S+\.\S+$/.test(email) || phone.replace(/\D/g, "").length < 10) {
+      err.textContent = "Please enter the email and 10-digit phone number you used for your order.";
+      return;
+    }
+    who = { email, phone };
+    saveCustomer(who);
+    load();
+  });
+
+  list.addEventListener("submit", async (e) => {
+    const f = e.target.closest("form.review");
+    if (!f) return;
+    e.preventDefault();
+    const msg = f.querySelector(".error"), btn = f.querySelector("button");
+    if (!f.rating.value) { msg.textContent = "Please pick a star rating."; return; }
+    btn.disabled = true; btn.textContent = "Sending..."; msg.textContent = "";
+    try {
+      await sendToShop({ type: "Review", orderId: f.dataset.order, email: who.email, phone: who.phone, rating: f.rating.value, text: f.text.value.trim() });
+      f.outerHTML = `<p class="muted">♥ Thank you for your review!</p>`;
+    } catch (x) {
+      btn.disabled = false; btn.textContent = "Send review";
+      msg.innerHTML = `Sorry, your review didn't go through. Please try again, or ${emailUs("email us")}.`;
+    }
+  });
+
+  if (who) load();
+</script>
+</body>
+</html>

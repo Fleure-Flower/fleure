@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610241922">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610242001">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Checkout | Fleure</title>
 <meta name="description" content="Place your order: your details, pickup or delivery, and online payment.">
@@ -75,9 +75,9 @@
     </div>
   </dialog>
 </main>
-<script src="assets/js/data.js?v=202610241922"></script>
-<script src="assets/js/bouquet.js?v=202610241922"></script>
-<script src="assets/js/app.js?v=202610241922"></script>
+<script src="assets/js/data.js?v=202610242001"></script>
+<script src="assets/js/bouquet.js?v=202610242001"></script>
+<script src="assets/js/app.js?v=202610242001"></script>
 <script>
   const D = SHOP.delivery;
   const METHODS = [["Pickup", D.pickup, "Pickup (free)"], ["Day delivery", D.day, `Day delivery (₹${D.day})`], ["Night delivery", D.night, `Night delivery (₹${D.night})`]];
@@ -241,12 +241,14 @@
       }
       dialog.close();
       clearCart();
+      saveCustomer({ email: record.email, phone: record.phone });
       document.getElementById("checkout").innerHTML = `
         <div class="panel center" style="padding:32px;grid-column:1/-1">
           <h1 class="script" style="font-size:2.6rem;margin:0">Thank you, ${esc(record.name)}!</h1>
           <p><strong>Your order has been confirmed. Our team will reach you shortly.</strong></p>
           <p>Your order number is <strong>${esc(record.orderId)}</strong>.</p>
           <p class="muted">We'll contact you at ${esc(record.email)} or ${esc(record.phone)}. Online payment only, no cash on delivery.</p>
+          <a class="btn btn-primary" href="orders.html">View my orders</a>
           <a class="btn btn-secondary" href="shop.html">Keep browsing</a>
         </div>`;
       scrollTo(0, 0);
