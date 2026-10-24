@@ -202,7 +202,11 @@
   // Real photos by rose colour: folder under assets/sizes and the counts photographed in every wrap and finish, and single extra photos.
   const SIZE_PHOTOS = { Red: { dir: "", counts: { min: 1, max: 30 } }, Pink: { dir: "pink/", counts: [1, 3], extra: ["black-plain-7", "black-plain-10", "black-plain-20", "white-plain-7", "white-plain-10", "white-plain-13", "white-plain-17", "white-plain-20"] }, White: { dir: "white/", counts: [1, 3] }, Black: { dir: "black/", counts: [1, 3] } };
   // Real pipe cleaner lily photos by colour, same layout as the roses.
-  const LILY_PHOTOS = { Red: { dir: "lily/red/", counts: [1] }, White: { dir: "lily/white/", counts: [], extra: ["black-plain-1", "black-plain-10"] } };
+  const LILY_PHOTOS = {
+    Red: { dir: "lily/red/", counts: [1] },
+    White: { dir: "lily/white/", counts: [], extra: ["black-plain-1", "black-plain-3", "black-plain-10", "newspaper-plain-3"] },
+    Pink: { dir: "lily/pink/", counts: [], extra: ["black-plain-1", "black-plain-3", "newspaper-plain-3"] },
+  };
   const sizePhoto = (o) => {
     const set = o.kind === "ribbon" ? o.ribbon === o.colours && SIZE_PHOTOS[o.colours]
       : o.flowers && o.flowers[0] === "lily" && LILY_PHOTOS[o.colours];
