@@ -276,3 +276,8 @@ textarea.input { min-height: 96px; resize: vertical; }
 .price-table .offer { display: inline-block; margin-left: 6px; padding: 0 8px; border-radius: var(--pill); background: var(--blush); color: var(--wine); font-size: .75rem; font-weight: 600; }
 .price-table .was { opacity: .55; margin-left: 4px; }
 .price-table tr.is-current { background: var(--blush); }
+
+/* Order confirmation popup */
+dialog.confirm { width: min(440px, calc(100% - 32px)); border: none; border-radius: var(--radius); padding: 24px; background: var(--surface); color: var(--text); box-shadow: 0 20px 60px rgba(60, 20, 35, .25); }
+dialog.confirm::backdrop { background: rgba(40, 20, 28, .45); }
+.confirm-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; margin-top: 16px; }
