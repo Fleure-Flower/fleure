@@ -102,7 +102,8 @@ window.PRODUCTS = [
   pipe("white-lily-bouquet", "White Lily Bouquet", "lily", ["lily"], { wrap: "White", ribbon: "White", colours: "White" },
     Object.assign({}, LILY, { featured: true, fixedPhoto: true, images: ["assets/photos/lily-white_white-wrap.jpg"],
       // One photo per lily colour and wrap in assets/photos/lily/<colour>_<wrap>.jpg; the number of lilies doesn't change it.
-      photoFolder: "assets/photos/lily/" })),
+      photoFolder: "assets/photos/lily/",
+      ideas: Array.from({ length: 15 }, (_, i) => i + 1) })), // reference pictures in assets/photos/ideas/
 
   { id: "chocolate-bouquet", name: "Dairy Milk Chocolate Bouquet", category: "gift", price: 399, featured: true,
     images: ["black", "white"].map((w) => `assets/products/dairy-milk_${w}-wrap.jpg`),

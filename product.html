@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610241003">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610241013">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order online.">
@@ -14,14 +14,19 @@
 <body data-page="shop">
 <main id="main" class="container">
   <div id="pdp"></div>
+  <section class="section-tight" id="ideas-wrap" hidden>
+    <h2>Customisation ideas</h2>
+    <p class="muted" id="ideas-note"></p>
+    <div class="product-grid" id="ideas"></div>
+  </section>
   <section class="section-tight" id="related-wrap">
     <h2>Related bouquets</h2>
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610241003"></script>
-<script src="assets/js/bouquet.js?v=202610241003"></script>
-<script src="assets/js/app.js?v=202610241003"></script>
+<script src="assets/js/data.js?v=202610241013"></script>
+<script src="assets/js/bouquet.js?v=202610241013"></script>
+<script src="assets/js/app.js?v=202610241013"></script>
 <script>
   const params = new URLSearchParams(location.search);
   // Old links to lily products that were merged into the White Lily Bouquet.
@@ -231,6 +236,18 @@
     form.addEventListener("submit", (e) => { e.preventDefault(); addToCart(current()); });
     document.getElementById("buy-now").addEventListener("click", () => { addToCart(current(), true); location.href = "checkout.html"; });
     update();
+
+    // Reference pictures of other designs; customers email us the picture to order one like it.
+    if (p.ideas) {
+      const pic = (n) => `assets/photos/ideas/idea-${String(n).padStart(2, "0")}.jpg`;
+      document.getElementById("ideas-note").innerHTML = `Like one of these? We can make a bouquet like it for you. ${emailUs("Email us")} the picture (or its number) and tell us the colours and size you'd like. These are reference pictures to show the kind of designs we can customise.`;
+      document.getElementById("ideas").innerHTML = p.ideas.map((n) => {
+        const href = mailLink(`Custom bouquet like idea #${n}`, `Hi! I'd like a bouquet like this reference picture (idea #${n}): ${new URL(pic(n), location.href).href}\n\nColours:\nSize:\nDate needed:`);
+        return `<article class="card"><img class="card-img" src="${pic(n)}" alt="Customisation idea ${n}" loading="lazy" width="300" height="375">
+          <h3>Idea #${n}</h3><a class="btn btn-outline" href="${esc(href)}">Email us</a></article>`;
+      }).join("");
+      document.getElementById("ideas-wrap").hidden = false;
+    }
 
     const related = PRODUCTS.filter((x) => x.category === p.category && x.id !== p.id).slice(0, 5);
     const fill = related.length ? related : PRODUCTS.filter((x) => x.featured && x.id !== p.id).slice(0, 5);
