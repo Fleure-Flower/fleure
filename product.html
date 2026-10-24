@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610240944">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610240956">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order online.">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610240944"></script>
-<script src="assets/js/bouquet.js?v=202610240944"></script>
-<script src="assets/js/app.js?v=202610240944"></script>
+<script src="assets/js/data.js?v=202610240956"></script>
+<script src="assets/js/bouquet.js?v=202610240956"></script>
+<script src="assets/js/app.js?v=202610240956"></script>
 <script>
   const params = new URLSearchParams(location.search);
   // Old links to lily products that were merged into the White Lily Bouquet.
@@ -35,7 +35,11 @@
   } else {
     document.title = `${p.name} | ${SHOP.name}`;
     const drawn = Boolean(p.kind);
-    const fixed = Boolean(p.fixedPhoto); // one photo that stays the same whatever the customer picks
+    const fixed = Boolean(p.fixedPhoto); // a real photo instead of the drawing; only colour and wrap can change it
+    const lookPhoto = (c) => {
+      const all = p.lookPhotos || {}, same = Object.keys(all).find((k) => k.startsWith(c.colours + "|"));
+      return all[`${c.colours}|${c.wrap}`] || (same && all[same]) || photos[0];
+    };
     const [unitOne, unit] = p.unit || (p.kind === "ribbon" ? ["rose", "roses"] : ["flower", "flowers"]);
     const labels = { colours: "Flower colours", wrap: "Wrapping paper", ribbon: "Ribbon colour" };
     const start = Object.assign({}, p.look);
@@ -90,7 +94,7 @@
     root.innerHTML = `
       <div class="pdp">
         <div>
-          <img class="gallery-main" id="main-img" src="${drawn && !fixed ? drawBouquet(p) : photos[0]}" alt="${esc(p.name)} bouquet" width="600" height="750">
+          <img class="gallery-main" id="main-img" src="${drawn && !fixed ? drawBouquet(p) : fixed ? lookPhoto(p.look) : photos[0]}" alt="${esc(p.name)} bouquet" width="600" height="750">
           ${drawn && !fixed ? `<p class="muted center" id="preview-note" style="font-size:.8rem;margin:8px 0 0">Preview of your choices. Each bouquet is handmade, so the real one will vary a little.</p>` : ""}
           ${thumbs}
           ${priceTable}
@@ -105,7 +109,7 @@
             ${piecesBlock}
             ${glitterBlock}
             ${group("wrap", p.options.wrap)}
-            <p class="note-box" style="margin:-4px 0 18px"><span>You can customise your bouquet and its colours if needed. Just ${contactLinks()}.</span></p>
+            <p class="note-box" style="margin:-4px 0 18px"><span>The design and colour of the flowers can be customised to your wish. Just ${contactLinks()}, or write it in the extra request box.</span></p>
             <div class="field"><label for="note">Gift note (optional)</label>
               <textarea class="input" id="note" maxlength="200" placeholder="Add your message here..."></textarea>
               <div class="counter" id="note-count" aria-live="polite">0/200</div></div>
@@ -169,7 +173,7 @@
       }
       return {
         id: p.id, name, price, qty: 1, options, note: note.value.trim(), request: document.getElementById("request").value.trim(),
-        image: drawn && !fixed ? drawBouquet(p, choice) : (p.wrapPhotos && p.wrapPhotos[choice.wrap]) || photos[0], choice,
+        image: drawn && !fixed ? drawBouquet(p, choice) : fixed ? lookPhoto(choice) : (p.wrapPhotos && p.wrapPhotos[choice.wrap]) || photos[0], choice,
       };
     }
 
@@ -204,6 +208,7 @@
         mainImg.src = item.image;
         root.querySelectorAll(".thumbs button").forEach((x) => x.toggleAttribute("aria-current", x.dataset.src === item.image));
       }
+      if (fixed && (!e || e.target.name === "colours" || e.target.name === "wrap")) mainImg.src = item.image;
       if (drawn && !fixed && !(e && (e.target === note || e.target.id === "request"))) {
         mainImg.src = item.image;
         root.querySelectorAll(".thumbs button").forEach((x) => x.removeAttribute("aria-current"));

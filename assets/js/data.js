@@ -100,7 +100,14 @@ window.PRODUCTS = [
 
   // The one lily product: customers choose the number of lilies, colour and wrap.
   pipe("white-lily-bouquet", "White Lily Bouquet", "lily", ["lily"], { wrap: "White", ribbon: "White", colours: "White" },
-    Object.assign({}, LILY, { featured: true, fixedPhoto: true, images: ["assets/photos/lily-white_white-wrap.jpg"] })),
+    Object.assign({}, LILY, { featured: true, fixedPhoto: true, images: ["assets/photos/lily-white_white-wrap.jpg"],
+      // One photo per lily colour and wrap; the number of lilies doesn't change the photo. Missing pairs show the same colour in another wrap.
+      lookPhotos: {
+        "White|White": "assets/photos/lily-white_white-wrap.jpg", "White|Black": "assets/photos/lily/white_black.jpg", "White|Newspaper": "assets/photos/lily/white_newspaper.jpg",
+        "Pink|White": "assets/photos/lily/pink_white.jpg", "Pink|Black": "assets/photos/lily/pink_black.jpg", "Pink|Newspaper": "assets/photos/lily/pink_newspaper.jpg",
+        "Red|White": "assets/photos/lily/red_white.jpg", "Red|Black": "assets/photos/lily/red_black.jpg", "Red|Newspaper": "assets/photos/lily/red_newspaper.jpg",
+        "Red & White|White": "assets/photos/lily-red-white_white-wrap.jpg",
+      } })),
 
   { id: "chocolate-bouquet", name: "Dairy Milk Chocolate Bouquet", category: "gift", price: 399, featured: true,
     images: ["black", "white"].map((w) => `assets/products/dairy-milk_${w}-wrap.jpg`),
