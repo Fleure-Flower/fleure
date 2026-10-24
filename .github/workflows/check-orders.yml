@@ -7,7 +7,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: GET (no side effects)
-        run: curl -sS -L -o get.txt -w "status=%{http_code} final=%{url_effective}\n" "https://script.google.com/macros/s/AKfycbyukKPyLDqN6plru2nz2XdAdyTbbHypm8E_EMIYvnrnYaL3MJhi4P6IkuzM9LPC4-2s5Q/exec"; grep -o "<title>[^<]*</title>" get.txt; grep -o "Script function not found[^<]*" get.txt | head -1; echo
+      - name: My Orders lookup for an email with no orders (reads only)
+        run: curl -sS -L -o get.txt "https://script.google.com/macros/s/AKfycbyukKPyLDqN6plru2nz2XdAdyTbbHypm8E_EMIYvnrnYaL3MJhi4P6IkuzM9LPC4-2s5Q/exec?action=orders&email=nobody%40example.com&phone=0000000000"; head -c 300 get.txt; echo; grep -o "Script function not found[^<]*" get.txt | head -1 || true
       - name: POST without order data (saves nothing), like a browser does
-        run: curl -sS -L -d "nothing=1" -w "\nstatus=%{http_code} final=%{url_effective}\n" "https://script.google.com/macros/s/AKfycbyukKPyLDqN6plru2nz2XdAdyTbbHypm8E_EMIYvnrnYaL3MJhi4P6IkuzM9LPC4-2s5Q/exec" -o post.txt; head -c 400 post.txt; echo; grep -o "<title>[^<]*</title>" post.txt || true; grep -o '<div[^>]*>[^<]*' post.txt | sed 's/<div[^>]*>//' | grep -v '^\s*$'
+        run: curl -sS -L -d "nothing=1" -w "\nstatus=%{http_code} final=%{url_effective}\n" "https://script.google.com/macros/s/AKfycbyukKPyLDqN6plru2nz2XdAdyTbbHypm8E_EMIYvnrnYaL3MJhi4P6IkuzM9LPC4-2s5Q/exec" -o post.txt; head -c 400 post.txt; echo; grep -o "<title>[^<]*</title>" post.txt || true; grep -o '<div[^>]*>[^<]*' post.txt | sed 's/<div[^>]*>//' | grep -v '^\s*$' || true

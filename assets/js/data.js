@@ -2,7 +2,7 @@
 window.SHOP = {
   name: "Fleure", // Taken from the Canva home page. Change here if your brand name is different.
   tagline: "Handmade forever flowers that never wilt",
-  instagram: "fleurehandmadeflower", // handle without @, e.g. "fleure.flowers"
+  instagram: "fleure_handmade_flower", // handle without @, e.g. "fleure.flowers"
   email: "fleurehandmadeflower@gmail.com", // the only contact for custom orders and extra requests
   // Web app link from scripts/orders-sheet.gs. Every order, custom request and message is saved to that Google Sheet.
   orderSheetUrl: "https://script.google.com/macros/s/AKfycbyukKPyLDqN6plru2nz2XdAdyTbbHypm8E_EMIYvnrnYaL3MJhi4P6IkuzM9LPC4-2s5Q/exec",

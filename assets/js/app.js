@@ -92,11 +92,6 @@
     toggle.setAttribute("aria-expanded", String(open));
   });
 
-  const socials = [
-    shop.instagram ? `<a href="https://instagram.com/${esc(shop.instagram)}" target="_blank" rel="noopener" aria-label="Instagram">${icons.instagram}</a>` : "",
-    shop.email ? `<a href="mailto:${esc(shop.email)}" aria-label="Email">${icons.mail}</a>` : "",
-  ].join("");
-
   const footer = document.createElement("footer");
   footer.className = "site-footer";
   footer.innerHTML = `
@@ -104,7 +99,10 @@
       <div>
         <a class="logo" href="index.html"><span class="logo-name">${esc(shop.name)}</span><span class="logo-sub">Handmade Flowers</span></a>
         <p class="muted" style="margin-top:12px">Handmade flowers, made with love.</p>
-        ${socials ? `<div class="socials">${socials}</div>` : ""}
+        <ul class="footer-contact">
+          ${shop.instagram ? `<li><a href="https://instagram.com/${esc(shop.instagram)}" target="_blank" rel="noopener">${icons.instagram}@${esc(shop.instagram)}</a></li>` : ""}
+          ${shop.email ? `<li><a href="mailto:${esc(shop.email)}">${icons.mail}${esc(shop.email)}</a></li>` : ""}
+        </ul>
       </div>
       <div><h3>Shop</h3><ul>
         <li><a href="shop.html">All Bouquets</a></li>
