@@ -75,12 +75,12 @@ function roses(id, name, colours, look, photos, extra) {
     id, name, category: "ribbon", kind: "ribbon", priceFrom: true, price: 59,
     images: photos.map((p) => `assets/photos/${p}.jpg`),
     look: Object.assign({ count: 20, glitter: false, colours }, look, { ribbon: colours }),
-    minCount: 1, maxCount: 20, sizes: [1, 3, 7, 10, 13, 17, 20], mixMin: 7, // the only sizes sold (mixed colours from 7); other counts on request
+    minCount: 1, maxCount: 20, sizes: [1, 3, 7, 10, 13, 17, 20], // the only sizes sold; other counts on request
     bigSizes: { Red: [13, 17, 20], Pink: [13, 17, 20] }, // sizes over 10 sold for now, by colour
     priceFor: (o) => rosePrice(o, 0),
     wasFor: (o) => rosePrice(o, 1),
     description: "Roses folded by hand from satin ribbon, tied with a double satin bow in the same colour as the roses. Glitter roses get a rhinestone centre. Choose your colours, how many roses (1, 3, 7, 10, 13, 17 or 20; some sizes over 10 only in certain colours for now), and glitter for extra sparkle.",
-    options: { colours: ["Red", "Pink", "White", "Black", "Red & White", "Black & White"], wrap: WRAPS, ribbon: RIBBONS },
+    options: { colours: ["Red", "Pink", "White", "Black"], wrap: WRAPS, ribbon: RIBBONS },
   }, extra || {});
 }
 
@@ -89,10 +89,6 @@ window.PRODUCTS = [
     ["rose-red_white-wrap", "rose-red_black-wrap", "rose-red-glitter_white-wrap", "rose-red-glitter_black-wrap"], { featured: true }),
   roses("pink-ribbon-roses", "Pink Ribbon Roses", "Pink", { wrap: "White", count: 3 }, [],
     { images: ["white-plain-3", "black-plain-3", "newspaper-plain-1", "white-glitter-1", "black-glitter-3"].map((n) => `assets/sizes/pink/${n}.jpg`) }),
-  roses("black-white-ribbon-roses", "Black & White Ribbon Roses", "Black & White", { wrap: "Black", ribbon: "White", glitter: true, count: 10 },
-    ["rose-black-white_black-wrap", "rose-black-white_white-wrap", "rose-black-white_newspaper-wrap"]),
-  roses("red-white-ribbon-roses", "Red & White Ribbon Roses", "Red & White", { wrap: "Newspaper", ribbon: "Red", glitter: true, count: 10 },
-    ["rose-red-white_newspaper-wrap", "rose-red-white_white-wrap"]),
   roses("white-ribbon-roses", "White Ribbon Roses", "White", { wrap: "Black", count: 3 }, [],
     { images: ["black-plain-3", "white-plain-3", "newspaper-plain-1", "white-glitter-3", "black-glitter-1", "newspaper-glitter-3"].map((n) => `assets/sizes/white/${n}.jpg`) }),
   roses("black-ribbon-roses", "Black Ribbon Roses", "Black", { wrap: "White", count: 3 }, [],
