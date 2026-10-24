@@ -202,15 +202,34 @@
   const version = new URL(document.currentScript.src).searchParams.get("v") || "";
   // Real photos by rose colour: folder under assets/sizes and the counts photographed in every wrap and finish, and single extra photos.
   const SIZE_PHOTOS = { Red: { dir: "", counts: { min: 1, max: 30 } }, Pink: { dir: "pink/", counts: [1, 3], extra: ["black-plain-7", "black-plain-10", "black-plain-20", "white-plain-7", "white-plain-10", "white-plain-13", "white-plain-17", "white-plain-20"] }, White: { dir: "white/", counts: [1, 3] }, Black: { dir: "black/", counts: [1, 3] } };
-  // Real pipe cleaner lily photos by colour, same layout as the roses.
-  const LILY_PHOTOS = {
-    Red: { dir: "lily/red/", counts: [1] },
-    White: { dir: "lily/white/", counts: [], extra: ["black-plain-1", "black-plain-3", "black-plain-10", "newspaper-plain-1", "newspaper-plain-3"] },
-    Pink: { dir: "lily/pink/", counts: [], extra: ["black-plain-1", "black-plain-3", "newspaper-plain-1", "newspaper-plain-3"] },
+  // Real lily bouquet photos: [colour, wrap, number of lilies, file]. Lilies always show a real photo:
+  // the exact match when there is one, otherwise the closest photo in the same colour (same wrap first).
+  const LILY_PHOTOS = [
+    ["Red", "White", 1, "assets/sizes/lily/red/white-plain-1.jpg"], ["Red", "Black", 1, "assets/sizes/lily/red/black-plain-1.jpg"],
+    ["Red", "Newspaper", 1, "assets/sizes/lily/red/newspaper-plain-1.jpg"],
+    ["White", "Black", 1, "assets/sizes/lily/white/black-plain-1.jpg"], ["White", "Black", 3, "assets/sizes/lily/white/black-plain-3.jpg"],
+    ["White", "Black", 10, "assets/sizes/lily/white/black-plain-10.jpg"], ["White", "Newspaper", 1, "assets/sizes/lily/white/newspaper-plain-1.jpg"],
+    ["White", "Newspaper", 3, "assets/sizes/lily/white/newspaper-plain-3.jpg"], ["White", "White", 10, "assets/photos/lily-white_white-wrap.jpg"],
+    ["White", "Newspaper", 10, "assets/photos/lily-white_newspaper-wrap.jpg"],
+    ["Pink", "Black", 1, "assets/sizes/lily/pink/black-plain-1.jpg"], ["Pink", "Black", 3, "assets/sizes/lily/pink/black-plain-3.jpg"],
+    ["Pink", "Newspaper", 1, "assets/sizes/lily/pink/newspaper-plain-1.jpg"], ["Pink", "Newspaper", 3, "assets/sizes/lily/pink/newspaper-plain-3.jpg"],
+    ["Red & White", "White", 10, "assets/photos/lily-red-white_white-wrap.jpg"],
+  ];
+  const lilyPhoto = (o) => {
+    const same = LILY_PHOTOS.filter(([c]) => c === o.colours);
+    if (!same.length) return null;
+    const score = ([, w, n]) => (w === o.wrap ? 0 : 100) + Math.abs(n - o.count);
+    const best = same.reduce((a, b) => (score(b) < score(a) ? b : a));
+    return { src: `${best[3]}?v=${version}`, exact: score(best) === 0 };
+  };
+  window.photoIsExact = (p, choice) => {
+    const o = Object.assign({ kind: p.kind, flowers: p.flowers }, p.look, choice || {});
+    const lily = o.flowers && o.flowers[0] === "lily" && lilyPhoto(o);
+    return lily ? lily.exact : Boolean(sizePhoto(o));
   };
   const sizePhoto = (o) => {
-    const set = o.kind === "ribbon" ? o.ribbon === o.colours && SIZE_PHOTOS[o.colours]
-      : o.flowers && o.flowers[0] === "lily" && LILY_PHOTOS[o.colours];
+    if (o.kind !== "ribbon") { const lily = o.flowers && o.flowers[0] === "lily" && lilyPhoto(o); return lily ? lily.src : null; }
+    const set = o.ribbon === o.colours && SIZE_PHOTOS[o.colours];
     if (!set) return null;
     const c = set.counts, has = Array.isArray(c) ? c.includes(o.count) : o.count >= c.min && o.count <= c.max;
     const name = `${o.wrap.toLowerCase()}-${o.glitter ? "glitter" : "plain"}-${o.count}`;

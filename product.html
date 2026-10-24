@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610240934">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610240942">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order online.">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610240934"></script>
-<script src="assets/js/bouquet.js?v=202610240934"></script>
-<script src="assets/js/app.js?v=202610240934"></script>
+<script src="assets/js/data.js?v=202610240942"></script>
+<script src="assets/js/bouquet.js?v=202610240942"></script>
+<script src="assets/js/app.js?v=202610240942"></script>
 <script>
   const params = new URLSearchParams(location.search);
   // Old links to lily products that were merged into the White Lily Bouquet.
@@ -207,7 +207,10 @@
         mainImg.src = item.image;
         root.querySelectorAll(".thumbs button").forEach((x) => x.removeAttribute("aria-current"));
         const n = document.getElementById("preview-note");
-        if (n) n.textContent = "Preview of your choices. Each bouquet is handmade, so the real one will vary a little.";
+        const lily = p.flowers && p.flowers[0] === "lily";
+        if (n) n.textContent = photoIsExact(p, item.choice) ? "Photo of this bouquet. Each one is handmade, so yours may vary a little."
+          : lily ? `Photo of a similar bouquet. Yours will be made with your chosen ${unit}, colour and wrap.`
+          : "Preview of your choices. Each bouquet is handmade, so the real one will vary a little.";
       }
       if (pieces) document.getElementById("price").innerHTML = item.price == null ? "Price by email" : rupees(item.price);
       if (drawn) {
