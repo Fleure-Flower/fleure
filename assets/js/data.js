@@ -49,7 +49,7 @@ const LILY = {
   unit: ["lily", "lilies"], sizes: [1, 3, 5, 7, 10], maxCount: 10, priceFrom: true, // the only sizes sold; more on request
   priceFor: (o) => lilyPrice(o, 0), wasFor: (o) => lilyPrice(o, 1), tagFor: (o) => lilyPrice(o, 2),
   description: "Lilies shaped by hand from soft pipe cleaners, wrapped and tied with a double satin bow. Choose your lily colour, how many lilies (1, 3, 5, 7 or 10) and your wrapping paper. Made to last, with no water or care needed.",
-  options: { colours: ["Pink", "White", "Red", "Red & White"], wrap: WRAPS },
+  options: { colours: ["White", "Pink", "Red"], wrap: WRAPS },
 };
 
 const PIPE = "Handmade from soft pipe cleaners (chenille stems), wrapped and tied with a double satin bow.";
@@ -101,13 +101,8 @@ window.PRODUCTS = [
   // The one lily product: customers choose the number of lilies, colour and wrap.
   pipe("white-lily-bouquet", "White Lily Bouquet", "lily", ["lily"], { wrap: "White", ribbon: "White", colours: "White" },
     Object.assign({}, LILY, { featured: true, fixedPhoto: true, images: ["assets/photos/lily-white_white-wrap.jpg"],
-      // One photo per lily colour and wrap; the number of lilies doesn't change the photo. Missing pairs show the same colour in another wrap.
-      lookPhotos: {
-        "White|White": "assets/photos/lily-white_white-wrap.jpg", "White|Black": "assets/photos/lily/white_black.jpg", "White|Newspaper": "assets/photos/lily/white_newspaper.jpg",
-        "Pink|White": "assets/photos/lily/pink_white.jpg", "Pink|Black": "assets/photos/lily/pink_black.jpg", "Pink|Newspaper": "assets/photos/lily/pink_newspaper.jpg",
-        "Red|White": "assets/photos/lily/red_white.jpg", "Red|Black": "assets/photos/lily/red_black.jpg", "Red|Newspaper": "assets/photos/lily/red_newspaper.jpg",
-        "Red & White|White": "assets/photos/lily-red-white_white-wrap.jpg",
-      } })),
+      // One photo per lily colour and wrap in assets/photos/lily/<colour>_<wrap>.jpg; the number of lilies doesn't change it.
+      photoFolder: "assets/photos/lily/" })),
 
   { id: "chocolate-bouquet", name: "Dairy Milk Chocolate Bouquet", category: "gift", price: 399, featured: true,
     images: ["black", "white"].map((w) => `assets/products/dairy-milk_${w}-wrap.jpg`),

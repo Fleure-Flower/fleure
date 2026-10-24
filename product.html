@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/styles.css?v=202610240956">
+<link rel="stylesheet" href="assets/css/styles.css?v=202610241003">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <title>Bouquet | Fleure</title>
 <meta name="description" content="Handmade bouquet, made to order. Choose colours and wrap, and order online.">
@@ -19,9 +19,9 @@
     <div class="product-grid" id="related"></div>
   </section>
 </main>
-<script src="assets/js/data.js?v=202610240956"></script>
-<script src="assets/js/bouquet.js?v=202610240956"></script>
-<script src="assets/js/app.js?v=202610240956"></script>
+<script src="assets/js/data.js?v=202610241003"></script>
+<script src="assets/js/bouquet.js?v=202610241003"></script>
+<script src="assets/js/app.js?v=202610241003"></script>
 <script>
   const params = new URLSearchParams(location.search);
   // Old links to lily products that were merged into the White Lily Bouquet.
@@ -36,10 +36,8 @@
     document.title = `${p.name} | ${SHOP.name}`;
     const drawn = Boolean(p.kind);
     const fixed = Boolean(p.fixedPhoto); // a real photo instead of the drawing; only colour and wrap can change it
-    const lookPhoto = (c) => {
-      const all = p.lookPhotos || {}, same = Object.keys(all).find((k) => k.startsWith(c.colours + "|"));
-      return all[`${c.colours}|${c.wrap}`] || (same && all[same]) || photos[0];
-    };
+    // Photo for the chosen flower colour and wrap, e.g. assets/photos/lily/red_black.jpg.
+    const lookPhoto = (c) => `${p.photoFolder || "assets/photos/lily/"}${c.colours.toLowerCase()}_${c.wrap.toLowerCase()}.jpg`;
     const [unitOne, unit] = p.unit || (p.kind === "ribbon" ? ["rose", "roses"] : ["flower", "flowers"]);
     const labels = { colours: "Flower colours", wrap: "Wrapping paper", ribbon: "Ribbon colour" };
     const start = Object.assign({}, p.look);
